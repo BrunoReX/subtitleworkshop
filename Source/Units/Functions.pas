@@ -1,12 +1,25 @@
 unit Functions;
 
+{ $DEFINE UNIOFF}
+
 interface
 
 uses Forms, Windows, Classes, SysUtils, StdCtrls, VirtualTrees, USubtitleApi,
     USubtitlesFunctions, TreeViewHandle, Mask, IniFiles, ComCtrls, ExtCtrls,
-    ShellApi, Controls, General, FastStrings, StrMan, Math;
+    ShellApi, Controls, General, FastStrings, StrMan, Math, TntStdCtrls;
 
 // -----------------------------------------------------------------------------
+
+const
+  OPEN_B = '<b>';
+  OPEN_I = '<i>';
+  OPEN_U = '<u>';
+  OPEN_C = '<c:#';
+  CLOSE_B = '</b>';
+  CLOSE_I = '</i>';
+  CLOSE_U = '</u>';
+  CLOSE_C = '</c>';
+  CRLF = #13#10;
 
 type
   TSyncPoint = record
@@ -17,6 +30,12 @@ type
   TClassicSyncPoints = record
     Point1Sub, Point1Movie: Integer;
     Point2Sub, Point2Movie: Integer;
+  end;
+  TStyleTag = record
+    Bold : Boolean;
+    Italic : Boolean;
+    Underline : Boolean;
+    Color : Integer;
   end;
 
 // -----------------------------------------------------------------------------
@@ -36,9 +55,15 @@ procedure AddFPSItem(FPS: Single; ModifyInputFPS, ModifyFPSTimes, ModifyInputFPS
 // --------------------------//
 //   TAG-Related functions   //
 // --------------------------//
+procedure AddBold(var Text: String);
+procedure AddItalic(var Text: String);
+procedure AddUnderline(var Text: String);
+function StoreTags(Text: String): TStyleTag;
+function RestoreSWTags(Text: String; StyleTag: TStyleTag; OverrideNoInterWithTags: Boolean = False): String;
 function RemoveSWTags(Text: String; Bold, Italic, Underline, Color: Boolean; OverrideNoInterWithTags: Boolean = False): String;
 function SetColorTag(Text: String; Color: Integer): String;
 function GetSubColor(Text: String): Integer;
+function GetColorOpen(Color: Integer): String;
 // ---------------------
 function IsFloat(Texto : string): Boolean;
 function StrSecToMS(Sec: String): Integer;
@@ -68,6 +93,9 @@ function GetVideoInfo(const FileName: String; var FPS: Single; var Duration: Int
 // -------- //
 //  Others  //
 // -------- //
+function GetCharsPerMSec(Text: String; MSec : Integer): Real;
+function GetMSecPerChars(Text: String; CPS : Real): Integer;
+function GetLengthTotal(Text: String): Integer;
 function GetLengthForEachLine(Text: String): String;
 function FixRTLPunctuation(S: String): String;
 // -------------- //
@@ -240,20 +268,81 @@ end;
 
 // -----------------------------------------------------------------------------
 
+procedure AddBold(var Text: String);
+begin
+  Text := OPEN_B + Text + CLOSE_B;
+end;
+
+procedure AddItalic(var Text: String);
+begin
+  Text := OPEN_I + Text + CLOSE_I;
+end;
+
+procedure AddUnderline(var Text: String);
+begin
+  Text := OPEN_U + Text + CLOSE_U;
+end;
+
+// -----------------------------------------------------------------------------
+
+function StoreTags(Text: String): TStyleTag;
+begin
+  Result.Bold      := Pos(OPEN_B, Text) > 0;
+  Result.Italic    := Pos(OPEN_I, Text) > 0;
+  Result.Underline := Pos(OPEN_U, Text) > 0;
+  Result.Color     := GetSubColor(Text);
+end;
+
+// -----------------------------------------------------------------------------
+
+function RestoreSWTags(Text: String; StyleTag: TStyleTag; OverrideNoInterWithTags: Boolean = False): String;
+begin
+  Result := Text;
+
+  if (SubtitleAPI.NoInteractionWithTags = False) or (OverrideNoInterWithTags = True) then
+  begin
+    if StyleTag.Underline = True then AddUnderline(Result);
+    if StyleTag.Bold      = True then AddBold(Result);
+    if StyleTag.Italic    = True then AddItalic(Result);
+    if StyleTag.Color > -1 then
+      Text := SetColorTag(Result, StyleTag.Color);
+  end;
+end;
+
+// -----------------------------------------------------------------------------
+
 function RemoveSWTags(Text: String; Bold, Italic, Underline, Color: Boolean; OverrideNoInterWithTags: Boolean = False): String;
 var
   i: Integer;
 begin
   if (SubtitleAPI.NoInteractionWithTags = False) or (OverrideNoInterWithTags = True) then
   begin
-    if Bold      = True then Text := ReplaceString(Text, '<b>', '');
-    if Italic    = True then Text := ReplaceString(Text, '<i>', '');
-    if Underline = True then Text := ReplaceString(Text, '<u>', '');
+    if Bold      = True then begin
+      Text := ReplaceString(Text, OPEN_B, '');
+      Text := ReplaceString(Text, CLOSE_B, '');
+    end;
+
+    if Italic    = True then begin
+      Text := ReplaceString(Text, OPEN_I, '');
+      Text := ReplaceString(Text, CLOSE_I, '');
+    end;
+
+    if Underline = True then begin
+      Text := ReplaceString(Text, OPEN_U, '');
+      Text := ReplaceString(Text, CLOSE_U, '');
+    end;
+
     if Color = True then
     begin
-      i := SmartPos('<c:#', Text, False);
-      while (i > 0) and (SmartPos('>', Text, True, i + 1) > i) do
-        Delete(Text, i, SmartPos('>', Text, True, i + 1));
+      i := SmartPos(OPEN_C, Text, False);
+//      while (i > 0) and (SmartPos('>', Text, True, i + 1) > i) do
+//        Delete(Text, i, SmartPos('>', Text, True, i + 1));
+      while (i > 0) do begin  // <c:#80FF00>
+        Text := copy(Text, 1, i-1) + copy(Text, i+11, length(Text)-i-11+1);
+        i := SmartPos(OPEN_C, Text, False);
+      end;
+
+      Text := ReplaceString(Text, CLOSE_C, '');
     end;
   end;
   Result := Text;
@@ -261,14 +350,18 @@ end;
 
 // -----------------------------------------------------------------------------
 
+function GetColorOpen(Color: Integer): String;
+var
+  HTMLColor : String;
+begin
+  HTMLColor := Format('%.2x%.2x%.2x', [GetRValue(Color), GetGValue(Color), GetBValue(Color)]);
+  Result := OPEN_C + HTMLColor + '>';
+end;
+
 function SetColorTag(Text: String; Color: Integer): String;
-  function ColorToHTML(Color: Integer): String;
-  begin
-    Result := Format('%.2x%.2x%.2x', [GetRValue(Color), GetGValue(Color), GetBValue(Color)]);
-  end;
 begin
   Text := RemoveSWTags(Text, False, False, False, True);
-  Result := '<c:#' + ColorToHTML(Color) + '>' + Text;
+  Result := GetColorOpen(Color) + Text + CLOSE_C;
 end;
 
 // -----------------------------------------------------------------------------
@@ -280,15 +373,15 @@ var
   i: Integer;
 begin
   Result := -1;
-  if (SmartPos('<c:#', Text, False) > 0) then
+  if (SmartPos(OPEN_C, Text, False) > 0) then
   begin
-    Text := Copy(Text, SmartPos('<c:#', Text, False) + 4, 7);
+    Text := Copy(Text, SmartPos(OPEN_C, Text, False) + 4, 7);
     if Copy(Text, 7, 1) = '>' then
     begin
       Delete(Text, 7, 1);
       Text := AnsiUpperCase(Text);
 
-      for i := 0 to Length(Text) do
+      for i := 0 to Length(Text)-1 do
         if (Text[i] <> '') and (Text[i] in HTMLChars = False) then exit;
 
       // convert hexadecimal values to RGB
@@ -407,14 +500,15 @@ begin
   W    := TForm.CreateNew(Application);
   But2 := nil;
   But3 := nil;
-  AMsg := ReplaceString(AMsg, '|', #13#10);
+  AMsg := ReplaceString(AMsg, '|', CRLF);
   try
     // set up form
     W.BorderStyle  := bsDialog;
     W.Ctl3D        := True;
     W.Width        := 360;
     W.Height       := 160;
-    W.Caption      := ID_PROGRAM;
+//    W.Caption      := ID_PROGRAM;
+    W.Caption      := ID_PROGRAM + ' '+ ID_VERSION;
     W.Font.Name    := Mainform.Font.Name;
     W.Font.Size    := Mainform.Font.Size;
     W.Font.Style   := Mainform.Font.Style;
@@ -652,6 +746,7 @@ procedure MemoKeyPress(Sender: TObject; List: TVirtualStringTree; NextLine: Bool
 begin
   if List.SelectedCount > 1 then
     exit;
+
   if NextLine then
   begin
     if List.FocusedNode.Index < List.RootNodeCount-1 then
@@ -661,9 +756,16 @@ begin
       List.FocusedNode := List.FocusedNode.NextSibling;
       List.Selected[List.FocusedNode] := True;
       frmMain.RefreshTimes;
+      frmMain.HighlightTags(True);
+      frmMain.HighlightTags(False);
+
       (Sender as TWinControl).SetFocus;
-      if (Sender.ClassType = TMemo) and (frmMain.SelTextNL = True) then
-        (Sender as TMemo).SelectAll;
+//      if (Sender.ClassType = {$IFDEF UNIOFF}TTntMemo{$ELSE}TMemo{$ENDIF}) and (frmMain.SelTextNL = True) then
+//        (Sender as {$IFDEF UNIOFF}TTntMemo{$ELSE}TMemo{$ENDIF}).SelectAll;
+      if frmMain.SelTextNL = True then
+        if Sender.ClassType = TTntMemo     then (Sender as TTntMemo).SelectAll else
+        if Sender.ClassType = TMemo        then (Sender as TMemo).SelectAll else
+        if Sender.ClassType = TRichEdit    then (Sender as TRichEdit).SelectAll else
     end;
   end else
   begin
@@ -673,9 +775,16 @@ begin
       List.FocusedNode := List.FocusedNode.PrevSibling;
     List.Selected[List.FocusedNode] := True;
     frmMain.RefreshTimes;
+    frmMain.HighlightTags(True);
+    frmMain.HighlightTags(False);
+
     (Sender as TWinControl).SetFocus;
-    if (Sender.ClassType = TMemo) and (frmMain.SelTextPL = True) then
-      (Sender as TMemo).SelectAll;
+//    if (Sender.ClassType = {$IFDEF UNIOFF}TTntMemo{$ELSE}TMemo{$ENDIF}) and (frmMain.SelTextPL = True) then
+//      (Sender as {$IFDEF UNIOFF}TTntMemo{$ELSE}TMemo{$ENDIF}).SelectAll;
+      if frmMain.SelTextPL = True then
+        if Sender.ClassType = TTntMemo     then (Sender as TTntMemo).SelectAll else
+        if Sender.ClassType = TMemo        then (Sender as TMemo).SelectAll else
+        if Sender.ClassType = TRichEdit    then (Sender as TRichEdit).SelectAll else
   end;
 end;
 
@@ -683,11 +792,7 @@ end;
 
 function AdjustLines(Line: String; GoForwardAlso: Boolean = True; FindLessDifference: Boolean = True): String;
 var
-  // Tags
-  Bold        : Boolean;
-  Italic      : Boolean;
-  Underline   : Boolean;
-  Color       : Integer;
+  StyleTag : TStyleTag;
   // Points to break
   BreakPoint1 : Integer;
   BreakPoint2 : Integer;
@@ -701,25 +806,20 @@ begin
     Result := '';
     exit;
   end;
-  // Store tags
-  Bold      := Pos('<b>', Line) > 0;
-  Italic    := Pos('<i>', Line) > 0;
-  Underline := Pos('<u>', Line) > 0;
-  Color     := GetSubColor(Line);
-  // Remove tags
+  StyleTag := StoreTags(Line);
   Line    := RemoveSWTags(Line, True, True, True, True);
 
   // Make one big line...
-  while Pos(#13#10, Line) > 0 do
+  while Pos(CRLF, Line) > 0 do
   begin
-    if Line[Pos(#13#10, Line)-1] <> ' ' then
-      Insert(' ', Line, Pos(#13#10, Line));
-    Delete(Line, Pos(#13#10, Line), 2);
+    if Line[Pos(CRLF, Line)-1] <> ' ' then
+      Insert(' ', Line, Pos(CRLF, Line));
+    Delete(Line, Pos(CRLF, Line), 2);
   end;
 
   Line := Trim(Line);
 
-  if (Length(Line) > frmMain.TwoLinesIfLongerThan) or (Pos('-', Line) > 0) then
+  if (Length(Line) > frmMain.Vars.TwoLinesIfLongerThan) or (Pos('-', Line) > 0) then
   begin
     // ----------------------------------------- //
     //              The way it works             //
@@ -778,7 +878,7 @@ begin
         BreakPoint1 := Pos(' -', Line);
       end else
       begin
-        if (Length(Line) < frmMain.TwoLinesIfLongerThan) then
+        if (Length(Line) < frmMain.Vars.TwoLinesIfLongerThan) then
           BreakPoint1 := -1;
       end;
     end else
@@ -790,25 +890,20 @@ begin
     end else
     if (Pos('-', Line) = 1) and (StringCount('-', Line) = 1) then
     begin
-      if Length(Line) < frmMain.TwoLinesIfLongerThan then
+      if Length(Line) < frmMain.Vars.TwoLinesIfLongerThan then
         BreakPoint1 := -1;
     end;
 
     if BreakPoint1 > -1 then
     begin
       Delete(Line, BreakPoint1, 1);
-      Insert(#13#10, Line, BreakPoint1);
+      Insert(CRLF, Line, BreakPoint1);
     end;
   end;
 
   if SubtitleAPI.NoInteractionWithTags = False then
   begin
-    // Restore tags
-    if Underline = True then Line := '<u>' + Line;
-    if Bold      = True then Line := '<b>' + Line;
-    if Italic    = True then Line := '<i>' + Line;
-    if Color > -1 then
-      Line := SetColorTag(Line, Color);
+    Line := RestoreSWTags(Line, StyleTag);
   end;
 
   Result := Line;
@@ -1002,8 +1097,7 @@ var
   Node   : PVirtualNode;
   RepStr : String;
   Text   : String;
-  Bold, Italic, Underline: Boolean;
-  Color : Integer;
+  StyleTag : TStyleTag;
   BreakNext: Boolean;
 begin
   Result    := nil;
@@ -1015,10 +1109,7 @@ begin
   begin
 
     Text      := GetSubText(Node);
-    Bold      := Pos('<b>', Text) > 0;
-    Italic    := Pos('<i>', Text) > 0;
-    Underline := Pos('<u>', Text) > 0;
-    Color     := GetSubColor(Text);
+    StyleTag  := StoreTags(Text);
     Text      := RemoveSWTags(Text, True, True, True, True);
 
     RepStr := Replace(Text, This, ByThis, CaseSensitive, WholeWords, PreserveCase);
@@ -1026,12 +1117,7 @@ begin
     begin
       if SubtitleAPI.NoInteractionWithTags = False then
       begin
-        // Restore tags
-        if Underline = True then RepStr := '<u>' + RepStr;
-        if Bold      = True then RepStr := '<b>' + RepStr;
-        if Italic    = True then RepStr := '<i>' + RepStr;
-        if Color > -1 then
-          RepStr := SetColorTag(RepStr, Color);
+        RepStr := RestoreSWTags(RepStr, StyleTag);
       end;
       SetText(Node, RepStr);
       BreakNext := True;
@@ -1040,10 +1126,7 @@ begin
     if frmMain.mnuTranslatorMode.Checked then
     begin
       Text      := GetSubTranslation(Node);
-      Bold      := Pos('<b>', Text) > 0;
-      Italic    := Pos('<i>', Text) > 0;
-      Underline := Pos('<u>', Text) > 0;
-      Color     := GetSubColor(Text);
+      StyleTag  := StoreTags(Text);
       Text      := RemoveSWTags(Text, True, True, True, True);
 
       RepStr := Replace(Text, This, ByThis, CaseSensitive, WholeWords, PreserveCase);
@@ -1051,12 +1134,7 @@ begin
       begin
         if SubtitleAPI.NoInteractionWithTags = False then
         begin
-          // Restore tags
-          if Underline = True then RepStr := '<u>' + RepStr;
-          if Bold      = True then RepStr := '<b>' + RepStr;
-          if Italic    = True then RepStr := '<i>' + RepStr;
-          if Color > -1 then
-            RepStr := SetColorTag(RepStr, Color);
+          RepStr := RestoreSWTags(RepStr, StyleTag);
         end;
         SetTranslation(Node, RepStr);
         BreakNext := True;
@@ -1200,25 +1278,59 @@ end;
 
 // -----------------------------------------------------------------------------
 
+function GetCharsPerMSec(Text: String; MSec : Integer): Real;
+begin
+  Text := RemoveSWTags(Text, True, True, True, True);
+  if MSec > 0 then
+    Result := Round(GetLengthTotal(Text) / (MSec/1000) * 100) / 100
+  else
+    Result := 0;
+end;
+
+// -----------------------------------------------------------------------------
+
+function GetMSecPerChars(Text: String; CPS : Real): Integer;
+var
+  x : cardinal;
+  y : real;
+begin
+  Text := RemoveSWTags(Text, True, True, True, True);
+  x := GetLengthTotal(Text);
+  y := x / CPS;
+
+  Result := Round(y * 1000);
+end;
+
+// -----------------------------------------------------------------------------
+
+function GetLengthTotal(Text: String): Integer;
+begin
+  Result := Length(Text) - StringCount(CRLF, Text) * 2;
+end;
+
+// -----------------------------------------------------------------------------
+
 function GetLengthForEachLine(Text: String): String;
 var
   TotLen  : Integer;
   PosEnter: Integer;
 begin
   Result := '';
-  TotLen := Length(Text) - StringCount(#13#10, Text) * 2;
-  PosEnter := Pos(#13#10, Text);
+  Text := RemoveSWTags(Text, True, True, True, True);
+  TotLen := GetLengthTotal(Text);
+
+  PosEnter := Pos(CRLF, Text);
   if PosEnter > 0 then
   begin
     while PosEnter > 0 do
     begin
-      Result := Result + IntToStr(Length(RemoveSWTags(Copy(Text, 1, PosEnter-1), True, True, True, True))) + '/';
+      Result := Result + IntToStr(Length(Copy(Text, 1, PosEnter-1))) + '/';
       Text := Copy(Text, PosEnter + 2, Length(Text));
-      PosEnter := Pos(#13#10, Text);
+      PosEnter := Pos(CRLF, Text);
     end;
-    Result := Result + IntToStr(Length(RemoveSWTags(Text, True, True, True, True))) + '=' + IntToStr(TotLen);
+    Result := Result + IntToStr(Length(Text)) + '=' + IntToStr(TotLen);
   end else
-  Result := IntToStr(Length(RemoveSWTags(Text, True, True, True, True)));
+  Result := IntToStr(Length(Text));
 end;
 
 // -----------------------------------------------------------------------------
@@ -1238,9 +1350,9 @@ begin
     for i := 0 to tmpLines.Count-1 do
       tmpLines[i] := Trim(tmpLines[i]);
     Part2 := tmpLines.Text;
-    if Copy(Part1, Length(Part1)-1, 2) = #13#10 then
+    if Copy(Part1, Length(Part1)-1, 2) = CRLF then
       Part1 := Copy(Part1, 1, Length(Part1)-2);
-    if Copy(Part2, Length(Part2)-1, 2) = #13#10 then
+    if Copy(Part2, Length(Part2)-1, 2) = CRLF then
       Part2 := Copy(Part2, 1, Length(Part2)-2);
   finally
     tmpLines.Free;
@@ -1256,21 +1368,23 @@ var
   Temp     : String;
   InBreak  : Integer;
 begin
+  PosEnter := Pos(CRLF, StringToDivide);
+  if PosEnter = 0 then exit;
+
   SetLength(Breaks, 0);
   PrevI    := 0;
   Temp     := StringToDivide;
-  PosEnter := Pos(#13#10, Temp);
-  if PosEnter = 0 then exit;
+
   while PosEnter <> 0 do
   begin
     SetLength(Breaks, Length(Breaks)+1);
     Breaks[Length(Breaks)-1] := PosEnter + PrevI;
-    PrevI    := PrevI + PosEnter + Length(#13#10)-1;
+    PrevI    := PrevI + PosEnter + Length(CRLF)-1;
     Temp     := Copy(Temp, PosEnter + 2, Length(Temp) - PosEnter - 1);
-    PosEnter := Pos(#13#10, Temp);
+    PosEnter := Pos(CRLF, Temp);
   end;
   MaxBreaks := Length(Breaks);
-  InBreak   := (StringCount(#13#10, StringToDivide) + 1) div 2;
+  InBreak   := (StringCount(CRLF, StringToDivide) + 1) div 2;
 
   if Length(Breaks) > 0 then
   begin
@@ -1290,89 +1404,75 @@ end;
 function FixRTLPunctuation(S: String): String;
 const
   SpecialChars = '.,:;''()-?!+=*&$^%#@~`" /';
-  Delimiter    = #13#10;
 var
   Posit : Integer;
   A,B   : String;
 
-function FixSubString(Sub: String): String;
-var
-  Prefix : String;
-  Suffix : String;
-  Temp   : String;
-  P,I    : Integer;
-begin
-  Temp   := Sub;
-  Prefix := '';
-  Suffix := '';
-  I      := 1;
-  if Temp = '' then
+  function FixSubString(Sub: String): String;
+  var
+    Prefix : String;
+    Suffix : String;
+    Temp   : String;
+    P,I    : Integer;
   begin
-    Result := '';
-    exit;
-  end;
-
-  P := Pos(Temp[i], SpecialChars);
-  while P <> 0 do
-  begin
-    Prefix := Prefix + Temp[i];
-    Temp   := Copy(Temp, 2, Length(Temp)-1);
+    Temp   := Sub;
+    Prefix := '';
+    Suffix := '';
+    I      := 1;
     if Temp = '' then
-      P := 0 else
-      P := Pos(Temp[i], SpecialChars);
-  end;
-  if Suffix = ' -' then Suffix := '- ';
-
-  I := Length(Temp);
-  if Temp = '' then
-    P := 0 else
-    P := Pos(Temp[i], SpecialChars);
-  while P <> 0 do
-  begin
-    Suffix := Suffix + Temp[I];
-    Temp   := Copy(Temp, 1, Length(Temp)-1);
-    i      := Length(Temp);
-    if Temp = '' then
-      P := 0 else
-      P := Pos(Temp[i], SpecialChars);
+    begin
+      Result := '';
+      exit;
     end;
-  if Prefix = '- ' then Prefix := ' -';
 
-  Result := Suffix + Temp + Prefix;
-end;
+    P := Pos(Temp[i], SpecialChars);
+    while P <> 0 do
+    begin
+      Prefix := Prefix + Temp[i];
+      Temp   := Copy(Temp, 2, Length(Temp)-1);
+      if Temp = '' then
+        P := 0 else
+        P := Pos(Temp[i], SpecialChars);
+    end;
+    if Suffix = ' -' then Suffix := '- ';
+
+    I := Length(Temp);
+    if Temp = '' then
+      P := 0 else
+      P := Pos(Temp[i], SpecialChars);
+    while P <> 0 do
+    begin
+      Suffix := Suffix + Temp[I];
+      Temp   := Copy(Temp, 1, Length(Temp)-1);
+      i      := Length(Temp);
+      if Temp = '' then
+        P := 0 else
+        P := Pos(Temp[i], SpecialChars);
+      end;
+    if Prefix = '- ' then Prefix := ' -';
+
+    Result := Suffix + Temp + Prefix;
+  end;
 var
-  Bold      : Boolean;
-  Italic    : Boolean;
-  Underline : Boolean;
-  Color     : Integer;
+  StyleTag : TStyleTag;
 begin
-  // Store tags
-  Bold      := Pos('<b>', S) > 0;
-  Italic    := Pos('<i>', S) > 0;
-  Underline := Pos('<u>', S) > 0;
-  Color     := GetSubColor(S);
-  // Remove tags
+  StyleTag := StoreTags(S);
   S := RemoveSWTags(S, True, True, True, True);
 
   A := S;
   B := '';
-  Posit := Pos(Delimiter, A);
+  Posit := Pos(CRLF, A);
   while Posit > 0 do
   begin
-    B     := B + FixSubString(Copy(A, 1, Posit-1)) + Delimiter;
-    A     := Copy(A, Posit + Length(Delimiter), Length(A) - Posit);
-    Posit := Pos(Delimiter, A);
+    B     := B + FixSubString(Copy(A, 1, Posit-1)) + CRLF;
+    A     := Copy(A, Posit + Length(CRLF), Length(A) - Posit);
+    Posit := Pos(CRLF, A);
   end;
   B := B + FixSubString(A);
 
   if SubtitleAPI.NoInteractionWithTags = False then
   begin
-    // Restore tags
-    if Underline = True then B := '<u>' + B;
-    if Bold      = True then B := '<b>' + B;
-    if Italic    = True then B := '<i>' + B;
-    if Color > -1 then
-      B := SetColorTag(B, Color);
+    B := RestoreSWTags(B, StyleTag);
   end;
   Result := B;
 end;

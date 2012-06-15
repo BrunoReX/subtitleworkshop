@@ -220,6 +220,9 @@ begin
           Time        := Data.InitialTime;
           OnTimeChangeFromEditOnly := EditTimeChangeFromEditOnly;
           SelStart := 10; // Milliseconds get focus by default
+          if frmMain.FormatType = ftTime then
+            TimeMode := tmTime else
+            TimeMode := tmFrames;
         end;
       end;
     2:
@@ -233,6 +236,9 @@ begin
           Time        := Data.FinalTime;
           OnTimeChangeFromEditOnly := EditTimeChangeFromEditOnly;
           SelStart := 10; // Milliseconds get focus by default
+          if frmMain.FormatType = ftTime then
+            TimeMode := tmTime else
+            TimeMode := tmFrames;
         end;
       end;
     3:

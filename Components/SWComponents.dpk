@@ -29,19 +29,16 @@ requires
   vcl;
 
 contains
-  SWButton in '..\SWButton.pas',
-  MiMenu in '..\MiMenu.pas',
-  MiSubtitulo in '..\MiSubtitulo.pas',
-  NFormSizing in '..\NFormSizing.pas',
-  SWSeekBar in '..\SWSeekBar.pas',
-  SWTimeCounter in '..\SWTimeCounter.pas',
-  USSpeller in '..\USSpeller.pas',
-  MiHint,
+  SWButton in 'Sources\SWButton.pas',
+  MiMenu in 'Sources\MiMenu.pas',
+  MiSubtitulo in 'Sources\MiSubtitulo.pas',
+  NFormSizing in 'Sources\NFormSizing.pas',
+  SWSeekBar in 'Sources\SWSeekBar.pas',
+  SWTimeCounter in 'Sources\SWTimeCounter.pas',
+  USSpeller in 'Sources\USSpeller.pas',
   USGraphics in 'Sources\USGraphics.pas',
   TimeMaskEdit in 'Sources\TimeMaskEdit.pas',
-  USStringsUtils in '..\..\..\..\New_SubtitleAPI\URUSoft-Generic\USStringsUtils.pas',
-  USTimeUtils in '..\..\..\..\New_SubtitleAPI\URUSoft-Generic\USTimeUtils.pas',
-  FastStrings in '..\..\..\..\New_SubtitleAPI\3rd-party\FastStrings.pas',
+  USTimeUtils in 'Sources\USTimeUtils.pas',
   HTTPGet in 'Sources\HTTPGet.pas';
 
 end.

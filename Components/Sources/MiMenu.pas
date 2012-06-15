@@ -50,6 +50,7 @@ type
     { Public declarations }
     constructor Create(AOwner : TComponent); override;
     destructor Destroy; override;
+    procedure RefreshMenu;
   published
     { Published declarations }
     Property Activo: Boolean Read vActivo Write SetearActivo Default False;
@@ -740,5 +741,10 @@ begin
 end;
 
 // -----------------------------------------------------------------------------
+
+procedure TMiMenu.RefreshMenu;
+begin
+  ActivarMiMenu(TRUE, TRUE);  //OwnerDraw, NeedRefresh
+end;
 
 end.

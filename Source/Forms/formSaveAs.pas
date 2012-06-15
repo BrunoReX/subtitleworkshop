@@ -24,7 +24,6 @@ type
     procedure lstFormatsKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btnCustomFormatClick(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
   private
     procedure AddCustomFormats;
     procedure SetLanguage;
@@ -98,7 +97,6 @@ var
   Item         : TListItem;
   Ini          : TIniFile;
 begin
-//  frmSaveAsExecuting := True;   // removed by BDZL
   SetLanguage;
   SaveTranslation := False;
   TotalFormats := SubtitleApi.FormatsCount;
@@ -301,13 +299,6 @@ begin
   frmCustomFormats := TfrmCustomFormats.Create(Application);
   frmCustomFormats.ShowModal;
   frmCustomFormats.Free;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmSaveAs.FormDestroy(Sender: TObject);
-begin
-//  frmSaveAsExecuting := False;  // removed by BDZL
 end;
 
 // -----------------------------------------------------------------------------

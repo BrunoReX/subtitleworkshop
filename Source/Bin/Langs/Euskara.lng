@@ -1,0 +1,919 @@
+;   Subtitle Workshop 2.52
+;   Euskara (Basque) language file
+;  Rev 20/NOV/2011
+;   Translator : Xabier Aramendi
+;   E-mail     : azpidatziak@gmail.com
+;   Web        : https://sites.google.com/site/azpidatziak/
+
+[General]
+Translator=Xabier Aramendi
+Font Charset=0
+AllFiles=Sostengatutako agiri guztiak
+Help=Manual.html
+FPS=FS-ko
+PlainText=Idazki laua
+STP=Azpidatzi Itzulpen Egitasmoa
+SRF=Azpidatzi Jakinarazpen Agiria
+
+[Standard buttons]
+01=&Ongi
+02=E&zeztatu
+03=&Bilatu
+04=&Ezarri
+05=&Irten
+06=&Bai
+07=&Ez
+
+[Main Form]
+01=Modua:
+02=Denbora
+03=Frame
+04=Sarrerako FS-ko:
+05=FS-ko:
+06=Lan egin:
+07=Iraupena|Amai denbora|Biak
+08=Zenbakia
+09=Erakutsi
+10=Ezkutatu
+11=Idazkia
+12=Itzulpena
+13=%d lerro itzuligabe
+14=Iraupena:
+15=%s (%s hikirri):
+16=- Itzuligabeko azpidatzia -
+
+[Main menu header]
+01=Agiria
+02=Editatu
+03=Bilatu
+04=Tresnak
+05=Filma
+06=Ezarpenak
+07=Laguntza
+
+[Main menu/File]
+01=Azpidatzi berria...
+02=Gertatu azpidatzia...
+03=Azken agiriak
+04=Garbitu zerrenda
+05=Gertatu
+06=Egitasmoa...
+07=Jatorrizkoa
+08=Itzulita
+09=Gorde
+10=Jatorrizkoa honela...
+11=Itzulpena honela...
+12=Gorde honela...
+13=Itxi
+14=Irten
+
+[Main menu/Edit]
+01=Desegin
+02=Berregin
+03=Txertatu azpidatzia
+04=Txertatu aurretik
+05=Kendu hautatutakoa
+06=Ebaki
+07=Kopiatu
+08=Itsatsi
+09=Hautatu denak
+
+[Main menu/Edit/Timings]
+01=Denborak
+02=Ezarri iraupen mugak...
+03=Ezarri atzerapean...
+04=Zehaztu
+05=Zehaztu azpidatziak...
+06=Zehaztu azpidatziak aldiberetzeko
+07=Denbora luzatzailea/murriztzailea
+08=Handitu luzera
+09=Berezgaitasunezko iraupenak
+10=Irakurri denborak agiritik
+11=Aldatu %s milisegundu
+; added in 2.52
+12=Erakutsi %s segundumilaen
+13=Ezkutatu %s segundumilaen
+
+[Main menu/Edit/Texts]
+01=Idazkiak
+02=Lerro zehazte adimentsua
+03=Bihurtu hizki larri-xehe...
+04=Ezhautsi azpdidatziak
+05=Banandu lerroak...
+06=Lerro banantze azkarra
+07=Ezarri gehienezko lerro luzera...
+08=Irakurri idazkiak agiritik
+; added in 2.52
+09=Ezarri lodi etiketa
+10=Ezarri etzan etiketa
+11=Ezarri azpimarra etiketa
+12=Ezarri margo etiketa
+
+[Main menu/Edit/Subtitles]
+01=Azpidatziak
+02=Nahastu azpidatziak
+03=Eraginak
+04=Idazmakina eragina
+05=Dizdira
+06=Dizdira azkarra
+07=Dizdira ertaina
+08=Dizdira astiroa
+09=Eskuinetik-Ezkerrera
+10=Alderantzizkatu idazkia
+11=Zuzendu puntuaketa
+12=Antolatu
+13=Ezabatu ezbeharrezko loturak
+14=Markatu hautatutako azpidatziak
+15=Ezmarkatu hautatutako azpidatziak
+
+[Main menu/Edit/Translation]
+01=Itzulpena
+02=Itzultzaile modua
+03=Aldatu
+
+[Main menu/Search]
+01=Bilatu...
+02=Bilatu hurrengoa
+03=Bilatu eta Ordeztu...
+04=Joan lerro zenbakira...
+
+[Main menu/Tools]
+01=Idaz egiaztapena
+02=Bihurketa handia...
+03=Banandu azpidatzia...
+04=Batu azpidatziak...
+05=Argibideak eta akatsak
+06=Argibideak eta akatsak...
+07=Askotariko argibideak...
+08=OCR Eskriptak
+09=Erakutsi era nagusian
+10=Ezarpenak...
+11=Berregiaztatu akatsak
+12=Zuzendu akatsa guztiak
+13=Zuzendu akatsak (hautatutako azpidatziak)
+14=Jauzi hurrengo akatsera
+15=Gehitu FS-a AVI-tik
+16=Kanpo aurreikuspena
+17=SAMI hizkuntza ateratzailea
+18=Pascal eskriptak
+
+[Main menu/Movie]
+01=Ireki...
+02=Itxi
+03=Argibideak...
+04=Bideo aurreikuspen modua
+05=Erakutsi azpidatziak
+06=Gorde multimedia hasiera agiria
+
+[Main menu/Movie/Playback]
+01=Irakurketa
+02=Irakurri/Pausatu
+03=Gelditu
+04=Atzera
+05=Aurrera
+06=Atzera 5 segundu
+07=Aurrera 5 segundu
+08=Irakurri neurria
+
+[Main menu/Movie/Subtitles]
+01=Azpidatziak
+02=Mugitu azpidatzia
+03=Ezarri hasiera denbora
+04=Ezarri amaiera denbora
+05=Hasi azpidatzia
+06=Amaitu azpidatzia
+
+[Main menu/Movie/Synchronization]
+01=Aldiberetzea
+02=Lehen aldiberetze puntua
+03=Azken aldiberetze puntua
+04=Gehitu aldiberetze puntua
+
+[Main menu/Movie/Display]
+01=Erakutsi
+02=Jatorrizkoa
+03=Itzulpena
+
+[Main menu/Settings]
+01=Irteera ezarpenak...
+02=Hizkuntza
+03=Erakutsi ezker panela
+04=Erakutsi denbora aginteak
+05=Erabili tokiko edizioa
+
+[Main menu/Help]
+01=%s-ri buruz...
+02=Egiaztatu bertsio berririk dagoen
+
+[Popup Menu]
+01=Etzana
+02=Lodia
+03=Azpimarra
+04=Ezarri margoa
+05=Kendu margo etiketak
+
+[Video preview hints]
+01=Irakurri/Pausatu (%s)
+02=Gelditu (%s)
+03=Aldatu irriskari zerrenda
+04=Jauzi aurreko azpidatzira
+05=Jauzi hurrengo azpidatzira
+06=Atzera (%s)
+07=Aurrera (%s)
+08=Aldatu irakurketa neurria
+09=Mugitu azpidatzia (%s)
+10=Ezarri hasiera denbora (%s)
+11=Ezarri amaiera denbora (%s)
+12=Hasi azpidatzia (%s)
+13=Amaitu azpidatzia (%s)
+14=Markatu lehen aldiberetze puntu bezala (%s)
+15=Markatu azken aldiberetze puntu bezala (%s)
+16=Gehitu azpidatzi/bideo aldiberetze puntua (%s)
+
+[Save as]
+01=Gorde honela
+02=Klik bikoitza irteera heuskarrian:
+03=Egile heuskarria
+04=Heuskarri denak
+
+[Custom formats]
+01=Egile heuskarriak
+02=Argibideak
+03=Izena:
+04=Luzapena:
+05=Lerro hizk. berria:
+06=Denbora
+07=Frame
+08=Egitura:
+09=FS-ko:
+10=Gertatu egitasmoa
+11=Gorde egitasmoa
+12=Gogoratu azken egile heuskarria
+13=Gorde!
+14=Egile heuskarri egitasmoa
+
+[Settings Form]
+01=Ezarpenak
+02=Aldatu programaren itxurapena
+; Atalak
+03=Orokorra
+04=Aurreratua
+05=Hizkikodeak
+06=Heuskarriak
+07=Agiri motak
+08=Gorde
+09=Bideo aurreikuspena
+10=Azpidatziak
+11=Kanpo aurreikuspena
+12=Irudia
+13=Programa
+14=Zerrenda
+15=Menua
+;-----------------;
+; General section ;
+;-----------------;
+16=Betik gainean
+17=Ahalbidetu lan bat baino gehiago ekinean
+18=Berretsi azpidatziak ezabatzerakoan
+19=Ulertu agiri baliogabeak idazki lau bezala
+20=Berez-bilatu filma
+21=Behartu denbora moduan lan egitea
+22=Gorde lerroen hurrentasuna idazkia alderantzterakoan
+23=Hautatu idazkia hurrengo lerrora jauzi egitean
+24=Hautatu idazkia aurreko lerrora jauzi egitean
+25=Elkarrekintzarik ez etiketekin
+26=Lan egin etiketa estiloekin
+27=Azken agiri muga:
+;----------;
+; Advanced ;
+;----------;
+28=Lerro zehazte adimentsua
+29=Bi lerro luzeagoa bada:
+30=hizkirri
+31=Aldatu hauste puntua
+32=Banandu lerroak
+33=Hautsi lerroa honen ondoren:
+34=Lerro zehazte adimentsua berezgaitasunez
+35=Gehienezko lerro luzera:
+36=Aldaketa denbora:
+37=segundumilaen
+; added in 2.52 
+92=HS-ko margotzea
+97=Add subtitle:
+98=Gap between subtitles:
+;----------;
+; Charsets ;
+;----------;
+38=Erakutsi era nagusian
+39=Jatorrizko hizki-kodea:
+40=Itzulpen hizki-kodea:
+;-----------------;
+; Formats section ;
+;-----------------;
+41=Berezko heuskarria:
+42="Gorde honela"-rako heuskarriak:
+43=Erakutsi egile heuskarriak
+44=Hautatu &denak
+45=Hautatu &huts
+;--------------------;
+; File types section ;
+;--------------------;
+46=Erregistratu luzapenak hasterakoan
+47=Elkartu azpidatzi luzapen sostengatuenekin
+;--------------;
+; Save section ;
+;--------------;
+48=Galdetu gordetzeko programatik irten/azpidatzia itxi
+49=Gorde lana berezgaitasunez
+50=minutu.
+51=Gorde babeskopia bezala
+52=Irteera ezarpenak...
+;---------------;
+; Video preview ;
+;---------------;
+53=Klik bikoitza azpidatzian:
+54=Segundu jauzi egiteko:
+55=Shift-klik bikoitza azpidatzian:
+56=Fokutu idaz kutxa
+57=Joan azpidatzi denborara bideoan
+58=Joan azpidatzia bideoan baino N segundu aurrerago
+59=Atzera eta aurrera denbora:
+60=segundu.
+61=Berezko irakurketa neurria aldatua:
+;-------------------------;
+; Video preview Subtitles ;
+;-------------------------;
+62=Marraztu hertza
+63=Marraztu itzala
+64=Saiatu barren gardena
+65=Behartu aldeak erabiliz (astiroa izan daiteke)
+66=Hizkia...
+67=Margoa...
+68=Barrena...
+69=Hertz zabalera:
+70=Itzal zabalera:
+71=LAGINA
+; added in 2.52
+94=Kokapena
+95=Ikus-leiho goian
+96=Ikus-leiho behean
+;--------------------------;
+; External Preview General ;
+;--------------------------;
+72=Ekin bideo irakurgailua:
+73=Atzeman elkartutako programa
+74=Galdetu bideoaz aldi bakoitzean
+75=Betik aztertu bideoarekin:
+;---------------------------;
+; External Preview Advanced ;
+;---------------------------;
+76=Gorde aldibaterako azpidatzia heuskarri honetan:
+77=Jatorrizko heuskarria
+78=Egile heuskarria:
+79=Bideo irakurgailuari bidaltzeko parametroa:
+80=VIDEO_FILE azpidatziak aztertzen ari zaren bideo agiria adierazten du. SUBT_FILE bideo irakurgailuari bidaliko zaion aldibaterako bideo agiri parametroa da. Beste parametro batzuk gehitu ditzakezu, adibidez ikusleiho-osoa, etab.
+;----------------;
+; Look / Program ;
+;----------------;
+81=Programan erabiltzeko hizkia:
+82=Hizki neurria:
+83="Idazki" eta "Itzulpen" eremu lerrokapena:
+84=Ezkerrean|Eskuinean|Erdian
+; added in 2.52
+93=Erakutsi margo barra
+;-------------;
+; Look / List ;
+;-------------;
+85=Erakusi sare lerroak
+86=Ezarri estiloa azpidatziei
+87=Markatu azpidatzi itzuligabea margo honekin:
+88=Erakutsi etzaneko irriskari-barra
+; added in 2.52 
+91=Itzuligabeko azpidatzientzako idazkia
+;-------------;
+; Look / Menu ;
+;-------------;
+89=Erabili Office XP estilo Menua
+90=Erabili gradiente menua
+
+[Output settings]
+01=Irteera ezarpenak
+02=Diska ID-a:
+03=DVD Izenburua:
+04=Hizkuntza:
+05=Egilea:
+06=Webgunea:
+07=Argibideak:
+08=Baimena:
+09=Azpidatzia:
+10=Barrena:
+11=LAGINA
+12=&Ezarri hizkia
+13=Lerrokapena:
+14=Ezkerrean
+15=Erdian
+16=Eskuinean
+17=Frameneurria:
+18=Moztu framea
+19=0 Margoa (barrena):
+20=1 Margoa (Hizkia):
+21=2 Margoa (ingurua):
+22=3 Margoa (lehundua):
+23=Margo paleta zenbk.:
+24=Zuribeltztasuna
+25=Izenburua:
+26=Eskripta:
+27=Kosmetikoak
+28=Besteak
+29=Hertz estiloa:
+30=Ingurua + moztu itzala
+31=Kutxa argikaitza
+32=Margoa
+33=Lehena:
+34=Bigarrena:
+35=Hirugarrena:
+36=Itzala:
+37=Ezker bazterra:
+38=Eskuin bazterra:
+39=Zutikako bazterra:
+40=Ingurua:
+41=Lerrokapena:
+42=Kodeaketa:
+43=Iturburua:
+44=Programa:
+45=Helburua:
+46=Atzerapena:
+47=CD Bidea:
+48=Aipamena:
+49=TMPlayer Heuskarria
+50=TMPlayer + Heuskarria
+51=TMPlayer Lerro-anitz Heuskarria
+
+[Duration limits]
+01=Iraupen mugak
+02=Ezarri gehienezko iraupena
+03=Segundumilaen
+04=Ezarri gutxieneko iraupena
+05=* Denbora handitzeak ez du gainjarpena eragingo
+
+[Set delay]
+01=Ezarri atzerapena
+02=Azpidatzi guztientzat
+03=Hautatutako azpidatzientzat
+
+[Adjust subtitles]
+01=Zehaztu azpidatziak
+02=Arrunta
+03=Aurreratua
+04=Lehen hitz lerroa:
+05=Azken hitz lerroa:
+06=Gertatu agiritik
+07=Gorde agirian
+08=Lerro zenbakia
+09=Denbora zaharra
+10=Denbora berria
+11=&Gehitu
+12=Gehitu &multimediatik
+13=&Kendu
+14=Denbora puntu mailatik kanpo badago:
+15=Estrapolatu
+16=Itzuli jatorrizko denborara (aldaketarik ez)
+17=Itzuli ondoko puntu aldaketara
+18=&Zehaztu!
+19=Sartu aldiberetze puntu berria
+20=Denbora zaharra:
+21=Denbora berria:
+
+[Time expander/reducer]
+01=Denbora luzatzailea/murriztzailea
+02=Handitu iraupena
+03=Gutxitu iraupena
+04=Handitu/gutxitu iraupena:
+05=Segundu
+06=Frame
+07=Azpidatzia hau baino luzeagoa bada bakarrik:
+09=hizkirriak
+10=Iraupena hau baino luzeagoa bada bakarrik:
+11=Iraupena hau baino laburragoa bada bakarrik:
+12=Sahiestu gainjarpena
+13=Azpidatzi guztientzat
+14=Hautatutako azpidatzientzat
+
+[Automatic durations]
+01=Berezgaitasunezko iraupenak
+02=Segundumilaen
+03=hizkirri bakoitzeko
+04=hitz bakoitzeko
+05=lerro bakoitzeko
+06=Ezarri iraupen berria betik
+07=Iraupen berria jatorrizkoa baino handiagoa bada bakarrik
+08=Iraupen berria jatorrizkoa baino txikiagoa bada bakarrik
+09=Azpidatzi guztiak
+10=Hautatutako azpidatziak bakarrik
+
+[Convert case]
+01=Bihurtu hizki larri-xehe
+02=Esaldi mota.
+03=Lehen hitzeko lehen hizkirria bakarrik
+04="..." atzematea
+05=hizki xeheak
+06=HIZKI LARRIAK
+07=Izenburu Mota
+08=aLDERANTZIZKO mOTA
+09=Azpidatzi guztiak
+10=Hautatutako azpidatziak bakarrik
+
+[Divide lines]
+01=Banandu lerroak
+02=Banandu lerro zenbk. honen ondoren:
+03=Erabili berezgaitasunezko iraupena
+04=Erakutsi:
+05=Ezkutatu:
+06=Iraupena:
+07=Jarraitu zuzenean
+08=%s hizkirri
+09=&Banandu!
+
+[Search & Replace]
+01=Bilatu eta Ordeztu
+02=Bilatu
+03=Bilatzeko idazkia:
+04=B&ilatu!
+05=Ordeztu honekin:
+06=Bilatu &hurrengoa
+07=&Ordeztu
+08=Ordeztu &denak
+09=&Gehiago >
+10=Gut&xiago <
+11=Hizki larri-xeheak
+12=Hitz osoa
+13=Heutsi larri-xehe ordezterakoan
+14=Bilatu idazkia hemen:
+15=Azpidatzi guztian
+16=Hautatutako gaitik
+17=Hizki-kodea:
+
+[Go to line]
+01=Joan lerro zenbakira
+02=Sartu lerro zenbakia:
+
+[Batch convert]
+01=Bihurketa handia
+02=Bihurtu agiri anitz heuskarri bakar batera urrats gutxitan.
+; Botoiak
+03=< &Atzera
+04=&Hurrengoa >
+05=&Bihurtu
+06=&Irten
+07=It&xi
+08=&Denak
+09=Bat ere &ez
+; 1 orrialdea
+10=Luzapenak:
+11=Bilatu helburua:
+12=Azpiagiritegiak barne
+13=Heuskarri hautapen sakona
+14=Irteera zuzenbidea:
+15=Irteera heuskarria:
+16=Berezko FS-ko:
+; Zerrenda zutabeak
+17=Agiri izena
+18=Heuskarria
+19=FS-ko
+20=Neurria
+; 2 orrialdea
+21=&Gehitu
+22=&Kendu
+23=Ga&rbitu
+; 3 orrialdea
+24=Egina! Ikusi oharra xehetasunetarako:
+25=Gorde...
+; Bilatzen
+26=%s agiria egiaztatzen
+
+[Batch convert log]
+01=%s %s - Bihurketa Handi Oharra
+02=%s sortua
+03=Irteera heuskarria: %s
+04=Bihurtzeko agiri guztira: %d
+05="%s"-ren gertaketa saiatzen...
+06=Agiria ongi gertatu da!
+07="%s" agiria jadanik badago, ordezten...
+08=Agiria ongi gorde da hemen: "%s"'
+09="%s" agiria jadanik badago eta ez duzu programa gaitu ordezteko
+10=Akatsa agiria gertatzerakoan, ezin da gorde!
+11=Bihurketa eginda guztira: %u
+12=Denbora guztira: %s
+13=Agiri guztiak ongi bihurtu dira
+14=Akatsak egon dira agiri batzuk bihurtzerakoan, ikusi azpiko xehetasunak
+
+[Split]
+01=Banandu azpidatzia...
+02=Arrunta
+03=Aurreratua
+04=Hautatutako gaia
+05=Gai zenbakia:
+06=Emaniko denbora:
+07=Emaniko framea:
+08=Bideo amaiera:
+09=Izenak
+10=%d atala:
+11=Agiri-Izena
+12=Luzera
+13=Lerroak
+14=Atal berdinak denboran
+15=Atal berdinak lerroetan
+16=Bideoen amaieran
+17=Atal zenbatekoa:
+18=Berez-izendatu atalak:
+19=Irteera zuzenbidea:
+20=Irteera heuskarria:
+21=Birkalkulatu denbora balioak
+22=Klik bikoitza filma hautatzeko
+23=&Banandu!
+
+[Join]
+01=Batu azpidatziak...
+02=Gehitu batzea nahi dituzun azpidatzi agiriak (hurrentasunez):
+03=Agiri izena
+04=Heuskarria
+05=FS-ko
+06=Neurria
+07=Filma zatia (Aukeran)
+08=&Gehitu
+09=&Kendu
+10=G&arbitu
+11=&Ezarri filma zatia
+12=Ga&rbitu filma zatia
+13=Irteera heuskarria:
+14=Irteera FS-ko:
+15=Gertatu agiria batu eta gorde ondoren
+16=Birkalkulatu denbora balioak
+17=&Batu!
+
+[Information and errors]
+01=Argibideak eta akatsak
+02=Egiaztatu!
+03=Zuzendu akatsak!
+04=&Ezarpenak
+05=Berretsi ezabapen bakoitza
+06=Azpidatzia
+07=Mota
+08=Azalpena
+; added in 2.52
+54=Jakinarazi agirira
+55=Jakinarazi agiriak
+56=Hautatu jakinarazpen agiri-izena
+;-------;
+; Types ;
+;-------;
+09=Akatsa
+10=Kontuz
+11=Argibideak
+13=Zuzenduta
+;----------------------;
+; Information messages ;
+;----------------------;
+14=Akats guztira: %d
+15=Akats zuzenduta: %d
+;---------------;
+; Error reports ;
+;---------------;
+16=Hizki gabeko lerroak ditu
+17=Azpidatzia hutsik
+18=Gainjarrita aurreko azpidatziarekin
+19=Balio okerra
+20=Iraupen luzeegia
+21=Iraupen laburregia
+22=Lerro luzeegia(k)
+23=Bi lerro baino gehiago
+24=Gorrentzako azpidatzia
+25=Idazkia du bi puntuen aurretik (":")
+26=Ezbeharrezko puntuak
+27=Hizki eragotzia du
+28=Hizkirri errepikatua
+29=Azpidatzi errepikatua
+30=OCR akatsa
+31=Azpidatzi lerro bat honekin hasten da "-"
+32=Ez dago tarterik egile hizkiaren ondoren
+33=Ez dago tarterik egile hizkiaren aurretik
+34=Ezbeharrezko tarteak
+35=Markatutako azpidatzia
+; added in 2.52
+57=HS-ko txikiegia
+58=HS-ko handiegia
+;-------------;
+; Fix reports ;
+;-------------;
+36=Hizki gabeko lerroa ezabatuta
+37=Azpidatzi hutsa ezabatuta
+38=Gainjarpena zuzenduta
+39=Balio okerrak zuzenduta
+40=Bi lerro baino gehiagoko azpidatzia zehaztuta
+41=Gorrentzako azpidatzia kenduta
+42=Gorrentzako azpidatzi zatiak kenduta
+43=Bi puntu  (":") aurreko idakia kenduta
+44=Ezbeharrezko puntuak kenduta
+45=Eragottzitako hizkia ezabatuta
+46=Errepikatutako hizkia zuzenduta
+47=Errepikatutako azpidatzia zuzenduta
+48=OCR akatsak zuzenduta
+49="-" duen azpidatzi lerroa ezabatuta
+50=Egile hizki ondorengo tartea gehituta
+51=Egile hizki aurreko tartea gehituta
+52=Ezbeharrezko tarteak kenduta
+;-----
+53=Klik-bikoitza lerrora jauzi egiteko era nagusian
+
+[Information and errors Settings]
+01=Ezarpenak
+02=Orokorra
+03=Aurreratua
+04=Egiaztatu
+05=Zuzendu
+06=Ezbeharrezko tarteak
+07=Erakutsi berrespenak era nagusian zuzenketan
+08=Markatu akatsak era nagusiaren zerrendan
+09=Ezarri margoa...
+10=Lodia
+11=Etzana
+12=Azpimarra
+13=Markatu akatsak azpidatzia gertatutakoan
+14=Zuzendu akatsak azpidatzia gertatutakoan
+15=Zuzendu bateko gainjarpena gertatutakoan
+16=OCR Eskripta:
+17=&Editatu
+18=Hizki errepikagarriak:
+19=Hizki eragotziak:
+20=Errep. azpidatziekiko jasangarritasuna:
+21=segundumilaen
+22=Tarte hizkien ondoren:
+23=Tarte hizkien aurretik:
+24=Iraupen luzeegia:
+25=Iraupen laburregia:
+26=Lerro luzeegia:
+27=Hizkirri
+;------
+28=Hizki gabeko lerroak
+29=Azpidatzi hutsak
+30=Azpidatzi gainjarpena
+31=Balio okerrak
+32=Iraupen luzeegiak
+33=Iraupen laburregiak
+34=Lerro luzeegiak
+35=Bi lerro baino gehiagoko azpidatziak
+36=Gorrentzako azpidatziak
+37=Idazkia bi puntuen aurretik (":")
+38=Idazkia hizki larritan bada bakarrik
+39=Ezbeharrezko puntuak
+40=Hizki eragotziak
+41=Hizki errepikatuak
+42=Azpidatzi errepikatuak
+43=OCR akatsak
+44="- " lerro bakarreko azpidatzietan
+45=Tarteak egile hizkien ondoren
+46=Tarteak egile hizkien aurretik
+47=Ezbeharrezko tarteak
+;------
+48=Egiaztatu:
+49=Zuzendu:
+50=Enterrak eta tarteak hasieran eta amaieran
+51=Tarteak enter artean (ezker eta eskuin)
+52=Tarte bikoitzak eta enterrak
+53=Tarteak puntuaketa marken aurrean
+54=Tarteak "z" eta "?" ondoren
+55=Tarteak "?" eta "!" aurretik
+56=Tarteak zenbaki artean
+; added in 2.52
+57=HS-ko hau baino txikiagoa:
+58=HS-ko hau baino hadiagoa edo berdina:
+59=HS-ko txikiegia
+60=HS-ko handiegia
+
+[Various information]
+01=Askotariko argibideak
+02=Argibideak
+03=Gehigarriak
+04=Jatorrizko agiria
+05=Itzulitako agiria
+06=Uneko heuskarria:
+07=Agiria:
+08=Neurria:
+09=Azpdatzi zenbatekoa guztira:
+10=Lerro zenbatekoa guztira:
+11=Hitz zenbatekoa guztira:
+12=Hizkirri zenbatekoa guztira:
+13=Lerro bakarreko azpidatziak:
+14=Bi lerroko azpidatziak:
+15=Bi lerro baino gehiagoko azpidatziak:
+16=Lerro luzeena:
+17=%d azpidatzian %d hizkirrikin
+18=Hizki neurri hoberena irakurketarako
+19=Bereizmen zabalera:
+20=AVI-tik
+21=Hizki izena:
+22=Lodia
+23=Etzana
+24=Kalkulatu
+; added in 2.52
+25=Iraupen luzeena:
+26=Iraupen laburrena:
+27=HS-ko handiena:
+28=HS-ko txikiena:
+29=%d azpidatzian
+
+[SAMI Language Extractor]
+01=SAMI Hizkuntza Ateratzailea
+02=SAMI agiria:
+03=Irteera zuzenbidea:
+04=Hautatutako hizkuntzak aterako dira:
+05=Kera
+06=Hizkuntza
+07=Berez atzeman guztiak
+08=Gehitu eskuz
+09=Atera!
+10=Gehitu hizkuntza
+11=Sartu nahi duzun hizkuntzaren kera izena:
+12=Mesedez itxaron...
+
+[About form]
+01=%s-ri buruz
+02=Argibideak
+03=Kreditoak
+04=Bertsioa: %s
+05=%s bertsioa: %s
+06=%d heuskarri ezberdin sostengatuta
+07=Software hau nahi baduzu, eskertuko genizuke donazio bat egitea. Klikatu hemen egiteko.
+08=Programatzailea:
+09=Progamatze gehigarria
+10=%s
+; Following line is "DirectShow programming"
+11=%s programaketa
+12=Itzultzaileak
+13=Beta aztertzaileak
+14=Berezko ikonoaren egilea
+15=Eguneraketetarako ikusi:
+; added in 2.52
+16=Subtitle Workshop argitaratu da
+17=GNU/GPL 3 baimenpean.
+
+[Error messages]
+01=Ezinezkoa azpidatzi API-a abiaraztea. Mesedez jeitsi "%s" DLL-a %s-tik eta kopiatu ezazu "%s" zuzenbidean.
+02=Hurrengo akatsa (%s) objetu honetatik eratorria da: %s (%s):||"%s"||Mesedez idatzi hona %s akatsa gertatu denean zer egiten ari zinen azalduz.||Sakatu Ongi jarraitzeko, eta Ezeztatu programatik irteteko.
+03="%s" agiria azpidatzi gaitza da edo heuskarri sostengatu bat.
+04="%s" agiria ez da %s heuskarrikoa edo ez da baliozko azpidatzi agiri bat.
+05="%s" ez da baliozko bideo agiri bat.
+06=Lerro zenbakia ez da baliozkoa.
+07=Hautatu gutxienez luzapen bat bilaketarako.
+08=Bilaketa helburua ez dago.
+09=Gai zenbakia ez da baliozko gai bat.
+10=Mesedez gehitu bi azpidatzi edo gehiago.
+11=Hutesgitea zerbitzariarekin elkarketatzerakoan!
+12=Ezinezkoa irakurtzeko-bakarrik ezaugarria kentzea hemendik: "%s".||Badaiteke idaz-aurkako babesa izatea.
+13=Akatsa Microsoft Word-ekin elkarketatzen saiatzerakoan!
+14=Hautatu bideoa(k) lehen atalerako lehenik!
+15=Hautatu irteera zuzenbide baliozko bat.
+16=Hautatu gutxienez ateratzeko hizkuntza bat.
+17="%s" ez da baliozko SAMI agiri bat.
+18=Hautatu azpidatzi atala zerrendan.
+19=Filma zati bat hautatzen baduzu azpidatzi atal baterako, filma zati bat hautatu behar duzu azpidatzi atal guztientzat (azken atala izan ezik noski).
+20=Bi puntu edo gehiago behar dituzu.
+
+[Question messages]
+01="%s" agira aldatu egin da.||Aldaketak gordetzea nahi dituzu?
+02="%s" agiria jadanik badago.||Ordeztea nahi duzu?
+03=("%s") jatorrizko agiria aldatu egin da.||Aldaketak gordetzea nahi dituzu?
+04=("%s") itzulitako agiria aldatu egin da.||Aldaketak gordetzea nahi dituzu?
+05=Hautatutako azpidatzia ezabatua izatear dago.||Jarraitzea nahi duzu?
+06=1 Puntuko Azpidatzia:: %s|2 Puntuko Filma: %s||2 Puntuko Azpidatzia: %s|2 Puntuko Filma: %s||Aldiberetu azpidatzia?
+07=Bideo irakurgailuaren exe ez da adierazi edo ez dago.||Kanpoko irakurgailua itxuratzea nahi duzu?.
+08=Bertsio berri bat aurkitu da!||Aldaketa zerrenda ikustea nahi duzu?
+09=Gordetzen saiatzen ari zaren agiria irakurtzeko-bakarri da.||Saiatu gordetzen horrela ere?
+
+[Information messages]
+01=Ezinezkoa "%s"-ren lan gehiago aurkitzea.
+02=Ez dago bertsio berririk eskuragarri.
+03=Idaz egiaztapena amaituta.||%d aldaketa egin dira.
+04=Atal gehiegi. Berrezartzen...
+05=Hizkuntza bakar bat aurkitu da.||Agiriak hizkuntza gehiago baditu, gehitu nahi dituzunak eskuz agiria idaz editatzaile batean irekiz eta kera izen zuzena bilatuz.
+06=Ezinezkoa "STYLE" kokatzea hasi eta/edo itxi etiketa!||Zihurrenik zergaiti honegaitik, agiri honek ez du hizkuntza bat baino gehiago.|Horrela bada, saiatu eskuz gehitzen nahi duzun hizkuntzaren kera izena bilatuz.
+07=Hizki neurri egokiena irakurketarako: %d
+08=Ordezte guztira: %d
+09=Agiri izena: %s|Neurria: %s|FS-ko: %s|Iraupena: %s|Frame guztira: %d|Bereizmena: %dx%d|FourCC: %s
+10=Filmaren jario batzuk ezin dira zuzen aurkeztu. |Zihurrenik ez dago audio edo bideo kodekik.|Akats kodea: %s
+11=Ez da beharrezkoa azken azpidatziari dagokion filma zatia ezartzeko.
+; added in 2.52
+12=Ustekabeko akatsa gertatu da:|"%s"
+
+[Information and errors messages]
+01=%d azpidatzi zenbakia azpidatzi hutsa da eta ezabatua izatear dago.||Jarraitzea nahi duzu?
+02=%d azpidatzi zenbakia:||"%s" hizki eragotzia da eta ezabatua izatear dago.||Jarraitzea nahi duzu?
+03=%d azpidatzi zenbakia:||"%s" ezabatua izatear dago.||Jarraitzea nahi duzu?
+04=%d azpidatzi zenbaki atala:||"%s" ezabatua izatear dago, hortaz azpidatzia izango da:||"%s"||Jarraitzea nahi duzu?
+05=%d azpidatzi zenbakia:||"%s" lerro-bakarreko azpidatzia da eta "-"z hasten da.||Nahi duzu "-" ezabatzea hasieran?
+
+; added in 2.52
+[Audio streams]
+01=Audio jario anitz atzeman dira.
+02=Mesedez hautatu lanerako audioa.
+03=Ongi

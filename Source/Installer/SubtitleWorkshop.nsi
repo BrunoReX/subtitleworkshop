@@ -1,5 +1,5 @@
 ;-------------------------------------------------------------;
-;               URUSoft Subtitle Workshop 2.51                ;
+;               URUSoft Subtitle Workshop 2.52                ;
 ;                   Installer Script File                     ;
 ;-------------------------------------------------------------;
 
@@ -8,18 +8,20 @@
 !define PRODUCT_SHORTNAME "SubtitleWorkshop"
 !define PRODUCT_EXENAME "subtitleworkshop.exe"
 !define VER_MAJOR 2
-!define VER_MINOR 51
+!define VER_MINOR 52
 !define VERSION "${VER_MAJOR}.${VER_MINOR}"
-!define WEBSITE "http://www.urusoft.net/"
+!define WEBSITE "http://sw.binhoster.com"
 Name "${PRODUCT}"
 
 ; Various settings
-SetCompressor lzma
+SetCompressor /SOLID lzma
 BrandingText "Subtitle Workshop ${VER_MAJOR}.${VER_MINOR}"
 SetOverwrite on
 !include "${NSISDIR}\Contrib\Modern UI\System.nsh"
-!include "Sections.nsh"
+!define LOGICLIB_SECTIONCMP
 !include "LogicLib.nsh"
+!include "Sections.nsh"
+
 !define MUI_ABORTWARNING
 !define MUI_UNINSTALLER
 !define MUI_UNCONFIRMPAGE
@@ -27,17 +29,17 @@ SetOverwrite on
 ; Cosmetic settings
 !define MUI_UI "Res\usmodern.exe"
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "Res\usmodern-header2.bmp"
+!define MUI_HEADERIMAGE_BITMAP "Res\usmodern-header2+Bdzl.bmp"
 !define MUI_HEADERIMAGE_RIGHT
 Icon "Res\my-install.ico"
 UninstallIcon "Res\my-uninstall.ico"
 
 ; Path to files & installer output
-!define FILESPATH "G:\URUSoft\Programs\Subtitle Workshop\${VER_MAJOR}.${VER_MINOR}\Bin"
-!define LICENSEPATH "G:\URUSoft\Programs"
+!define FILESPATH "c:\Backa\Projects\Subtitle_Workshop_252_releases\${VER_MAJOR}.${VER_MINOR}"
+!define LICENSEPATH "c:\Backa\Projects\Subtitle_Workshop_252_releases\${VER_MAJOR}.${VER_MINOR}"
 OutFile "${PRODUCT_SHORTNAME}${VER_MAJOR}${VER_MINOR}.exe"
 
-!define MUI_FINISHPAGE_LINK "http://www.urusoft.net"
+!define MUI_FINISHPAGE_LINK "http://sw.binhoster.com"
 !define MUI_FINISHPAGE_LINK_LOCATION ${WEBSITE}
 
 ; Path to EXE, to display in the finish page after successful instalation
@@ -57,60 +59,54 @@ OutFile "${PRODUCT_SHORTNAME}${VER_MAJOR}${VER_MINOR}.exe"
 
 ; Installer language files
 !insertmacro MUI_LANGUAGE "English"
-!insertmacro MUI_LANGUAGE "Spanish"
+!insertmacro MUI_LANGUAGE "Russian"
 
 ; License file
-LicenseLangString urusoftlicense ${LANG_ENGLISH} "${LICENSEPATH}\License.txt"
-LicenseLangString urusoftlicense ${LANG_SPANISH} "${LICENSEPATH}\Licencia.txt"
+LicenseLangString urusoftlicense ${LANG_ENGLISH} "${LICENSEPATH}\License_gpl-3.0_ENG.txt"
+LicenseLangString urusoftlicense ${LANG_RUSSIAN} "${LICENSEPATH}\License_gpl-3.0_RUS.txt"
 
 ; Language strings for component-selection page - Titles
 LangString TITLE_MainFiles ${LANG_ENGLISH} "Main files"
-LangString TITLE_MainFiles ${LANG_SPANISH} "Archivos principales"
+LangString TITLE_MainFiles ${LANG_RUSSIAN} "Основные файлы"
 LangString TITLE_Manual ${LANG_ENGLISH} "Manual"
-LangString TITLE_Manual ${LANG_SPANISH} "Manual"
+LangString TITLE_Manual ${LANG_RUSSIAN} "Руководство пользователя"
 LangString TITLE_CustomFormats ${LANG_ENGLISH} "Custom formats"
-LangString TITLE_CustomFormats ${LANG_SPANISH} "Formatos personalizados"
+LangString TITLE_CustomFormats ${LANG_RUSSIAN} "Пользовательские форматы"
 LangString TITLE_LangFiles ${LANG_ENGLISH} "Language files"
-LangString TITLE_LangFiles ${LANG_SPANISH} "Archivos de lenguaje"
+LangString TITLE_LangFiles ${LANG_RUSSIAN} "Файлы языков"
 LangString TITLE_ShortCuts ${LANG_ENGLISH} "Shortcuts"
-LangString TITLE_ShortCuts ${LANG_SPANISH} "Accesos directos"
+LangString TITLE_ShortCuts ${LANG_RUSSIAN} "Ярлыки"
 LangString TITLE_StartMenuShortCuts ${LANG_ENGLISH} "Start menu"
-LangString TITLE_StartMenuShortCuts ${LANG_SPANISH} "Menъ inicio"
+LangString TITLE_StartMenuShortCuts ${LANG_RUSSIAN} "Меню пуск"
 LangString TITLE_DesktopShortCuts ${LANG_ENGLISH} "Desktop"
-LangString TITLE_DesktopShortCuts ${LANG_SPANISH} "Escritorio"
+LangString TITLE_DesktopShortCuts ${LANG_RUSSIAN} "Рабочий стол"
 LangString TITLE_QuickLaunchShortCuts ${LANG_ENGLISH} "Quick launch"
-LangString TITLE_QuickLaunchShortCuts ${LANG_SPANISH} "Barra de inicio rбpido"
+LangString TITLE_QuickLaunchShortCuts ${LANG_RUSSIAN} "Быстрый запуск"
 
 ; Language strings for component-selection page - Descriptions
 LangString DESC_MainFiles ${LANG_ENGLISH} "Copy the ${PRODUCT}'s main files into the desired folder."
-LangString DESC_MainFiles ${LANG_SPANISH} "Copia los archivos principales de ${PRODUCT} a la carpeta deseada."
+LangString DESC_MainFiles ${LANG_RUSSIAN} "Копировать основные файлы ${PRODUCT} в выбранную папку."
 LangString DESC_Manual ${LANG_ENGLISH} "Installs the manual in all available translations."
-LangString DESC_Manual ${LANG_SPANISH} "Instala el manual en todas las traducciones disponibles."
+LangString DESC_Manual ${LANG_RUSSIAN} "Установить руководство пользователя на всех доступных языках."
 LangString DESC_CustomFormats ${LANG_ENGLISH} "Copies the custom format examples."
-LangString DESC_CustomFormats ${LANG_SPANISH} "Copia los ejemplos de formatos personalizados."
+LangString DESC_CustomFormats ${LANG_RUSSIAN} "Копирование примеров пользовательских форматов файлов."
 LangString DESC_LangFiles ${LANG_ENGLISH} "Installs the additional language files pack."
-LangString DESC_LangFiles ${LANG_SPANISH} "Instala el pack adicional de archivos de lenguaje."
+LangString DESC_LangFiles ${LANG_RUSSIAN} "Установка дополнительных файлов языков."
 LangString DESC_ShortCuts ${LANG_ENGLISH} "Creates additional shortcuts."
-LangString DESC_ShortCuts ${LANG_SPANISH} "Crea accesos directos adicionales."
+LangString DESC_ShortCuts ${LANG_RUSSIAN} "Создание дополнительных ярлыков."
 LangString DESC_StartMenuShortCuts ${LANG_ENGLISH} "Creates shortcuts in the start menu."
-LangString DESC_StartMenuShortCuts ${LANG_SPANISH} "Crea accesos directos en el menъ inicio."
+LangString DESC_StartMenuShortCuts ${LANG_RUSSIAN} "Создание ярлыков в меню пуск."
 LangString DESC_DesktopShortCuts ${LANG_ENGLISH} "Creates shortcuts in the desktop."
-LangString DESC_DesktopShortCuts ${LANG_SPANISH} "Crea accesos directos en el escritorio."
+LangString DESC_DesktopShortCuts ${LANG_RUSSIAN} "Создание ярлыков на рабочем столе."
 LangString DESC_QuickLaunchShortCuts ${LANG_ENGLISH} "Creates shortcuts in the quick launch."
-LangString DESC_QuickLaunchShortCuts ${LANG_SPANISH} "Crea accesos directos en la barra de inicio rбpido."
+LangString DESC_QuickLaunchShortCuts ${LANG_RUSSIAN} "Создание ярлыков в меню быстрого запуска."
 
 ; Translations of the manual
 LangString TITLE_ManualEnglish ${LANG_ENGLISH} "English"
-LangString TITLE_ManualSpanish ${LANG_ENGLISH} "Spanish"
-LangString TITLE_ManualBulgarian ${LANG_ENGLISH} "Bulgarian"
-;LangString TITLE_ManualFrench ${LANG_ENGLISH} "French"
 LangString TITLE_ManualRussian ${LANG_ENGLISH} "Russian"
 
-LangString TITLE_ManualEnglish ${LANG_SPANISH} "Inglйs"
-LangString TITLE_ManualSpanish ${LANG_SPANISH} "Espaсol"
-LangString TITLE_ManualBulgarian ${LANG_SPANISH} "Bъlgaro"
-;LangString TITLE_ManualFrench ${LANG_SPANISH} "Francйs"
-LangString TITLE_ManualRussian ${LANG_SPANISH} "Ruso"
+LangString TITLE_ManualEnglish ${LANG_RUSSIAN} "Английский"
+LangString TITLE_ManualRussian ${LANG_RUSSIAN} "Русский"
 
 ; Folder-selection page
 InstallDir "$PROGRAMFILES\URUSoft\${PRODUCT}"
@@ -125,7 +121,6 @@ Section $(TITLE_MainFiles) MainFiles
   SetOutPath $INSTDIR
     File "${FILESPATH}\${PRODUCT_EXENAME}"
     File "${FILESPATH}\shortcuts.key"
-    File "${FILESPATH}\FPS.ini"
   SetOutPath $INSTDIR\SubtitleAPI
     File "${FILESPATH}\SubtitleAPI\SubtitleAPI.dll"
   SetOutPath $INSTDIR\OCRScripts
@@ -149,22 +144,6 @@ SubSection $(TITLE_Manual) Manual
     SetOutPath $INSTDIR\Help
     File "${FILESPATH}\Help\Manual.html"
   SectionEnd
-
-  Section $(TITLE_ManualSpanish) ManualSpanish
-    SetOutPath $INSTDIR\Help
-    File "${FILESPATH}\Help\ManualSPA.html"
-  SectionEnd
-
-  Section $(TITLE_ManualBulgarian) ManualBulgarian
-    SetOutPath $INSTDIR\Help
-    File "${FILESPATH}\Help\ManualBG.html"
-  SectionEnd
-
-/*  Section $(TITLE_ManualFrench) ManualFrench
-    SetOutPath $INSTDIR\Help
-    File "${FILESPATH}\Help\ManualFR.html"
-  SectionEnd
-*/
 
   Section $(TITLE_ManualRussian) ManualRussian
     SetOutPath $INSTDIR\Help
@@ -198,19 +177,10 @@ SubSection $(TITLE_ShortCuts) ShortCuts
     CreateDirectory "$SMPROGRAMS\URUSoft\${PRODUCT}\Help"
 
     ${If} ${SectionIsSelected} ${ManualEnglish}
-        CreateShortCut "$SMPROGRAMS\URUSoft\${PRODUCT}\Help\Manual (English).lnk" "$INSTDIR\Manual\Manual.html" "" "$INSTDIR\Manual\Manual.html" 0
+        CreateShortCut "$SMPROGRAMS\URUSoft\${PRODUCT}\Help\Manual (English).lnk" "$INSTDIR\Help\Manual.html" "" "$INSTDIR\Help\Manual.html" 0
     ${EndIf}
-    ${If} ${SectionIsSelected} ${ManualSpanish}
-      CreateShortCut "$SMPROGRAMS\URUSoft\${PRODUCT}\Help\Manual (Espaсol).lnk" "$INSTDIR\Manual\ManualSPA.html" "" "$INSTDIR\Manual\ManualSPA.html" 0
-    ${EndIf}
-    ${If} ${SectionIsSelected} ${ManualBulgarian}
-      CreateShortCut "$SMPROGRAMS\URUSoft\${PRODUCT}\Help\Manual (Bulgarian).lnk" "$INSTDIR\Manual\ManualBG.html" "" "$INSTDIR\Manual\ManualBG.html" 0
-    ${EndIf}
-    ;${If} ${SectionIsSelected} ${ManualFrench}
-      ;CreateShortCut "$SMPROGRAMS\URUSoft\${PRODUCT}\Help\Manual (French).lnk" "$INSTDIR\Manual\ManualFR.html" "" "$INSTDIR\Manual\ManualFR.html" 0
-    ;${EndIf}
     ${If} ${SectionIsSelected} ${ManualRussian}
-      CreateShortCut "$SMPROGRAMS\URUSoft\${PRODUCT}\Help\Manual (Russian).lnk" "$INSTDIR\Manual\ManualRUS.html" "" "$INSTDIR\Manual\ManualRUS.html" 0
+      CreateShortCut "$SMPROGRAMS\URUSoft\${PRODUCT}\Help\Manual (Russian).lnk" "$INSTDIR\Help\ManualRUS.html" "" "$INSTDIR\Help\ManualRUS.html" 0
     ${EndIf}
 
     CreateShortCut "$SMPROGRAMS\URUSoft\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT_EXENAME}" "" "$INSTDIR\${PRODUCT_EXENAME}" 0
@@ -279,7 +249,7 @@ Section "Uninstall"
   Delete "$DESKTOP\${PRODUCT}.lnk"
   Delete "$QUICKLAUNCH\${PRODUCT}.lnk"
   RMDir  "$INSTDIR"
-  RMDir  "$SMPROGRAMS\URUSoft"
+  RMDir  "$SMPROGRAMS\URUSoft\"
 
 SectionEnd
 

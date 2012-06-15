@@ -1,0 +1,64 @@
+Adobe Encore DVD
+Advanced SubStation Alpha
+Advanced Subtitles
+AQTitle
+Captions 32
+Captions DAT
+Captions DAT Text
+Captions Inc.
+Cavena
+Cheetah
+CPC-600
+DKS Subtitle Format
+DVD Junior
+DVD Subtitle System
+DVDSubtitle
+FAB Subtitler
+I-Author Script
+Inscriber CG
+JACOSub 2.7+
+Karaoke Lyrics LRC
+Karaoke Lyrics VKT
+MAC DVD Studio Pro
+MacSUB
+MicroDVD
+MPlayer
+MPlayer2
+MPSub
+OVR Script
+Panimator
+Philips SVCD Designer 1.5-2.0
+Phoenix Japanimation Society
+Pinnacle Impression
+PowerDivX
+PowerPixel
+QuickTime Text
+RealTime
+SAMI Captioning
+Sasami Script
+SBT
+Scantitle
+Sofni
+Softitler RTF
+SonicDVD Creator
+Sonic Scenarist
+Spruce DVDMaestro
+Spruce Subtitle File
+Stream SubText Player
+Stream SubText Script
+SubCreator 1.x
+SubRip
+SubSonic
+SubStation Alpha
+SubViewer 1.0
+SubViewer 2.0
+Timed Text
+Titlevision ANSI with cues
+TMPlayer
+Turbo Titler
+Ulead DVD Workshop 2.0
+Ulead DVD Workshop 2.0 a
+ViPlay Subtitle File
+Wincaps text timecoded
+Youtube
+ZeroG

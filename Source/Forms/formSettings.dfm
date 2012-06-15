@@ -1,11 +1,11 @@
 object frmSettings: TfrmSettings
-  Left = 192
-  Top = 104
+  Left = 395
+  Top = 182
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'frmSettings'
   ClientHeight = 404
-  ClientWidth = 523
+  ClientWidth = 552
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -16,24 +16,24 @@ object frmSettings: TfrmSettings
   Position = poScreenCenter
   OnCreate = FormCreate
   DesignSize = (
-    523
+    552
     404)
   PixelsPerInch = 96
   TextHeight = 13
   object bvlSeparate1: TBevel
     Left = 8
     Top = 355
-    Width = 523
+    Width = 552
     Height = 9
     Anchors = [akLeft, akRight, akBottom]
     Shape = bsBottomLine
   end
   object pgeCtrl: TPageControl
-    Left = 200
-    Top = 64
-    Width = 321
-    Height = 297
-    ActivePage = pgeGeneral
+    Left = 185
+    Top = 52
+    Width = 365
+    Height = 309
+    ActivePage = pgeVideoPreview
     Style = tsButtons
     TabOrder = 4
     object pgeGeneral: TTabSheet
@@ -42,9 +42,16 @@ object frmSettings: TfrmSettings
       object bvlSeparate2: TBevel
         Left = 0
         Top = 152
-        Width = 305
+        Width = 357
         Height = 9
         Shape = bsTopLine
+      end
+      object lblDoubleClickBox: TLabel
+        Left = 0
+        Top = 252
+        Width = 187
+        Height = 13
+        Caption = 'Double click on Original/Translation box'
       end
       object chkAlwaysOnTop: TCheckBox
         Left = 0
@@ -155,21 +162,51 @@ object frmSettings: TfrmSettings
         Caption = 'No interaction with tags'
         TabOrder = 12
       end
+      object cmbDoubleClickBox: TComboBox
+        Left = 0
+        Top = 268
+        Width = 357
+        Height = 21
+        Style = csDropDownList
+        ItemHeight = 0
+        TabOrder = 13
+      end
     end
     object pgeAdvanced: TTabSheet
       Caption = 'pgeAdvanced'
       ImageIndex = 12
       TabVisible = False
       object lblCharacters3: TLabel
-        Left = 62
-        Top = 220
+        Left = 270
+        Top = 28
         Width = 51
         Height = 13
         Caption = 'characters'
       end
       object lblMilliseconds: TLabel
-        Left = 70
-        Top = 268
+        Left = 270
+        Top = 76
+        Width = 55
+        Height = 13
+        Caption = 'milliseconds'
+      end
+      object lblCPScoloring: TLabel
+        Left = 0
+        Top = 260
+        Width = 59
+        Height = 13
+        Caption = 'CPS coloring'
+      end
+      object lblMilliseconds2: TLabel
+        Left = 270
+        Top = 121
+        Width = 55
+        Height = 13
+        Caption = 'milliseconds'
+      end
+      object lblMilliseconds3: TLabel
+        Left = 270
+        Top = 169
         Width = 55
         Height = 13
         Caption = 'milliseconds'
@@ -177,21 +214,21 @@ object frmSettings: TfrmSettings
       object gbSmartLineAdjust: TGroupBox
         Left = 0
         Top = 0
-        Width = 313
+        Width = 210
         Height = 89
         Caption = 'Smart line adjust'
         TabOrder = 0
         object lblCharacters1: TLabel
-          Left = 78
+          Left = 54
           Top = 44
           Width = 51
           Height = 13
           Caption = 'characters'
         end
         object edtTwoLinesIfLongerThan: TLabeledEdit
-          Left = 16
+          Left = 8
           Top = 36
-          Width = 41
+          Width = 25
           Height = 21
           EditLabel.Width = 115
           EditLabel.Height = 13
@@ -200,7 +237,7 @@ object frmSettings: TfrmSettings
           Text = '40'
         end
         object udTwoLinesIfLongerThan: TUpDown
-          Left = 57
+          Left = 33
           Top = 36
           Width = 15
           Height = 21
@@ -211,9 +248,9 @@ object frmSettings: TfrmSettings
           TabOrder = 1
         end
         object chkToggleBreakPoint: TCheckBox
-          Left = 16
+          Left = 8
           Top = 64
-          Width = 281
+          Width = 200
           Height = 17
           Caption = 'Toggle breakpoint'
           TabOrder = 2
@@ -222,21 +259,21 @@ object frmSettings: TfrmSettings
       object gbDivideLines: TGroupBox
         Left = 0
         Top = 96
-        Width = 313
+        Width = 210
         Height = 89
         Caption = 'Divide lines'
         TabOrder = 1
         object lblCharacters2: TLabel
-          Left = 78
+          Left = 54
           Top = 44
           Width = 51
           Height = 13
           Caption = 'characters'
         end
         object edtBreakLineAfter: TLabeledEdit
-          Left = 16
+          Left = 8
           Top = 36
-          Width = 41
+          Width = 25
           Height = 21
           EditLabel.Width = 77
           EditLabel.Height = 13
@@ -245,7 +282,7 @@ object frmSettings: TfrmSettings
           Text = '40'
         end
         object udBreakLineAfter: TUpDown
-          Left = 57
+          Left = 33
           Top = 36
           Width = 15
           Height = 21
@@ -256,18 +293,18 @@ object frmSettings: TfrmSettings
           TabOrder = 1
         end
         object chkSLAAutomatically: TCheckBox
-          Left = 16
+          Left = 8
           Top = 64
-          Width = 289
+          Width = 200
           Height = 17
           Caption = 'Smart line adjust automatically'
           TabOrder = 2
         end
       end
       object edtMaxLineLength: TLabeledEdit
-        Left = 0
-        Top = 212
-        Width = 41
+        Left = 216
+        Top = 20
+        Width = 33
         Height = 21
         EditLabel.Width = 100
         EditLabel.Height = 13
@@ -276,8 +313,8 @@ object frmSettings: TfrmSettings
         Text = '45'
       end
       object udMaxLineLength: TUpDown
-        Left = 41
-        Top = 212
+        Left = 249
+        Top = 20
         Width = 15
         Height = 21
         Associate = edtMaxLineLength
@@ -287,9 +324,9 @@ object frmSettings: TfrmSettings
         TabOrder = 3
       end
       object edtShiftTime: TLabeledEdit
-        Left = 0
-        Top = 260
-        Width = 49
+        Left = 216
+        Top = 68
+        Width = 33
         Height = 21
         EditLabel.Width = 49
         EditLabel.Height = 13
@@ -298,8 +335,8 @@ object frmSettings: TfrmSettings
         Text = '100'
       end
       object udShiftTime: TUpDown
-        Left = 49
-        Top = 260
+        Left = 249
+        Top = 68
         Width = 16
         Height = 21
         Associate = edtShiftTime
@@ -309,6 +346,187 @@ object frmSettings: TfrmSettings
         Position = 100
         TabOrder = 5
         Thousands = False
+      end
+      object edCPSrange1: TIntegerEdit
+        Left = 24
+        Top = 276
+        Width = 24
+        Height = 21
+        Alignment = taRightJustify
+        ColorNormal = clBlack
+        ColorWarning = clRed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        FormatString = '%d'
+        ParentFont = False
+        TabOrder = 6
+        Validate = False
+        MaxValue = 90
+        MinValue = 1
+        Value = 8
+      end
+      object edCPSrange2: TIntegerEdit
+        Left = 90
+        Top = 276
+        Width = 24
+        Height = 21
+        Alignment = taRightJustify
+        ColorNormal = clBlack
+        ColorWarning = clRed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        FormatString = '%d'
+        ParentFont = False
+        TabOrder = 7
+        Validate = False
+        MaxValue = 91
+        MinValue = 2
+        Value = 18
+      end
+      object edCPSrange3: TIntegerEdit
+        Left = 156
+        Top = 276
+        Width = 24
+        Height = 21
+        Alignment = taRightJustify
+        ColorNormal = clBlack
+        ColorWarning = clRed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        FormatString = '%d'
+        ParentFont = False
+        TabOrder = 8
+        Validate = False
+        MaxValue = 92
+        MinValue = 3
+        Value = 24
+      end
+      object udCPSrange1: TUpDown
+        Left = 48
+        Top = 276
+        Width = 15
+        Height = 21
+        Associate = edCPSrange1
+        Min = 1
+        Max = 91
+        Position = 8
+        TabOrder = 9
+      end
+      object udCPSrange2: TUpDown
+        Left = 114
+        Top = 276
+        Width = 15
+        Height = 21
+        Associate = edCPSrange2
+        Min = 2
+        Max = 92
+        Position = 18
+        TabOrder = 10
+      end
+      object udCPSrange3: TUpDown
+        Left = 180
+        Top = 276
+        Width = 15
+        Height = 21
+        Associate = edCPSrange3
+        Min = 3
+        Max = 93
+        Position = 24
+        TabOrder = 11
+      end
+      object pnlCPSrange1: TPanel
+        Left = 0
+        Top = 276
+        Width = 21
+        Height = 21
+        Cursor = crHandPoint
+        Color = clBlue
+        TabOrder = 12
+        OnClick = pnlCPSrange1Click
+      end
+      object pnlCPSrange2: TPanel
+        Left = 66
+        Top = 276
+        Width = 21
+        Height = 21
+        Cursor = crHandPoint
+        Color = clBlack
+        TabOrder = 13
+        OnClick = pnlCPSrange2Click
+      end
+      object pnlCPSrange3: TPanel
+        Left = 132
+        Top = 276
+        Width = 21
+        Height = 21
+        Cursor = crHandPoint
+        Color = clOlive
+        TabOrder = 14
+        OnClick = pnlCPSrange3Click
+      end
+      object pnlCPSrange4: TPanel
+        Left = 198
+        Top = 276
+        Width = 21
+        Height = 21
+        Cursor = crHandPoint
+        Color = clRed
+        TabOrder = 15
+        OnClick = pnlCPSrange4Click
+      end
+      object edtNewSubDuration: TLabeledEdit
+        Left = 216
+        Top = 116
+        Width = 33
+        Height = 21
+        EditLabel.Width = 61
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Add subtitle:'
+        TabOrder = 16
+        Text = '1500'
+      end
+      object udNewSubDuration: TUpDown
+        Left = 249
+        Top = 116
+        Width = 16
+        Height = 21
+        Associate = edtNewSubDuration
+        Min = 100
+        Max = 9000
+        Position = 1500
+        TabOrder = 17
+        Thousands = False
+      end
+      object edtGapBetweenSubs: TLabeledEdit
+        Left = 216
+        Top = 164
+        Width = 33
+        Height = 21
+        EditLabel.Width = 111
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Gap between subtitles:'
+        TabOrder = 18
+        Text = '300'
+      end
+      object udGapBetweenSubs: TUpDown
+        Left = 249
+        Top = 164
+        Width = 15
+        Height = 21
+        Associate = edtGapBetweenSubs
+        Min = 1
+        Max = 5000
+        Position = 300
+        TabOrder = 19
       end
     end
     object pgeCharsets: TTabSheet
@@ -386,22 +604,23 @@ object frmSettings: TfrmSettings
       object chkLstFormatsToShow: TCheckListBox
         Left = 0
         Top = 64
-        Width = 305
-        Height = 169
+        Width = 353
+        Height = 177
+        Columns = 2
         ItemHeight = 13
         TabOrder = 1
       end
       object chkShowCustomFormats: TCheckBox
         Left = 0
-        Top = 268
+        Top = 280
         Width = 305
         Height = 17
         Caption = 'Show custom formats'
         TabOrder = 2
       end
       object btnSelectAllFormat: TButton
-        Left = 96
-        Top = 236
+        Left = 144
+        Top = 248
         Width = 105
         Height = 25
         Caption = 'Select &all'
@@ -409,8 +628,8 @@ object frmSettings: TfrmSettings
         OnClick = btnSelectAllFormatClick
       end
       object btnSelectZeroFormat: TButton
-        Left = 200
-        Top = 236
+        Left = 248
+        Top = 248
         Width = 105
         Height = 25
         Caption = 'Select &zero'
@@ -423,9 +642,9 @@ object frmSettings: TfrmSettings
       ImageIndex = 2
       TabVisible = False
       object chkRegExtOnStart: TCheckBox
-        Left = 0
-        Top = 0
-        Width = 305
+        Left = 4
+        Top = 4
+        Width = 349
         Height = 17
         Caption = 'Register extensions on start'
         TabOrder = 0
@@ -433,9 +652,9 @@ object frmSettings: TfrmSettings
         OnMouseUp = chkRegExtOnStartMouseUp
       end
       object chkAssociateExtensions: TCheckBox
-        Left = 0
-        Top = 16
-        Width = 305
+        Left = 4
+        Top = 28
+        Width = 349
         Height = 17
         Caption = 'Associate with most supported subtitle extensions'
         TabOrder = 1
@@ -444,31 +663,32 @@ object frmSettings: TfrmSettings
         OnMouseUp = chkRegExtOnStartMouseUp
       end
       object chklstExtensions: TCheckListBox
-        Left = 0
-        Top = 40
-        Width = 305
-        Height = 217
+        Left = 4
+        Top = 56
+        Width = 351
+        Height = 209
         OnClickCheck = chklstExtensionsClickCheck
+        Columns = 3
         Enabled = False
         ItemHeight = 13
         Sorted = True
         TabOrder = 2
       end
       object btnSelectAllExt: TButton
-        Left = 96
-        Top = 260
-        Width = 105
+        Left = 128
+        Top = 272
+        Width = 110
         Height = 25
         Caption = 'Select &all'
         TabOrder = 3
         OnClick = btnSelectAllExtClick
       end
       object btnSelectZeroExt: TButton
-        Left = 200
-        Top = 260
-        Width = 105
+        Left = 240
+        Top = 272
+        Width = 110
         Height = 25
-        Caption = 'Select &zero'
+        Caption = 'Select &none'
         TabOrder = 4
         OnClick = btnSelectZeroExtClick
       end
@@ -563,7 +783,7 @@ object frmSettings: TfrmSettings
       object Bevel2: TBevel
         Left = 0
         Top = 184
-        Width = 313
+        Width = 357
         Height = 9
         Shape = bsBottomLine
       end
@@ -582,8 +802,8 @@ object frmSettings: TfrmSettings
         Caption = 'Rewind and forward time:'
       end
       object lblDefaultAltPlayRate: TLabel
-        Left = 0
-        Top = 248
+        Left = 168
+        Top = 200
         Width = 144
         Height = 13
         Caption = 'Default altered playback rate:'
@@ -675,15 +895,13 @@ object frmSettings: TfrmSettings
         Text = ' ,   '
       end
       object cmbDefaultAltPlayRate: TComboBox
-        Left = 0
-        Top = 264
+        Left = 168
+        Top = 216
         Width = 97
         Height = 21
         Style = csDropDownList
         ItemHeight = 13
-        ItemIndex = 4
         TabOrder = 7
-        Text = '50%'
         Items.Strings = (
           '10%'
           '20%'
@@ -694,15 +912,54 @@ object frmSettings: TfrmSettings
           '70%'
           '80%'
           '90%'
+          '150%'
           '200%'
           '300%'
           '400%')
+      end
+      object chkPlayVideoOnLoad: TCheckBox
+        Left = 0
+        Top = 248
+        Width = 173
+        Height = 17
+        Caption = 'Play video on load'
+        Checked = True
+        State = cbChecked
+        TabOrder = 8
       end
     end
     object pgeVideoPreviewSubs: TTabSheet
       Caption = 'pgeVideoPreviewSubs'
       ImageIndex = 5
       TabVisible = False
+      object lblSubColor: TLabel
+        Left = 26
+        Top = 108
+        Width = 37
+        Height = 13
+        Caption = 'Color...'
+      end
+      object lblSubBackground: TLabel
+        Left = 26
+        Top = 136
+        Width = 68
+        Height = 13
+        Caption = 'Background...'
+      end
+      object lblSubTransparency: TLabel
+        Left = 26
+        Top = 164
+        Width = 78
+        Height = 13
+        Caption = 'Transparency...'
+      end
+      object lblSubFont: TLabel
+        Left = 26
+        Top = 80
+        Width = 34
+        Height = 13
+        Caption = 'Font...'
+      end
       object chkDrawBorder: TCheckBox
         Left = 0
         Top = 0
@@ -734,71 +991,53 @@ object frmSettings: TfrmSettings
       end
       object btnSubFont: TButton
         Left = 0
-        Top = 72
-        Width = 97
-        Height = 25
-        Caption = 'Font...'
+        Top = 76
+        Width = 21
+        Height = 21
+        Caption = '...'
         TabOrder = 3
         OnClick = btnSubFontClick
       end
-      object btnSubColor: TButton
-        Left = 104
-        Top = 72
-        Width = 97
-        Height = 25
-        Caption = 'Color...'
-        TabOrder = 4
-        OnClick = btnSubColorClick
-      end
-      object btnBackground: TButton
-        Left = 208
-        Top = 72
-        Width = 97
-        Height = 25
-        Caption = 'Background...'
-        TabOrder = 5
-        OnClick = btnBackgroundClick
-      end
       object edtBorderWidth: TLabeledEdit
-        Left = 232
-        Top = 104
+        Left = 280
+        Top = 136
         Width = 57
         Height = 21
         EditLabel.Width = 65
         EditLabel.Height = 13
         EditLabel.Caption = 'Border width:'
         LabelPosition = lpLeft
-        TabOrder = 6
+        TabOrder = 4
         Text = '1'
         OnChange = edtBorderWidthChange
       end
       object edtShadowWidth: TLabeledEdit
-        Left = 232
-        Top = 128
+        Left = 280
+        Top = 160
         Width = 57
         Height = 21
         EditLabel.Width = 71
         EditLabel.Height = 13
         EditLabel.Caption = 'Shadow width:'
         LabelPosition = lpLeft
-        TabOrder = 7
+        TabOrder = 5
         Text = '1'
         OnChange = edtShadowWidthChange
       end
       object udShadowWidth: TUpDown
-        Left = 289
-        Top = 128
+        Left = 337
+        Top = 160
         Width = 15
         Height = 21
         Associate = edtShadowWidth
         Min = 1
         Max = 5
         Position = 1
-        TabOrder = 8
+        TabOrder = 6
       end
       object udBorderWidth: TUpDown
-        Left = 289
-        Top = 104
+        Left = 337
+        Top = 136
         Width = 15
         Height = 21
         Associate = edtBorderWidth
@@ -806,16 +1045,16 @@ object frmSettings: TfrmSettings
         Min = 1
         Max = 5
         Position = 1
-        TabOrder = 9
+        TabOrder = 7
       end
       object pnlSubSample: TPanel
         Left = 0
-        Top = 160
-        Width = 305
+        Top = 224
+        Width = 357
         Height = 73
-        TabOrder = 10
+        TabOrder = 8
         object subSample: TMiSubtitulo
-          Left = 89
+          Left = 92
           Top = 16
           Width = 121
           Height = 33
@@ -828,6 +1067,7 @@ object frmSettings: TfrmSettings
           BorderWidth = 1
           ShadowWidth = 1
           ForceTransparency = False
+          TransparentColor = clFuchsia
           Font.Charset = ANSI_CHARSET
           Font.Color = clWindowText
           Font.Height = -19
@@ -843,7 +1083,46 @@ object frmSettings: TfrmSettings
         BiDiMode = bdLeftToRight
         Caption = 'Force using regions (may be slow)'
         ParentBiDiMode = False
+        TabOrder = 9
+      end
+      object rgSubtitlePosition: TRadioGroup
+        Left = 200
+        Top = 72
+        Width = 153
+        Height = 57
+        Caption = 'Position'
+        ItemIndex = 0
+        Items.Strings = (
+          'Top'
+          'Bottom')
+        TabOrder = 10
+      end
+      object pnlSubColor: TPanel
+        Left = 0
+        Top = 104
+        Width = 21
+        Height = 21
+        Cursor = crHandPoint
         TabOrder = 11
+        OnClick = btnSubColorClick
+      end
+      object pnlSubBackground: TPanel
+        Left = 0
+        Top = 132
+        Width = 21
+        Height = 21
+        Cursor = crHandPoint
+        TabOrder = 12
+        OnClick = btnBackgroundClick
+      end
+      object pnlSubTransparency: TPanel
+        Left = 0
+        Top = 160
+        Width = 21
+        Height = 21
+        Cursor = crHandPoint
+        TabOrder = 13
+        OnClick = pnlSubTransparencyClick
       end
     end
     object pgeExternalPreviewGeneral: TTabSheet
@@ -853,7 +1132,7 @@ object frmSettings: TfrmSettings
       object edtVidPlayer: TLabeledEdit
         Left = 0
         Top = 16
-        Width = 305
+        Width = 357
         Height = 21
         EditLabel.Width = 116
         EditLabel.Height = 13
@@ -901,7 +1180,7 @@ object frmSettings: TfrmSettings
       object edtAVIFile: TEdit
         Left = 0
         Top = 120
-        Width = 305
+        Width = 357
         Height = 21
         Enabled = False
         TabOrder = 5
@@ -924,7 +1203,7 @@ object frmSettings: TfrmSettings
       object lblParamDescription: TLabel
         Left = 0
         Top = 128
-        Width = 305
+        Width = 357
         Height = 137
         AutoSize = False
         Caption = 
@@ -944,7 +1223,7 @@ object frmSettings: TfrmSettings
       object edtParameter: TLabeledEdit
         Left = 0
         Top = 104
-        Width = 305
+        Width = 357
         Height = 21
         EditLabel.Width = 187
         EditLabel.Height = 13
@@ -1046,11 +1325,46 @@ object frmSettings: TfrmSettings
         ItemHeight = 0
         TabOrder = 3
       end
+      object chkShowColorBar: TCheckBox
+        Left = 0
+        Top = 152
+        Width = 181
+        Height = 17
+        Caption = 'Show color bar'
+        TabOrder = 4
+      end
+      object pnlSubtitleAbsent: TPanel
+        Left = 0
+        Top = 172
+        Width = 21
+        Height = 21
+        Cursor = crHandPoint
+        Color = clBlack
+        TabOrder = 5
+        OnClick = pnlSubtitleAbsentClick
+      end
+      object pnlSubtitleOK: TPanel
+        Left = 28
+        Top = 172
+        Width = 21
+        Height = 21
+        Cursor = crHandPoint
+        Color = clBlue
+        TabOrder = 6
+        OnClick = pnlSubtitleOKClick
+      end
     end
     object pgeListLook: TTabSheet
       Caption = 'pgeListLook'
       ImageIndex = 9
       TabVisible = False
+      object lblUntranslatedText: TLabel
+        Left = 0
+        Top = 116
+        Width = 150
+        Height = 13
+        Caption = 'Text for untranslated subtitles:'
+      end
       object chkMarkUnTransSubs: TCheckBox
         Left = 0
         Top = 32
@@ -1077,9 +1391,10 @@ object frmSettings: TfrmSettings
       end
       object pnlUnTransColor: TPanel
         Left = 16
-        Top = 56
-        Width = 57
-        Height = 25
+        Top = 52
+        Width = 21
+        Height = 21
+        Cursor = crHandPoint
         Color = clRed
         TabOrder = 3
         OnClick = pnlUnTransColorClick
@@ -1091,6 +1406,14 @@ object frmSettings: TfrmSettings
         Height = 17
         Caption = 'Show horizontal scrollbar'
         TabOrder = 4
+      end
+      object edtUntranslatedText: TEdit
+        Left = 0
+        Top = 132
+        Width = 353
+        Height = 21
+        TabOrder = 5
+        Text = '- Untranslated subtitle -'
       end
     end
     object pgeMenuLook: TTabSheet
@@ -1119,261 +1442,14 @@ object frmSettings: TfrmSettings
   object pnlHeading: TPanel
     Left = 0
     Top = 0
-    Width = 523
-    Height = 65
+    Width = 552
+    Height = 49
     Align = alTop
     Color = clWhite
     TabOrder = 0
     DesignSize = (
-      523
-      65)
-    object imgDrawing: TImage
-      Left = 462
-      Top = 10
-      Width = 54
-      Height = 47
-      Anchors = [akTop, akRight]
-      Picture.Data = {
-        07544269746D6170961D0000424D961D00000000000036000000280000003500
-        00002F0000000100180000000000601D0000C40E0000C40E0000000000000000
-        0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFF
-        FF00FFFFFFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFFFFF
-        FF00BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BF00BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBFBF
-        BFBFBFBFBFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FF00}
-      Proportional = True
-    end
+      552
+      49)
     object lblTitle: TLabel
       Left = 16
       Top = 8
@@ -1391,25 +1467,25 @@ object frmSettings: TfrmSettings
       Left = 26
       Top = 24
       Width = 431
-      Height = 33
+      Height = 21
       AutoSize = False
       Caption = 'Modify the program configuration'
       WordWrap = True
     end
     object bvlSeparator: TBevel
       Left = -8
-      Top = 63
-      Width = 531
-      Height = 9
+      Top = 46
+      Width = 560
+      Height = 4
       Anchors = [akLeft, akRight, akBottom]
       Shape = bsTopLine
     end
   end
   object tvSettings: TTreeView
-    Left = 8
-    Top = 72
-    Width = 185
-    Height = 283
+    Left = 4
+    Top = 60
+    Width = 180
+    Height = 295
     Anchors = [akLeft, akTop, akBottom]
     HideSelection = False
     HotTrack = True
@@ -1422,7 +1498,7 @@ object frmSettings: TfrmSettings
     OnKeyUp = tvSettingsKeyUp
   end
   object btnOk: TButton
-    Left = 344
+    Left = 376
     Top = 372
     Width = 84
     Height = 25
@@ -1439,7 +1515,7 @@ object frmSettings: TfrmSettings
     OnClick = btnOkClick
   end
   object btnCancel: TButton
-    Left = 435
+    Left = 467
     Top = 372
     Width = 81
     Height = 25

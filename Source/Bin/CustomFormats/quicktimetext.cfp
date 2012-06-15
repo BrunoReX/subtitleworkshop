@@ -1,0 +1,22 @@
+[Information]
+Name=Quicktime3
+Extension=*.txt
+Time structure=hh:mm:ss.zz
+Time=True
+FPS=15
+New line char=[Enter]
+
+[Format text]
+{QTtext} 
+{font:Tahoma}
+{plain} 
+{size:10}
+{timeScale:10}
+{height:40}
+{width:320}
+{useMovieBackColor:ON}
+
+{timeStamps:absolute} {RepeatSub}
+[{swStart}]
+{swText}
+{EndRepeat}

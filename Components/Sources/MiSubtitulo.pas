@@ -11,8 +11,8 @@ interface
 uses
   Windows, Messages, Classes, Graphics, Controls, SysUtils, USGraphics;
 
-const
-  TransparentColor = $FF00FF;
+//const
+//  TransparentColor = $FF00FF;
 
 type
   TMiSubtitulo = class(TCustomControl)
@@ -28,6 +28,7 @@ type
     FText              : String;
     FTextColor         : TColor;
     FBackgroundColor   : TColor;
+    FTransparentColor : TColor;
     procedure DrawSubtitleText;
     procedure SetText(Text: String);
     procedure SetShadow(Value: Boolean);
@@ -38,6 +39,7 @@ type
     procedure SetTextColor(Value: TColor);
     procedure SetBackgroundColor(Value: TColor);
     procedure SetForceTransparency(Value: Boolean);
+	procedure SetTransparentColor(Value: TColor);
   protected
     { Protected declarations }
     procedure Paint; override;
@@ -57,6 +59,7 @@ type
     property BorderWidth     : Byte    read FBorderWidth     write SetBorderWidth;
     property ShadowWidth     : Byte    read FShadowWidth     write SetShadowWidth;
     property ForceTransparency: Boolean read FForceTransparency write SetForceTransparency;
+	property TransparentColor : TColor read FTransparentColor  write SetTransparentColor;
     property Anchors;
     property Enabled;
     property Font;
@@ -77,12 +80,26 @@ implementation
 
 function RemoveSWTags(Text: String; Bold, Italic, Underline, Color: Boolean): String;
 begin
-  if Bold      = True then Text := StringReplace(Text, '<b>', '', [rfReplaceAll, rfIgnoreCase]);
-  if Italic    = True then Text := StringReplace(Text, '<i>', '', [rfReplaceAll, rfIgnoreCase]);
-  if Underline = True then Text := StringReplace(Text, '<u>', '', [rfReplaceAll, rfIgnoreCase]);
-  if Color = True then
+  if Bold      = True then begin
+    Text := StringReplace(Text, '<b>', '', [rfReplaceAll, rfIgnoreCase]);
+    Text := StringReplace(Text, '</b>', '', [rfReplaceAll, rfIgnoreCase]);
+  end;
+
+  if Italic    = True then begin
+    Text := StringReplace(Text, '<i>', '', [rfReplaceAll, rfIgnoreCase]);
+    Text := StringReplace(Text, '</i>', '', [rfReplaceAll, rfIgnoreCase]);
+  end;
+
+  if Underline = True then begin
+    Text := StringReplace(Text, '<u>', '', [rfReplaceAll, rfIgnoreCase]);
+    Text := StringReplace(Text, '</u>', '', [rfReplaceAll, rfIgnoreCase]);
+  end;
+
+  if Color = True then begin
     while Pos('<c:#', Text) > 0 Do
       Delete(Text, Pos('<c:#', Text), Pos('>', Copy(Text, Pos('<c:#', Text), Length(Text))));
+    Text := StringReplace(Text, '</c>', '', [rfReplaceAll, rfIgnoreCase]);
+  end;
   Result := Text;
 end;
 
@@ -100,6 +117,8 @@ begin
 
   FTextColor       := clWhite;
   FBackgroundColor := clBtnFace;
+  FTransparentColor := clFuchsia;
+
 
   FBorder      := True;
   FShadow      := True;
@@ -188,15 +207,13 @@ Begin
     tmpFont := TFont.Create;
     tmpFont.Assign(Font);
     
-    if Pos('<i>', TextToPaint) > 0 then
-      tmpFont.Style := tmpFont.Style + [fsItalic];
-    if Pos('<b>', TextToPaint) > 0 then
-      tmpFont.Style := tmpFont.Style + [fsBold];
-    if Pos('<u>', TextToPaint) > 0 then
-      tmpFont.Style := tmpFont.Style + [fsUnderline];
+    if Pos('<i>', TextToPaint) > 0 then tmpFont.Style := tmpFont.Style + [fsItalic];
+    if Pos('<b>', TextToPaint) > 0 then tmpFont.Style := tmpFont.Style + [fsBold];
+    if Pos('<u>', TextToPaint) > 0 then tmpFont.Style := tmpFont.Style + [fsUnderline];
+
     Color := GetSubColor(TextToPaint);
     if Color = -1 then
-     Color := TextColor;
+      Color := TextColor;
       
     TextToPaint := RemoveSWTags(TextToPaint, True, True, True, True);
 
@@ -342,6 +359,16 @@ end;
 
 // -----------------------------------------------------------------------------
 
+procedure TMiSubtitulo.SetTransparentColor(Value: TColor);
+Begin
+  FTransparentColor := Value;
+  
+  DrawSubtitleText;
+  Paint;
+end;
+
+// -----------------------------------------------------------------------------
+	
 procedure TMiSubtitulo.SetUseTags(Value: Boolean);
 Begin
   FUseTags := Value;

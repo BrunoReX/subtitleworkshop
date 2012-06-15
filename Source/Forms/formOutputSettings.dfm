@@ -1,6 +1,6 @@
 object frmOutputSettings: TfrmOutputSettings
-  Left = 192
-  Top = 103
+  Left = 186
+  Top = 539
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'frmOutputSettings'
@@ -52,7 +52,7 @@ object frmOutputSettings: TfrmOutputSettings
     Top = 40
     Width = 385
     Height = 273
-    ActivePage = pgeDVDSubtitle
+    ActivePage = pgeSubStationAlpha
     Style = tsButtons
     TabOrder = 1
     object pgeDVDSubtitle: TTabSheet
@@ -429,7 +429,7 @@ object frmOutputSettings: TfrmOutputSettings
         Top = 56
         Width = 369
         Height = 209
-        ActivePage = pgeCosmetics
+        ActivePage = pgeOthers
         Style = tsFlatButtons
         TabOrder = 2
         object pgeCosmetics: TTabSheet
@@ -569,6 +569,7 @@ object frmOutputSettings: TfrmOutputSettings
             Width = 47
             Height = 13
             Caption = 'Encoding:'
+            Visible = False
           end
           object lblSSAShadowPos: TLabel
             Left = 0
@@ -628,8 +629,9 @@ object frmOutputSettings: TfrmOutputSettings
             Width = 113
             Height = 21
             Style = csDropDownList
-            ItemHeight = 0
+            ItemHeight = 13
             TabOrder = 0
+            Visible = False
           end
           object seSSAShadow: TSpinEdit
             Left = 112
@@ -687,7 +689,7 @@ object frmOutputSettings: TfrmOutputSettings
             Width = 113
             Height = 21
             Style = csDropDownList
-            ItemHeight = 0
+            ItemHeight = 13
             TabOrder = 6
           end
           object cmbSSASubTopMidTitle: TComboBox

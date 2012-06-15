@@ -46,7 +46,9 @@ end;
 
 function FramesToTime(Frames, FPS: Single): Integer;
 begin
-  Result := Round((Frames / FPS) * 1000);
+  if FPS > 0 then
+    Result := Round((Frames / FPS) * 1000) else
+    Result := 0;
 end;
 
 // -----------------------------------------------------------------------------

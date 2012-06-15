@@ -1,9 +1,22 @@
 {*
- *  USTimeUtils
- *  Copyright (C) 2001-2003 URUSoft
+ *  ViPlay3 - Rise of the Players
  *
- *  Website : http://www.urusoft.net
+ *  Author  : Aldo Lacavalla
+ *  Email   : aml@urusoft.net
+ *  Website : www.urusoft.net
  *
+ *  The contents of this file are used with permission, subject to
+ *  the Mozilla Public License Version 1.1 (the "License"); you may
+ *  not use this file except in compliance with the License. You may
+ *  obtain a copy of the License at
+ *  http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ *  Software distributed under the License is distributed on an
+ *  "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  rights and limitations under the License.
+ *
+ *  Copyright (C) 2001-2005 Aldo Lacavalla <urusoft@gmail.com>
  *}
 
 unit USTimeUtils;
@@ -13,19 +26,17 @@ unit USTimeUtils;
 interface
 
 uses
-  SysUtils, FastStrings, USStringsUtils;
+  SysUtils, FastStrings, USStringUtils;
 
 // -----------------------------------------------------------------------------
 
 function TimeToFrames(const Time: Cardinal; const FPS: Single): Cardinal;
 function FramesToTime(const Frames, FPS: Single): Cardinal;
-function TimeToString(const Time: Cardinal; TimeFormat: String = {$IFDEF VIPLAY}'hh:mm:ss'{$ELSE}'hh:mm:ss,zzz'{$ENDIF}): String;
-function StringToTime(const Time: String; const NoHours: Boolean = False): Integer;
-function TimeInFormat(const Time, Format: String): Boolean;
+//function TimeToString(const Time: Cardinal; TimeFormat: String = 'hh:mm:ss'): String;
+//function StringToTime(const Time: String; const NoHours: Boolean = False): Cardinal;
 function RefTimeToMSecs(RefTime: Int64): Cardinal;
 function MSecsToRefTime(MSecs: Cardinal): Int64;
-function MSToHHMMSSFFTime(const Time: Integer; const FPS: Single; const FramesSeparator: Char = ':'): String;
-function HHMMSSFFTimeToMS(const Time: String; const FPS: Single): Integer;
+function GetDateAndTime(Format: String = 'hh:mm:ss, dd/mm/yyyy'): String;
 
 // -----------------------------------------------------------------------------
 
@@ -42,14 +53,15 @@ end;
 
 function FramesToTime(const Frames, FPS: Single): Cardinal;
 begin
-  if FPS <> 0 then
-    Result := Round((Frames / FPS) * 1000) else
+  if FPS > 0 then
+    Result := Round((Frames / FPS) * 1000)
+  else
     Result := 0;
 end;
 
 // -----------------------------------------------------------------------------
-
-function TimeToString(const Time: Cardinal; TimeFormat: String = {$IFDEF VIPLAY}'hh:mm:ss'{$ELSE}'hh:mm:ss,zzz'{$ENDIF}): String;
+{
+function TimeToString(const Time: Cardinal; TimeFormat: String = 'hh:mm:ss'): String;
 var
   Hour, Min, Sec, MSec : Word;
   Count, tmp           : Byte;
@@ -58,11 +70,6 @@ begin
   Min  := Trunc((Time-(Hour*3600000)) / 60000);
   Sec  := Trunc((Time-(Hour*3600000)-(Min*60000)) / 1000);
   MSec := Trunc((Time-(Hour*3600000)-(Min*60000)-(Sec*1000)));
-
-  if Hour > 23  then Hour := 23;
-  if Min > 59   then Min  := 59;
-  if Sec > 59   then Sec  := 59;
-  if MSec > 999 then MSec := 999;
 
   if TimeFormat = 'hh:mm:ss' then
     Result := Format('%.2d:%.2d:%.2d', [Hour, Min, Sec])
@@ -94,15 +101,15 @@ begin
     Result := TimeFormat;
   end;
 end;
-
+}
 // -----------------------------------------------------------------------------
-
-function StringToTime(const Time: String; const NoHours: Boolean = False): Integer;
+{
+function StringToTime(const Time: String; const NoHours: Boolean = False): Cardinal;
 var
   H, M, S, Z, i                : Integer;
   PCount, PFirst, PSec, PThird : Integer;
 begin
-  Result := -1;
+  Result := 0;
   if (Time = '') then Exit;
 
   H      := 0;
@@ -172,28 +179,10 @@ begin
       Result := ((H*3600)*1000) + ((M*60)*1000) + (S*1000) + Z;
     end;
   except
-    Result := -1;
+    Result := 0;
   end;
 end;
-
-// -----------------------------------------------------------------------------
-
-function TimeInFormat(const Time, Format: String): Boolean;
-begin
-  Result := False;
-  if StringToTime(Time) > -1 then
-  begin
-    if (Pos(':', Time) = Pos(':', Format)) and
-       (Pos('.', Time) = Pos('.', Format)) and
-       (Pos(',', Time) = Pos(',', Format)) and
-       (StringCount(':', Time) = StringCount(':', Format)) and
-       (StringCount('.', Time) = StringCount('.', Format)) and
-       (StringCount(',', Time) = StringCount(',', Format)) and
-       (Length(Time) = Length(Format)) then
-       Result := True;
-  end;
-end;
-
+}
 // -----------------------------------------------------------------------------
 
 function RefTimeToMSecs(RefTime: Int64): Cardinal;
@@ -210,26 +199,9 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function MSToHHMMSSFFTime(const Time: Integer; const FPS: Single; const FramesSeparator: Char = ':'): String;
-var
-  tmp: Integer;
+function GetDateAndTime(Format: String = 'hh:mm:ss, dd/mm/yyyy'): String;
 begin
-  Result := TimeToString(Time, 'hh:mm:ss');
-  tmp := TimeToFrames(Time - StringToTime(Result), FPS);
-  if tmp = 25 then
-  begin
-    Result := TimeToString(StringToTime(Result) + 1000, 'hh:mm:ss');
-    tmp := 0;
-  end;
-  Result := Result + FramesSeparator + PadLeft(IntToStr(tmp), '0', 2);
-end;
-
-// -----------------------------------------------------------------------------
-
-function HHMMSSFFTimeToMS(const Time: String; const FPS: Single): Integer;
-begin
-  if StringToTime(Time) = -1 then Result := -1 else
-  Result := StringToTime(Copy(Time, 1, 8)) + Integer(FramesToTime(StrToIntDef(Copy(Time, 10, 2), 0), FPS));
+  DateTimeToString(Result, Format, Now);
 end;
 
 // -----------------------------------------------------------------------------

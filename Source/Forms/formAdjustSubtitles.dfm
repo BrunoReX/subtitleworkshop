@@ -1,6 +1,6 @@
 object frmAdjustSubtitles: TfrmAdjustSubtitles
-  Left = 272
-  Top = 141
+  Left = 743
+  Top = 106
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'frmAdjustSubtitles'
@@ -112,6 +112,7 @@ object frmAdjustSubtitles: TfrmAdjustSubtitles
         Width = 281
         Height = 105
         Header.AutoSizeIndex = 0
+        Header.DefaultHeight = 17
         Header.Font.Charset = ANSI_CHARSET
         Header.Font.Color = clWindowText
         Header.Font.Height = -11
@@ -134,7 +135,7 @@ object frmAdjustSubtitles: TfrmAdjustSubtitles
         Columns = <
           item
             Position = 0
-            Width = 33
+            Width = 37
             WideText = '#'
           end
           item

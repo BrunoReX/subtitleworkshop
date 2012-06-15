@@ -132,14 +132,6 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function ZeroIfMinor(Value: Integer): Integer;
-begin
-  Result := Value;
-  if Value < 0 then Result := 0;
-end;
-
-// -----------------------------------------------------------------------------
-
 procedure TfrmDivideLines.CalculateTimes(Prop1, Prop2: Integer; AutomaticDur: Boolean = False);
 var
   InitialTime : Integer;
@@ -151,32 +143,28 @@ begin
   begin
     InitialTime := GetStartTime(lstSubtitles.FocusedNode);
     FinalTime   := GetFinalTime(lstSubtitles.FocusedNode);
+
     if AutomaticDur = False then
     begin
-      Time1 := Trunc(InitialTime + ((FinalTime - InitialTime) / (Prop1+Prop2) * Prop1));
-      tmeShowSub1.Time  := InitialTime;
-      tmeHideSub2.Time  := FinalTime;
-      tmeHideSub1.Time  := Time1;
-      tmeShowSub2.Time  := Time1 + 1;
-      tmeDuration1.Time := Time1 - InitialTime;
+      Time1 := Trunc((FinalTime - InitialTime - Vars.GapBetweenSubs) / (Prop1+Prop2) * Prop1);
     end else
     begin
       if TotalOrgLength <> 0 then
-        DurPerChar := (FinalTime - InitialTime) / TotalOrgLength else // Milliseconds
+        DurPerChar := (FinalTime - InitialTime - Vars.GapBetweenSubs) / TotalOrgLength else // Milliseconds
         DurPerChar := 0;
       Time1 := Round(DurPerChar * Length(mmoSub1.Text));
+    end;
 
-      // We don't want to leave second subtitle with 0 duration!
-      if FinalTime-InitialTime-Time1 > 100 then
-      begin
-        tmeShowSub1.Time  := InitialTime;
-        tmeHideSub2.Time  := FinalTime;
-        tmeHideSub1.Time  := Time1 + InitialTime;
-        tmeShowSub2.Time  := InitialTime + Time1 + 1;
-        tmeDuration1.Time := Time1;
-        tmeDuration2.Time := FinalTime - (InitialTime + Time1 + 1);
-      end;
+    // We don't want to leave second subtitle with 0 duration!
+    if FinalTime-InitialTime-Time1-Vars.GapBetweenSubs > 100 then
+    begin
+      tmeShowSub1.Time  := InitialTime;
+      tmeHideSub1.Time  := tmeShowSub1.Time + Time1;
+      tmeDuration1.Time := tmeHideSub1.Time - tmeShowSub1.Time;
 
+      tmeShowSub2.Time  := tmeHideSub1.Time + Vars.GapBetweenSubs;
+      tmeHideSub2.Time  := FinalTime;
+      tmeDuration2.Time := tmeHideSub2.Time - tmeShowSub2.Time;
     end;
   end;
 end;
@@ -190,8 +178,8 @@ begin
     tmeShowSub2.Enabled := False;
     if chkUseAutoDur.Checked = False then
     begin
-      tmeShowSub2.Time  := StringToTime(tmeHideSub1.Text) + 1;
-      tmeDuration2.Time := Cardinal(GetFinalTime(frmMain.lstSubtitles.FocusedNode)) - (tmeShowSub2.Time + 1);
+      tmeShowSub2.Time  := StringToTime(tmeHideSub1.Text) + frmMain.Vars.GapBetweenSubs;
+      tmeDuration2.Time := Cardinal(GetFinalTime(frmMain.lstSubtitles.FocusedNode)) - (tmeShowSub2.Time + frmMain.Vars.GapBetweenSubs);
     end else
       CalculateTimes(1, 1, True);
   end else
@@ -319,7 +307,9 @@ begin
     tmeDuration1.MaxLength := 7;
     tmeDuration2.MaxLength := 7;
   end;
+
   chkContinueDirectly.Checked := True;
+
   with frmMain do
   begin
     mmoSub1.Alignment  := frmMain.mmoSubtitleText.Alignment;
@@ -327,8 +317,9 @@ begin
     OriginalString     := GetSubText(lstSubtitles.FocusedNode);
     TotalOrgLength     := Length(OriginalString) - (StringCount(#13#10, OriginalString)*2);
     if Pos(#13#10, OriginalString) = 0 then
-      OriginalString := WrapText(OriginalString, frmMain.BreakLineAfter);
+      OriginalString := WrapText(OriginalString, frmMain.Vars.BreakLineAfter);
   end;
+
   ProcessStringToDivide(OriginalString, BreaksArray, AdjustAutomatically, Out1, Out2, MaxBreaks);
   mmoSub1.Text := Out1;
   mmoSub2.Text := Out2;
@@ -348,8 +339,7 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure TfrmDivideLines.udDivideAfterBreakNumChangingEx(Sender: TObject;
-  var AllowChange: Boolean; NewValue: Smallint;
-  Direction: TUpDownDirection);
+  var AllowChange: Boolean; NewValue: Smallint; Direction: TUpDownDirection);
 var
   Part1, Part2: String;
 begin
@@ -483,16 +473,25 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmDivideLines.tmeShowSub2TimeChangeFromEditOnly(
-  Sender: TObject; NewTime: Cardinal);
+procedure TfrmDivideLines.tmeShowSub2TimeChangeFromEditOnly(Sender: TObject; NewTime: Cardinal);
 begin
+  if tmeShowSub2.Time - frmMain.Vars.GapBetweenSubs < tmeShowSub1.Time then
+  begin
+    tmeShowSub2.Time := tmeHideSub1.Time + frmMain.Vars.GapBetweenSubs;
+  end;
+
   tmeDuration2.Time := Cardinal(GetFinalTime(frmMain.lstSubtitles.FocusedNode)) - tmeShowSub2.Time;
+
+  if tmeShowSub2.Time - frmMain.Vars.GapBetweenSubs <= tmeHideSub1.Time then
+  begin
+    tmeHideSub1.Time := tmeShowSub2.Time - frmMain.Vars.GapBetweenSubs;
+    tmeDuration2.Time := tmeHideSub1.Time - tmeShowSub1.Time;
+  end;
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmDivideLines.tmeHideSub1TimeChangeFromEditOnly(
-  Sender: TObject; NewTime: Cardinal);
+procedure TfrmDivideLines.tmeHideSub1TimeChangeFromEditOnly(Sender: TObject; NewTime: Cardinal);
 var
   Time: Integer;
 begin
@@ -501,7 +500,7 @@ begin
     Time := tmeHideSub1.Time;
     if (Time > -1) then
     begin
-      tmeShowSub2.Time  := Time + 1;
+      tmeShowSub2.Time  := Time + frmMain.Vars.GapBetweenSubs;
       tmeDuration1.Time := Time - GetStartTime(frmMain.lstSubtitles.FocusedNode);
       tmeDuration2.Time := GetFinalTime(frmMain.lstSubtitles.FocusedNode) - (StringToTime(tmeShowSub2.Text));
     end;
@@ -510,8 +509,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmDivideLines.tmeDuration1TimeChangeFromEditOnly(
-  Sender: TObject; NewTime: Cardinal);
+procedure TfrmDivideLines.tmeDuration1TimeChangeFromEditOnly(Sender: TObject; NewTime: Cardinal);
 var
   Time: Integer;
 begin
@@ -520,7 +518,7 @@ begin
     Time := tmeDuration1.Time;
     if (Time > -1) then
     begin
-      tmeShowSub2.Time  := GetStartTime(frmMain.lstSubtitles.FocusedNode) + Time + 1;
+      tmeShowSub2.Time  := GetStartTime(frmMain.lstSubtitles.FocusedNode) + Time + frmMain.Vars.GapBetweenSubs;
       if GetFocus <> tmeHideSub1.Handle then
         tmeHideSub1.Time  := GetStartTime(frmMain.lstSubtitles.FocusedNode) + Time;
       tmeDuration2.Time := GetFinalTime(frmMain.lstSubtitles.FocusedNode) - (StringToTime(tmeShowSub2.Text));

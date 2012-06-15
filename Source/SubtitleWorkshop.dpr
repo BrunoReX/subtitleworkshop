@@ -1,8 +1,9 @@
 program SubtitleWorkshop;
 
-
+{ $DEFINE UTF8}
 
 uses
+  {$IFDEF DOMEMCHECK}MemCheck in 'Units\MemCheck.pas',{$ENDIF}
   Forms,
   IniFiles,
   SysUtils,
@@ -22,6 +23,7 @@ uses
   formJoin in 'Forms\formJoin.pas' {frmJoin},
   formMain in 'Forms\formMain.pas' {frmMain},
   formOutputSettings in 'Forms\formOutputSettings.pas' {frmOutputSettings},
+  FormPosition in 'Units\FormPosition.pas',
   formSAMILangExtractor in 'Forms\formSAMILangExtractor.pas' {frmSAMILangExtractor},
   formSaveAs in 'Forms\formSaveAs.pas' {frmSaveAs},
   formSearchAndReplace in 'Forms\formSearchAndReplace.pas' {frmSearchAndReplace},
@@ -46,24 +48,25 @@ uses
   USubtitleAdjust in 'Units\USubtitleAdjust.pas',
   USubtitleApi in 'Units\USubtitleApi.pas',
   USubtitlesFunctions in 'Units\USubtitlesFunctions.pas',
+  VarLord in 'Units\VarLord.pas',
   VideoPreview in 'Units\VideoPreview.pas',
   VTInPlaceEdition in 'Units\VTInPlaceEdition.pas',
-  VirtualTrees in '..\..\..\..\Delphi\Componentes\VirtualTreeView\VirtualTrees.pas',
   DirectShow9 in 'DirectX Units\DirectShow9.pas',
   DirectDraw in 'DirectX Units\DirectDraw.pas',
   DirectSound in 'DirectX Units\DirectSound.pas',
   Direct3D9 in 'DirectX Units\Direct3D9.pas',
-  DXTypes in 'DirectX Units\DXTypes.pas';
+  DXTypes in 'DirectX Units\DXTypes.pas',
+  formMultipleStreams in 'Forms\formMultipleStreams.pas' {frmMultipleStreams};
 
 {$R *.res}
 
 // -----------------------------------------------------------------------------
-
 var
   hWnd : THandle;
   cds  : CopyDataStruct;
   Ini  : TIniFile;
 begin
+  {$IFDEF DOMEMCHECK}MemChk;{$ENDIF}
   Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + '\SubtitleWorkshop.ini');
   if Ini.ReadBool('Settings','Allow more than one instance', False) = False then
   begin

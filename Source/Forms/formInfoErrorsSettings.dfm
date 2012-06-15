@@ -1,10 +1,10 @@
 object frmInfoErrorsSettings: TfrmInfoErrorsSettings
-  Left = 192
-  Top = 103
+  Left = 631
+  Top = 110
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'frmInfoErrorsSettings'
-  ClientHeight = 456
+  ClientHeight = 495
   ClientWidth = 393
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -21,7 +21,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
     Left = 8
     Top = 8
     Width = 377
-    Height = 409
+    Height = 445
     ActivePage = pgeGeneral
     TabOrder = 0
     object pgeGeneral: TTabSheet
@@ -49,22 +49,13 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         Caption = 'Mark errors in main form'#39's list'
         TabOrder = 0
       end
-      object btnSetColor: TButton
-        Left = 24
-        Top = 64
-        Width = 113
-        Height = 25
-        Caption = 'Set color...'
-        TabOrder = 1
-        OnClick = btnSetColorClick
-      end
       object chkBold: TCheckBox
         Left = 24
         Top = 96
         Width = 337
         Height = 17
         Caption = 'Bold'
-        TabOrder = 2
+        TabOrder = 1
       end
       object chkItalic: TCheckBox
         Left = 24
@@ -72,7 +63,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         Width = 337
         Height = 17
         Caption = 'Italic'
-        TabOrder = 3
+        TabOrder = 2
       end
       object chkUnderline: TCheckBox
         Left = 24
@@ -80,7 +71,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         Width = 337
         Height = 17
         Caption = 'Underline'
-        TabOrder = 4
+        TabOrder = 3
       end
       object chkMarkOnLoad: TCheckBox
         Left = 8
@@ -88,7 +79,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         Width = 353
         Height = 17
         Caption = 'Mark errors on load subtitle'
-        TabOrder = 5
+        TabOrder = 4
       end
       object chkFixOnLoad: TCheckBox
         Left = 8
@@ -96,7 +87,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         Width = 353
         Height = 17
         Caption = 'Fix errors on load subtitle'
-        TabOrder = 6
+        TabOrder = 5
       end
       object btnEdit: TButton
         Left = 200
@@ -104,7 +95,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         Width = 97
         Height = 25
         Caption = 'Edit'
-        TabOrder = 7
+        TabOrder = 6
         OnClick = btnEditClick
       end
       object chkFixOneUnitOverlap: TCheckBox
@@ -113,7 +104,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         Width = 353
         Height = 17
         Caption = 'Fix one unit overlap at load'
-        TabOrder = 8
+        TabOrder = 7
       end
       object cmbOCRFiles: TComboBox
         Left = 8
@@ -122,7 +113,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         Height = 21
         Style = csDropDownList
         ItemHeight = 13
-        TabOrder = 9
+        TabOrder = 8
       end
       object chkShowConfInMainForm: TCheckBox
         Left = 8
@@ -130,7 +121,19 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         Width = 353
         Height = 17
         Caption = 'Show confirmations in main form on fix'
+        TabOrder = 9
+      end
+      object pnlErrorColor: TPanel
+        Left = 24
+        Top = 64
+        Width = 24
+        Height = 24
+        Cursor = crHandPoint
+        Color = clRed
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 10
+        OnClick = SetColorClick
       end
     end
     object pgeAdvanced: TTabSheet
@@ -163,6 +166,20 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         Width = 55
         Height = 13
         Caption = 'characters.'
+      end
+      object lblTooSmallCPS: TLabel
+        Left = 200
+        Top = 160
+        Width = 84
+        Height = 13
+        Caption = 'CPS smaller than:'
+      end
+      object lblTooBigCPS: TLabel
+        Left = 200
+        Top = 208
+        Width = 98
+        Height = 13
+        Caption = 'CPS bigger or equal:'
       end
       object edtRepeatableChars: TLabeledEdit
         Left = 8
@@ -295,6 +312,44 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
         TabOrder = 11
         Thousands = False
       end
+      object edtTooSmallCPS: TRealEdit
+        Left = 200
+        Top = 176
+        Width = 57
+        Height = 21
+        Alignment = taRightJustify
+        ColorNormal = clBlack
+        ColorWarning = clRed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        FormatString = '%3.2f'
+        ParentFont = False
+        TabOrder = 12
+        Validate = False
+        MaxValue = 99.990000000000000000
+      end
+      object edtTooBigCPS: TRealEdit
+        Left = 200
+        Top = 224
+        Width = 57
+        Height = 21
+        Alignment = taRightJustify
+        ColorNormal = clBlack
+        ColorWarning = clRed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        FormatString = '%3.2f'
+        ParentFont = False
+        TabOrder = 13
+        Validate = False
+        MaxValue = 99.990000000000000000
+      end
     end
     object pgeCheckFor: TTabSheet
       Caption = 'Check for'
@@ -307,7 +362,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object bvlSep3: TBevel
         Left = 8
-        Top = 168
+        Top = 208
         Width = 353
         Height = 9
         Shape = bsTopLine
@@ -338,7 +393,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckHearingImpaired: TCheckBox
         Left = 8
-        Top = 176
+        Top = 216
         Width = 353
         Height = 17
         Caption = 'Hearing impaired subtitles'
@@ -346,7 +401,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckTextBeforeColon: TCheckBox
         Left = 8
-        Top = 192
+        Top = 232
         Width = 353
         Height = 17
         Caption = 'Text before colon (":")'
@@ -355,7 +410,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckOnlyIfCapitalLetters: TCheckBox
         Left = 24
-        Top = 208
+        Top = 248
         Width = 337
         Height = 17
         BiDiMode = bdLeftToRight
@@ -365,7 +420,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckUnnecessaryDots: TCheckBox
         Left = 8
-        Top = 224
+        Top = 264
         Width = 353
         Height = 17
         Caption = 'Unnecessary dots'
@@ -381,7 +436,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckProhibitedChars: TCheckBox
         Left = 8
-        Top = 240
+        Top = 280
         Width = 353
         Height = 17
         Caption = 'Prohibited characters'
@@ -389,7 +444,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckRepeatedChars: TCheckBox
         Left = 8
-        Top = 256
+        Top = 296
         Width = 353
         Height = 17
         Caption = 'Repeated characters'
@@ -397,7 +452,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckOCRErrors: TCheckBox
         Left = 8
-        Top = 288
+        Top = 328
         Width = 353
         Height = 17
         Caption = 'OCR Errors'
@@ -405,7 +460,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckRepeatedSubs: TCheckBox
         Left = 8
-        Top = 272
+        Top = 312
         Width = 353
         Height = 17
         Caption = 'Repeated subtitles'
@@ -413,7 +468,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckUnnecessarySpaces: TCheckBox
         Left = 8
-        Top = 360
+        Top = 396
         Width = 353
         Height = 17
         Caption = 'Unnecessary spaces'
@@ -421,7 +476,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckSpaceAfterCustomChars: TCheckBox
         Left = 8
-        Top = 328
+        Top = 364
         Width = 353
         Height = 17
         Caption = 'Space after custom characters'
@@ -429,7 +484,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckSpaceBeforeCustomChars: TCheckBox
         Left = 8
-        Top = 344
+        Top = 380
         Width = 353
         Height = 17
         Caption = 'Space before custom characters'
@@ -469,11 +524,27 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
       end
       object chkCheckOpnDlgInSubsWithOneLine: TCheckBox
         Left = 8
-        Top = 312
+        Top = 348
         Width = 353
         Height = 17
         Caption = '"- " in subtitles with one line'
         TabOrder = 19
+      end
+      object chkTooSmallCPS: TCheckBox
+        Left = 8
+        Top = 164
+        Width = 353
+        Height = 17
+        Caption = 'Too small CPS'
+        TabOrder = 20
+      end
+      object chkTooBigCPS: TCheckBox
+        Left = 8
+        Top = 180
+        Width = 353
+        Height = 17
+        Caption = 'Too big CPS'
+        TabOrder = 21
       end
     end
     object pgeFix: TTabSheet
@@ -684,7 +755,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
   end
   object btnOk: TButton
     Left = 216
-    Top = 424
+    Top = 460
     Width = 81
     Height = 25
     Caption = '&Ok'
@@ -701,7 +772,7 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
   end
   object btnCancel: TButton
     Left = 304
-    Top = 424
+    Top = 460
     Width = 81
     Height = 25
     Cancel = True
@@ -711,11 +782,11 @@ object frmInfoErrorsSettings: TfrmInfoErrorsSettings
   end
   object dlgSetColor: TColorDialog
     Left = 40
-    Top = 424
+    Top = 456
   end
   object dlgLoad: TOpenDialog
     Filter = 'OCR (*.ocr)|*.ocr'
     Left = 8
-    Top = 424
+    Top = 456
   end
 end

@@ -4,8 +4,8 @@ object frmCustomFormats: TfrmCustomFormats
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'frmCustomFormats'
-  ClientHeight = 448
-  ClientWidth = 755
+  ClientHeight = 288
+  ClientWidth = 631
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -22,7 +22,7 @@ object frmCustomFormats: TfrmCustomFormats
     Left = 8
     Top = 8
     Width = 290
-    Height = 393
+    Height = 241
     Caption = 'Information'
     TabOrder = 0
     object lblFPS: TLabel
@@ -137,8 +137,8 @@ object frmCustomFormats: TfrmCustomFormats
   end
   object chkRemember: TCheckBox
     Left = 8
-    Top = 416
-    Width = 293
+    Top = 260
+    Width = 401
     Height = 17
     Caption = 'Remember last custom format'
     Checked = True
@@ -146,8 +146,8 @@ object frmCustomFormats: TfrmCustomFormats
     TabOrder = 2
   end
   object btnCancel: TButton
-    Left = 656
-    Top = 412
+    Left = 536
+    Top = 256
     Width = 89
     Height = 25
     Cancel = True
@@ -156,8 +156,8 @@ object frmCustomFormats: TfrmCustomFormats
     TabOrder = 4
   end
   object btnSave: TButton
-    Left = 536
-    Top = 412
+    Left = 416
+    Top = 256
     Width = 113
     Height = 25
     Caption = '&Save!'
@@ -173,8 +173,8 @@ object frmCustomFormats: TfrmCustomFormats
   object mmoCustomFormat: TMemo
     Left = 304
     Top = 8
-    Width = 445
-    Height = 393
+    Width = 321
+    Height = 241
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -11

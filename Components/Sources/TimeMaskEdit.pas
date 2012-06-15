@@ -7,14 +7,15 @@ interface
 // -----------------------------------------------------------------------------
 
 uses
+  USubtitlesFunctions {BDZL},
   Windows, Messages, Classes, SysUtils, Graphics, Controls, Mask, ComCtrls, dialogs,
-  CommCtrl, USTimeUtils;
+  CommCtrl;
 
 // -----------------------------------------------------------------------------
 
 const TimeMask1 = '!90:00:00,000;1; ';
       TimeMask2 = '!90:00:00:00;1; ';
-      MaxTime   = 86399999;
+      MaxTime   = (24 * 60 * 60 * 1000) - 1;
 
 type
   TTimeMode = (tmTime, tmFrames, tmHHMMSSFF);
@@ -294,7 +295,7 @@ begin
   if FUpDown <> nil then
   begin
     if NewStyleControls and Ctl3D then
-      FUpDown.SetBounds(Width - FUpDown.Width - 5, 0, FUpDown.Width, Height - 5) else
+      FUpDown.SetBounds(Width - FUpDown.Width - 5, 0, FUpDown.Width + 1, Height - 5 +1 ) else
       FUpDown.SetBounds(Width - FUpDown.Width, 1, FUpDown.Width, Height - 3);
     SetEditRect;
   end;
@@ -487,8 +488,8 @@ begin
       TimeToChange := - TimeToChange;
 
     // Only if new time is lower than 23:59:59,999
-    if (Time + Cardinal(TimeToChange)) < MaxTime then
-      Time := Time + Cardinal(TimeToChange);
+    if (Time + Integer(TimeToChange)) < MaxTime then
+      Time := Time + Integer(TimeToChange);
 
     if Assigned(FOnTimeChangeFromEditOnly) then FOnTimeChangeFromEditOnly(Self, Time);
 

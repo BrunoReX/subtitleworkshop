@@ -1,6 +1,6 @@
 <!----------------------------------------------->
 <!--     Subtitle Workshop OCR Script file     -->
-<!--       Copyright © 2001-2004 URUSoft       -->
+<!--       Copyright © 2001-2005 URUSoft       -->
 <!--           http://www.urusoft.net          -->
 <!--                                           -->
 <!-- Default values:                           -->
@@ -31,9 +31,9 @@
 	<ERROR Find="[a-zá-ú](II)" ReplaceBy="ll">
 	<ERROR Find="(II)[a-zá-ú]" ReplaceBy="ll">
 	<!-- Replace all "l" by "I" in the middle of any uppercase word -->
-	<ERROR Find="[A-ZÁ-Ú](l)[A-ZÁ-Ú]" ReplaceBy="I">
+	<ERROR Find="(.*[A-ZÁ-Ú]{1,})(l)([A-ZÁ-Ú].*)" SubstituteBy="$1I$3">
 	<!-- Replace all "I" by "l" in the middle of any lowercase word -->
-	<ERROR Find="[a-zá-ú](I)[a-zá-ú]" ReplaceBy="l">
+	<ERROR Find="(.*[a-zá-ú]{1,})(I)(.*)" SubstituteBy="$1l$3">
 	<!-- Replace all alone "l" to "I" -->
 	<ERROR Find="\b(l)\b" ReplaceBy="I">
 	<!-- I'II to I'll -->
@@ -65,7 +65,7 @@
 	<!-- Particular cases -->
 	<ERROR Find="\b(I)[aeiouá-ú]" ReplaceBy="l">
 	<ERROR Find="\b[A-ZÁ-Ú](I)[a-zá-ú]" ReplaceBy="l">
-	<ERROR Find="[AEOUÁÉÓÚ](I)\b" ReplaceBy="l">
+	<ERROR Find="(.*)([AEOUÁÉÓÚ]{1})(I)(\b.*)" SubstituteBy="$1$2l$4">
 	<ERROR Find="\b(l)[^aeiouyàá-úl]" ReplaceBy="I">
 	<ERROR Find="\b[TV](l)\b" ReplaceBy="I">
 
@@ -81,11 +81,12 @@
 	<ERROR Find="[0-9](,O)" ReplaceBy=",0">
 	<ERROR Find="[A-Z](0)" ReplaceBy="O">
 	<ERROR Find="\b(0)[A-Za-z]" ReplaceBy="O">
-
+	
 	<!-- Smart space after dot -->
-	<ERROR Find="[a-zá-úñä-ü](\.)[^(\s\n\.\?\!)]" ReplaceBy=". ">
+	<ERROR Find="[a-zá-úñä-ü](\.)[^(\s\n\.\?\!\x22)]" ReplaceBy=". ">
 	<!-- Space after last of some consecutive dots (eg. "...") -->
-	<ERROR Find="(\.\.)[^(\s\n\.\?\!)]" ReplaceBy=".. ">
+	<ERROR Find="(\.\.)[^(\s\n\.\?\!\x22)]" ReplaceBy=".. ">
+	
 	<!-- Delete space after "..." that is at the beginning of the line. You may delete this line if you don't like it -->
 	<ERROR UseREOnlyToFind="False" Find="^(\.\.\.) " ReplaceBy="...">
 </SWOCR>

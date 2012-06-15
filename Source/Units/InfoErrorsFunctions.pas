@@ -2,7 +2,8 @@ unit InfoErrorsFunctions;
 
 interface
 
-uses Forms, SysUtils, Windows, TreeViewHandle, VirtualTrees, StrMan, RegExpr,  
+uses IniFiles,
+     Forms, SysUtils, Windows, TreeViewHandle, VirtualTrees, StrMan, RegExpr,
      USubtitlesFunctions, HTMLPars, Functions, General, FastStrings, OCRScripts,
      Undo;
 
@@ -16,20 +17,23 @@ type
                                SpacesAfterQuestionAndExclamation,
                                SpacesBeforeQuestionAndExclamation,
                                SpacesBetweenNumbers);
-  TErrors = record
+
+  TErrors = class
+  private
+    FIniName     : String;
+    FIniSection  : String;
+    FIniSection2 : String;
+  public
     eLinesWithoutLetters   : Boolean;
     eEmptySubtitle         : Boolean;
     // ------------------------------
     eOverlapping           : Boolean;
     eBadValues             : Boolean;
-    eTooLongDurations      : Boolean;
-    eTooShortDurations     : Boolean;
-    eTooLongLines          : Boolean;
     eOverTwoLines          : Boolean;
     // ------------------------------
     eHearingImpaired       : Boolean;
     eTextBeforeColon       : Boolean;
-     eOnlyIfCapitalLetters : Boolean;
+    eOnlyIfCapitalLetters  : Boolean;
     eUnnecessaryDots       : Boolean;
     eProhibitedCharacter   : Boolean;
     eRepeatedCharacter     : Boolean;
@@ -41,7 +45,25 @@ type
     eSpaceBeforeCustChars  : Boolean;
     eUnnecessarySpaces     : Boolean;
     eWhatUnnecessarySpaces : TUnnecessarySpaces;
+    // ------------------------------
+    constructor Create(IniFname, IniSection, IniSection2 : String);
+    destructor Destroy; override;
+    procedure LoadVars(); virtual;
+    procedure SaveVars(); virtual;
   end;
+
+  TErrorsCheck = class(TErrors)
+  public
+    eTooLongDurations      : Boolean;
+    eTooShortDurations     : Boolean;
+    eTooLongLines          : Boolean;
+    eTooSmallCPS           : Boolean;
+    eTooBigCPS             : Boolean;
+    procedure LoadVars(); override;
+    procedure SaveVars(); override;
+  end;
+
+
   TFixTypes = (ftLinesWithoutLettersDeleted,
                ftEmptySubtitleDeleted,
                // ------------------------------
@@ -79,6 +101,8 @@ function HasRepeatedChar(Text: String): Boolean;
 function HasSpaceAfterOrBeforeCustomChar(const Text: String; const After: Boolean): Boolean;
 function HasUnnecessarySpaces(Text: String): Boolean;
 function HasTooLongLine(Text: String): Boolean;
+function HasTooSmallCPS(Text: String; MSec: Integer): Boolean;
+function HasTooBigCPS(Text: String; MSec: Integer): Boolean;
 // --
 function GetError(Node, Previous: PVirtualNode): TErrorTypeSet;
 procedure CheckMarkErrors;
@@ -97,7 +121,7 @@ procedure FixErrors(const OnlySelected: Boolean = False);
 // -----------------------------------------------------------------------------
 
 var
-  ErrorsToCheck : TErrors;
+  ErrorsToCheck : TErrorsCheck;
   ErrorsToFix   : TErrors;
   // -------------------------//
   //  Information and errors  //
@@ -120,6 +144,8 @@ var
   TooLongDuration      : Integer;
   TooShortDuration     : Integer;
   TooLongLine          : Integer;
+  TooSmallCPS          : Single;
+  TooBigCPS            : Single;
   // -----------
   CancelProcess: Boolean;
 
@@ -205,6 +231,9 @@ end;
 function IsHearingImpaired(Text: String): Boolean;
 begin
   Result := False;
+
+  Text := RemoveSWTags(Text, True, True, True, True, True);   // without remove <i> judged as HI subtitle 
+
   if ((Pos('(', Text) > 0) and (Pos(')', Text) > Pos('(', Text))) or
      ((Pos('[', Text) > 0) and (Pos(']', Text) > Pos('[', Text))) or
      ((Pos('<', Text) > 0) and (Pos('>', Text) > Pos('<', Text))) then
@@ -401,6 +430,9 @@ var
   PosEnter : Integer;
 begin
   Result   := False;
+
+  Text := RemoveSWTags(Text, True, True, True, True);
+
   PosEnter := Pos(#13#10, Text);
   // For multi line subtitles...
   while PosEnter > 0 do
@@ -419,6 +451,23 @@ end;
 
 // -----------------------------------------------------------------------------
 
+function HasTooSmallCPS(Text: String; MSec: Integer): Boolean;
+begin
+  if GetCharsPerMSec(Text, MSec) < TooSmallCPS then
+    Result := True else
+    Result := False;
+end;
+
+// -----------------------------------------------------------------------------
+
+function HasTooBigCPS(Text: String; MSec: Integer): Boolean;
+begin
+  if GetCharsPerMSec(Text, MSec) >= TooBigCPS then
+    Result := True else
+    Result := False;
+end;
+
+// -----------------------------------------------------------------------------
 function GetError(Node, Previous: PVirtualNode): TErrorTypeSet;
 var
   Data    : PSubtitleItem; // Node
@@ -614,6 +663,21 @@ begin
       Data.ErrorType := Data.ErrorType + [etTooLongLine];
   end;
 
+  // ----------------- //
+  // Too small/big CPS //
+  // ----------------- //
+  if ErrorsToCheck.eTooSmallCPS then
+  begin
+    if HasTooSmallCPS(SubText, Data.FinalTime-Data.InitialTime) then
+      Data.ErrorType := Data.ErrorType + [etTooSmallCPS];
+  end;
+
+  if ErrorsToCheck.eTooBigCPS then
+  begin
+    if HasTooBigCPS(SubText, Data.FinalTime-Data.InitialTime) then
+      Data.ErrorType := Data.ErrorType + [etTooBigCPS];
+  end;
+
   Result := Data.ErrorType;
 end;
 
@@ -625,6 +689,7 @@ var
 begin
   if (ErrorsToCheck.eOCRErrors) and (FileExists(OCRDefFile)) then
     ParseOCRErrors(OCRDefFile);
+    
   with frmMain do
   begin
     Node := lstSubtitles.GetFirst;
@@ -955,12 +1020,7 @@ var
   DataP   : PSubtitleItem; // Previous
   SubText : String;
   tmpText : String;
-  // Variables to store tags
-  Bold      : Boolean;
-  Italic    : Boolean;
-  Underline : Boolean;
-  SubColor  : Integer;
-  // -
+  StyleTag : TStyleTag;
   i: Integer;
   OVERLAPPRECISION: Integer;
 begin
@@ -970,13 +1030,8 @@ begin
   if Assigned(Previous) then
     DataP := frmMain.lstSubtitles.GetNodeData(Previous);
 
-  // Store tags
-  Bold      := Pos('<b>', Data.Text) > 0;
-  Italic    := Pos('<i>', Data.Text) > 0;
-  Underline := Pos('<u>', Data.Text) > 0;
-  SubColor  := GetSubColor(Data.Text);
-  // Important!!!: Remove tags
-  SubText := RemoveSWTags(Data.Text, True, True, True, True);
+  StyleTag := StoreTags(Data.Text);
+  SubText := RemoveSWTags(Data.Text, True, True, True, True);  // Important!!!: Remove tags
 
   // --------------------- //
   // Lines without letters //
@@ -1290,12 +1345,7 @@ begin
 
   if SubtitleAPI.NoInteractionWithTags = False then
   begin
-    // Restore tags...
-    if Underline = True then SubText := '<u>' + SubText;
-    if Bold      = True then SubText := '<b>' + SubText;
-    if Italic    = True then SubText := '<i>' + SubText;
-    if SubColor > -1 then
-      SubText := SetColorTag(SubText, SubColor);
+    SubText := RestoreSWTags(SubText, StyleTag);
   end;
 
   // Apply modifications done to the text
@@ -1407,5 +1457,167 @@ begin
 end;
 
 // -----------------------------------------------------------------------------
+
+{ TErrors }
+
+const
+  KEYLINESWITHOUTLETTERS  = 'Lines without letters';
+  KEYEMPTYSUBTITLES       = 'Empty subtitles';
+  KEYOVERLAPPINGSUBTITLES = 'Overlapping subtitles';
+  KEYBADVALUES            = 'Bad values';
+  KEYSUBTITLESOVER2LINES  = 'Subtitles over two lines';
+  KEYHEARINGIMPAIREDSUBS  = 'Hearing impaired subtitles';
+  KEYTEXTBEFORECOLON      = 'Text before colon (":")';
+  KEYONLYIFTEXTISCAPITAL  = 'Only if text is in capital letters';
+  KEYUNNECESSARYDOTS      = 'Unnecessary dots';
+  KEYPROHIBITEDCHARACTERS = 'Prohibited characters';
+  KEYREPEATEDCHARACTERS   = 'Repeated characters';
+  KEYREPEATEDSUBTITLES    = 'Repeated subtitles';
+  KEYOCRERRORS            = 'OCR Errors';
+  KEYOPENDLGINONELINE     = '"- " in subtitles with one line';
+  KEYSPACEAFTERCUSTOMCHR  = 'Space after custom characters';
+  KEYSPACEBEFORECUSTOMCHR = 'Space before custom characters';
+  KEYUNNECESSARYSPACES    = 'Unnecessary spaces';
+
+  KEYTOOLONGDURATIONS     = 'Too long durations';
+  KEYTOOSHORTDURATIONS    = 'Too short durations';
+  KEYTOOLONGLINES         = 'Too long lines';
+  KEYTOOSMALLCPS          = 'Too small CPS';
+  KEYTOOBIGCPS            = 'Too big CPS';
+
+  KEYENTERSANDSPACESAT    = 'Enters and spaces at the beginning and end';
+  KEYSPACESBETWEENENTERS  = 'Spaces between enters (left and right)';
+  KEYDOUBLESPACESENTERS   = 'Double spaces and enters';
+  KEYSPACESINFRONTOFPUNCT = 'Spaces in front of punctuation marks';
+  KEYSPACESAFTEROPNQUEST  = 'Spaces after "¿" and "¡"';
+  KEYSPACESBEFOREOPNQUEST = 'Spaces before "?" and  "!"';
+  KEYSPACESBETWEENNUMBERS = 'Spaces between numbers';
+
+constructor TErrors.Create(IniFname, IniSection, IniSection2: String);
+begin
+  FIniName     := IniFname;
+  FIniSection  := IniSection;
+  FIniSection2 := IniSection2;
+  LoadVars;
+end;
+
+destructor TErrors.Destroy;
+begin
+  //SaveVars;
+  inherited;
+end;
+
+procedure TErrors.LoadVars;
+var
+  Ini : TIniFile;
+begin
+  Ini := TIniFile.Create(FIniName);
+  try
+    eLinesWithoutLetters  := Ini.ReadBool(FIniSection, KEYLINESWITHOUTLETTERS,  True);
+    eEmptySubtitle        := Ini.ReadBool(FIniSection, KEYEMPTYSUBTITLES,       True);
+    eOverlapping          := Ini.ReadBool(FIniSection, KEYOVERLAPPINGSUBTITLES, True);
+    eBadValues            := Ini.ReadBool(FIniSection, KEYBADVALUES,            True);
+    eOverTwoLines         := Ini.ReadBool(FIniSection, KEYSUBTITLESOVER2LINES,  True);
+    eHearingImpaired      := Ini.ReadBool(FIniSection, KEYHEARINGIMPAIREDSUBS,  True);
+    eTextBeforeColon      := Ini.ReadBool(FIniSection, KEYTEXTBEFORECOLON,      True);
+    eOnlyIfCapitalLetters := Ini.ReadBool(FIniSection, KEYONLYIFTEXTISCAPITAL,  True);
+    eUnnecessaryDots      := Ini.ReadBool(FIniSection, KEYUNNECESSARYDOTS,      True);
+    eProhibitedCharacter  := Ini.ReadBool(FIniSection, KEYPROHIBITEDCHARACTERS, False);
+    eRepeatedCharacter    := Ini.ReadBool(FIniSection, KEYREPEATEDCHARACTERS,   True);
+    eRepeatedSubtitle     := Ini.ReadBool(FIniSection, KEYREPEATEDSUBTITLES,    True);
+    eOCRErrors            := Ini.ReadBool(FIniSection, KEYOCRERRORS,            True);
+    eOpnDlgSubsOneLine    := Ini.ReadBool(FIniSection, KEYOPENDLGINONELINE,     True);
+    eSpaceAfterCustChars  := Ini.ReadBool(FIniSection, KEYSPACEAFTERCUSTOMCHR,  True);
+    eSpaceBeforeCustChars := Ini.ReadBool(FIniSection, KEYSPACEBEFORECUSTOMCHR, False);
+    eUnnecessarySpaces    := Ini.ReadBool(FIniSection, KEYUNNECESSARYSPACES,    True);
+
+    eWhatUnnecessarySpaces := [];
+    if Ini.ReadBool(FIniSection2, KEYENTERSANDSPACESAT, True) then    eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [EntersAndSpacesBeginningEnd];
+    if Ini.ReadBool(FIniSection2, KEYSPACESBETWEENENTERS, True) then  eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesBetweenEnters];
+    if Ini.ReadBool(FIniSection2, KEYDOUBLESPACESENTERS, True) then   eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [DoubleSpacesAndEnters];
+    if Ini.ReadBool(FIniSection2, KEYSPACESINFRONTOFPUNCT, True) then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesFrontPunctuation];
+    if Ini.ReadBool(FIniSection2, KEYSPACESAFTEROPNQUEST, True) then  eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesAfterQuestionAndExclamation];
+    if Ini.ReadBool(FIniSection2, KEYSPACESBEFOREOPNQUEST, True) then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesBeforeQuestionAndExclamation];
+    if Ini.ReadBool(FIniSection2, KEYSPACESBETWEENNUMBERS, True) then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesBetweenNumbers];
+  finally
+    Ini.Free;
+  end;
+end;
+
+procedure TErrors.SaveVars;
+var
+  Ini : TIniFile;
+begin
+  Ini := TIniFile.Create(FIniName);
+  try
+    Ini.WriteBool(FIniSection, KEYLINESWITHOUTLETTERS,  eLinesWithoutLetters);
+    Ini.WriteBool(FIniSection, KEYEMPTYSUBTITLES,       eEmptySubtitle);
+    Ini.WriteBool(FIniSection, KEYOVERLAPPINGSUBTITLES, eOverlapping);
+    Ini.WriteBool(FIniSection, KEYBADVALUES,            eBadValues);
+    Ini.WriteBool(FIniSection, KEYSUBTITLESOVER2LINES,  eOverTwoLines);
+    Ini.WriteBool(FIniSection, KEYHEARINGIMPAIREDSUBS,  eHearingImpaired);
+    Ini.WriteBool(FIniSection, KEYTEXTBEFORECOLON,      eTextBeforeColon);
+    Ini.WriteBool(FIniSection, KEYONLYIFTEXTISCAPITAL,  eOnlyIfCapitalLetters);
+    Ini.WriteBool(FIniSection, KEYUNNECESSARYDOTS,      eUnnecessaryDots);
+    Ini.WriteBool(FIniSection, KEYPROHIBITEDCHARACTERS, eProhibitedCharacter);
+    Ini.WriteBool(FIniSection, KEYREPEATEDCHARACTERS,   eRepeatedCharacter);
+    Ini.WriteBool(FIniSection, KEYREPEATEDSUBTITLES,    eRepeatedSubtitle);
+    Ini.WriteBool(FIniSection, KEYOCRERRORS,            eOCRErrors);
+    Ini.WriteBool(FIniSection, KEYOPENDLGINONELINE,     eOpnDlgSubsOneLine);
+    Ini.WriteBool(FIniSection, KEYSPACEAFTERCUSTOMCHR,  eSpaceAfterCustChars);
+    Ini.WriteBool(FIniSection, KEYSPACEBEFORECUSTOMCHR, eSpaceBeforeCustChars);
+    Ini.WriteBool(FIniSection, KEYUNNECESSARYSPACES,    eUnnecessarySpaces);
+
+    Ini.WriteBool(FIniSection2, KEYENTERSANDSPACESAT,    EntersAndSpacesBeginningEnd in eWhatUnnecessarySpaces);
+    Ini.WriteBool(FIniSection2, KEYSPACESBETWEENENTERS,  SpacesBetweenEnters in eWhatUnnecessarySpaces);
+    Ini.WriteBool(FIniSection2, KEYDOUBLESPACESENTERS,   DoubleSpacesAndEnters in eWhatUnnecessarySpaces);
+    Ini.WriteBool(FIniSection2, KEYSPACESINFRONTOFPUNCT, SpacesFrontPunctuation in eWhatUnnecessarySpaces);
+    Ini.WriteBool(FIniSection2, KEYSPACESAFTEROPNQUEST,  SpacesAfterQuestionAndExclamation in eWhatUnnecessarySpaces);
+    Ini.WriteBool(FIniSection2, KEYSPACESBEFOREOPNQUEST, SpacesBeforeQuestionAndExclamation in eWhatUnnecessarySpaces);
+    Ini.WriteBool(FIniSection2, KEYSPACESBETWEENNUMBERS, SpacesBetweenNumbers in eWhatUnnecessarySpaces);
+
+  finally
+    Ini.Free;
+  end;
+end;
+
+
+{ TErrorsCheck }
+
+procedure TErrorsCheck.LoadVars;
+var
+  Ini : TIniFile;
+begin
+  inherited;
+
+  Ini := TIniFile.Create(FIniName);
+  try
+    eTooLongDurations     := Ini.ReadBool(FIniSection, KEYTOOLONGDURATIONS,  True);
+    eTooShortDurations    := Ini.ReadBool(FIniSection, KEYTOOSHORTDURATIONS, True);
+    eTooLongLines         := Ini.ReadBool(FIniSection, KEYTOOLONGLINES,      True);
+    eTooSmallCPS          := Ini.ReadBool(FIniSection, KEYTOOSMALLCPS,       False);
+    eTooBigCPS            := Ini.ReadBool(FIniSection, KEYTOOBIGCPS,         True);
+  finally
+    Ini.Free;
+  end;
+end;
+
+procedure TErrorsCheck.SaveVars;
+var
+  Ini : TIniFile;
+begin
+  inherited;
+
+  Ini := TIniFile.Create(FIniName);
+  try
+    Ini.WriteBool(FIniSection, KEYTOOLONGDURATIONS,  eTooLongDurations);
+    Ini.WriteBool(FIniSection, KEYTOOSHORTDURATIONS, eTooShortDurations);
+    Ini.WriteBool(FIniSection, KEYTOOLONGLINES,      eTooLongLines);
+    Ini.WriteBool(FIniSection, KEYTOOSMALLCPS,       eTooSmallCPS);
+    Ini.WriteBool(FIniSection, KEYTOOBIGCPS,         eTooBigCPS);
+  finally
+    Ini.Free;
+  end;
+end;
 
 end.

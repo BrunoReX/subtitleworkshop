@@ -181,8 +181,8 @@ begin
         UndoList.Add(UndoAction);
 
         FinalTime := InitialTime + StrToInt(edtMinDur.Text);
-        if (Node <> lstSubtitles.GetLast) and (FinalTime > GetStartTime(Node.NextSibling)) then
-          FinalTime := GetStartTime(Node.NextSibling) - 1;
+        if (Node <> lstSubtitles.GetLast) and (FinalTime > GetStartTime(Node.NextSibling) - frmMain.Vars.GapBetweenSubs) then
+          FinalTime := GetStartTime(Node.NextSibling) - frmMain.Vars.GapBetweenSubs;
         SetFinalTime(Node, FinalTime);
       end;
 
@@ -191,7 +191,7 @@ begin
     
     mnuUndo.Enabled := True;
     OrgModified   := True;
-    TransModified := True;
+  	TransModified := True;
     RefreshTimes;
   end;
   Close;

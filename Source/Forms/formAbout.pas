@@ -49,11 +49,18 @@ type
     lblRoma1: TLabel;
     lblTranslatorsList: TLabel;
     lblBedazzle1: TLabel;
-    lblDonation: TLabel;
     lblDefaultIconBy: TLabel;
     lblKornKid: TLabel;
-    Label1: TLabel;
-    Label2: TLabel;
+    lblCopyrightBdzl: TLabel;
+    lblCopyrightGPL: TLabel;
+    lblCopyrightGPL2: TLabel;
+    lblBedazzle2: TLabel;
+    lblCopyrightGPL3: TLabel;
+    lblCopyrightGPL4: TLabel;
+    lblBetaTester5: TLabel;
+    lblBetaTester6: TLabel;
+    lblBetaTester7: TLabel;
+    lblBedazzle3: TLabel;
     procedure TimerTimer(Sender: TObject);
     procedure pgeCtrlChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -81,6 +88,27 @@ uses formMain;
 // -----------------------------------------------------------------------------
 
 procedure TfrmAbout.SetLanguage;
+  function GetVersion(sFileName: string): string;
+  var
+    VerInfoSize: DWORD;
+    VerInfo: Pointer;
+    VerValueSize: DWORD;
+    VerValue: PVSFixedFileInfo;
+    Dummy: DWORD;
+  begin
+    VerInfoSize := GetFileVersionInfoSize(PChar(sFileName), Dummy);
+    GetMem(VerInfo, VerInfoSize);
+    GetFileVersionInfo(PChar(sFileName), 0, VerInfoSize, VerInfo);
+    VerQueryValue(VerInfo, '\', Pointer(VerValue), VerValueSize);
+    with VerValue^ do
+    begin
+      Result := IntToStr(dwFileVersionMS shr 16);
+      Result := Result + '.' + IntToStr(dwFileVersionMS and $FFFF);
+      Result := Result + '.' + IntToStr(dwFileVersionLS shr 16);
+      Result := Result + '.' + IntToStr(dwFileVersionLS and $FFFF);
+    end;
+    FreeMem(VerInfo, VerInfoSize);
+  end;
 var
   LF: TIniFile;
   APIVersion: String;
@@ -95,10 +123,11 @@ begin
       Caption                     := Format(ReadString('About form', '01', 'About %s'), [ID_PROGRAM]);
       pgeInformation.Caption      := ReadString('About form', '02', 'Information');
       pgeCredits.Caption          := ReadString('About form', '03', 'Credits');
-      lblVersion.Caption          := Format(ReadString('About form', '04', 'Version: %s'), [ID_VERSION]);
+//      lblVersion.Caption          := Format(ReadString('About form', '04', 'Version: %s'), [ID_VERSION]);
+      lblVersion.Caption          := Format(ReadString('About form', '04', 'Version: %s'), [GetVersion(Application.Exename)]);
       lblSubtitleAPIVer.Caption   := Format(ReadString('About form', '05', '%s version: %s'), [ID_COMPANY + ' ' + 'Subtitle API', APIVersion]);
       lblSupportedFormats.Caption := Format(ReadString('About form', '06', '%d different supported formats'), [SubtitleAPI.FormatsCount]);
-      lblDonation.Caption         := ReadString('About form', '07', 'If you like this software, we would really appreciate you could make a donation. Click here to do it.');
+//      lblDonation.Caption         := ReadString('About form', '07', 'If you like this software, we would really appreciate you could make a donation. Click here to do it.');
       lblCredits.Caption          := pgeCredits.Caption;
       lblProgrammedBy.Caption     := ReadString('About form', '08', 'Programmed by');
       lblAdditionalProgramming.Caption := ReadString('About form', '09', 'Additional programming');
@@ -108,14 +137,20 @@ begin
       lblBetaTesters.Caption      := ReadString('About form', '13', 'Beta testers');
       lblDefaultIconBy.Caption    := ReadString('About form', '14', 'Default icon by');
       lblForUpdVisit.Caption      := ReadString('About form', '15', 'For updates visit:');
-      btnOk.Caption := BTN_OK;                     
-      
+
+      lblCopyrightGPL.Caption     := ReadString('About form', '16', 'Subtitle Workshop is released');
+      lblCopyrightGPL2.Caption    := ReadString('About form', '17', 'under the GNU/GPL 3 license.');
+      lblCopyrightGPL3.Caption     := lblCopyrightGPL.Caption;
+      lblCopyrightGPL4.Caption    := lblCopyrightGPL2.Caption;
+
+      btnOk.Caption := BTN_OK;
+
       // ------------------ //
       //      Set font      //
       // ------------------ //
       btnOK.ParentFont                    := True;
       lblVersion.ParentFont               := True;
-      lblDonation.ParentFont              := True;
+//      lblDonation.ParentFont              := True;
       lblVer.ParentFont                   := True;
       lblSupportedFormats.ParentFont      := True;
       lblCredits.ParentFont               := True;
@@ -130,7 +165,7 @@ begin
       Font                                := frmMain.Font;
       btnOk.Font.Style                    := frmMain.Font.Style + [fsBold];
       lblVersion.Font.Style               := frmMain.Font.Style + [fsBold];
-      lblDonation.Font.Style              := frmMain.Font.Style + [fsBold];
+//      lblDonation.Font.Style              := frmMain.Font.Style + [fsBold];
       lblSupportedFormats.Font.Style      := frmMain.Font.Style + [fsBold];
       lblVer.Font.Style                   := frmMain.Font.Style + [fsBold];
       lblVer.Font.Size                    := frmMain.Font.Size + 2;
@@ -144,6 +179,14 @@ begin
       lblDefaultIconBy.Font.Style         := frmMain.Font.Style + [fsBold];
       lblForUpdVisit.Font.Style           := frmMain.Font.Style + [fsBold];
 
+      lblCopyrightGPL.ParentFont     := True;
+      lblCopyrightGPL2.ParentFont    := True;
+      lblCopyrightGPL3.ParentFont    := True;
+      lblCopyrightGPL4.ParentFont    := True;
+      lblCopyrightGPL.Font.Style     := frmMain.Font.Style + [fsBold];
+      lblCopyrightGPL2.Font.Style    := frmMain.Font.Style + [fsBold];
+      lblCopyrightGPL3.Font.Style    := frmMain.Font.Style + [fsBold];
+      lblCopyrightGPL4.Font.Style    := frmMain.Font.Style + [fsBold];
     end;
   finally
     LF.Free;
@@ -229,7 +272,6 @@ begin
   lblEMail.Caption      := Format('E-Mail: %s', [ID_EMAIL]);
   lblWeb.Caption        := ID_WEBPAGE;
   lblWeb2.Caption       := ID_WEBPAGE;
-//  lblCopyright.Caption  := 'Copyright © 2001-2004 ' + ID_COMPANY;
   lblCopyright.Caption  := 'Copyright © 2001-2008 ' + ID_COMPANY;
   lblCopyright2.Caption := lblCopyright.Caption;
   SetLanguage;
@@ -273,7 +315,7 @@ end;
 
 procedure TfrmAbout.lblDonationClick(Sender: TObject);
 begin
-  ShellExecute(0, 'open', PChar(ID_DONATIONPAGE), nil, nil, SW_SHOW);
+//  ShellExecute(0, 'open', PChar(ID_DONATIONPAGE), nil, nil, SW_SHOW);
 end;
 
 // -----------------------------------------------------------------------------

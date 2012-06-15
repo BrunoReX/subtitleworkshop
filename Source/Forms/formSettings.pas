@@ -6,12 +6,11 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls, StdCtrls, ComCtrls, CheckLst, Functions, Registry, IniFiles,
   General, USubtitleAPI, USubtitlesFunctions, FileTypes, MiSubtitulo,
-  VideoPreview, NFormSizing, FastStrings, VirtualTrees, Mask;
+  VideoPreview, NFormSizing, FastStrings, VirtualTrees, Mask, RZNEdit;
 
 type
   TfrmSettings = class(TForm)
     pnlHeading: TPanel;
-    imgDrawing: TImage;
     lblTitle: TLabel;
     lblDescription: TLabel;
     bvlSeparator: TBevel;
@@ -77,8 +76,6 @@ type
     chkDrawShadow: TCheckBox;
     chkTransparent: TCheckBox;
     btnSubFont: TButton;
-    btnSubColor: TButton;
-    btnBackground: TButton;
     edtBorderWidth: TLabeledEdit;
     edtShadowWidth: TLabeledEdit;
     udShadowWidth: TUpDown;
@@ -144,20 +141,50 @@ type
     udShiftTime: TUpDown;
     lblMilliseconds: TLabel;
     chkNoInteractionWithTags: TCheckBox;
+    lblUntranslatedText: TLabel;
+    edtUntranslatedText: TEdit;
+    edCPSrange1: TIntegerEdit;
+    edCPSrange2: TIntegerEdit;
+    edCPSrange3: TIntegerEdit;
+    udCPSrange1: TUpDown;
+    udCPSrange2: TUpDown;
+    udCPSrange3: TUpDown;
+    lblCPScoloring: TLabel;
+    pnlCPSrange1: TPanel;
+    pnlCPSrange2: TPanel;
+    pnlCPSrange3: TPanel;
+    pnlCPSrange4: TPanel;
+    chkShowColorBar: TCheckBox;
+    pnlSubtitleAbsent: TPanel;
+    pnlSubtitleOK: TPanel;
+    rgSubtitlePosition: TRadioGroup;
+    edtNewSubDuration: TLabeledEdit;
+    udNewSubDuration: TUpDown;
+    lblMilliseconds2: TLabel;
+    edtGapBetweenSubs: TLabeledEdit;
+    udGapBetweenSubs: TUpDown;
+    lblMilliseconds3: TLabel;
+    lblDoubleClickBox: TLabel;
+    cmbDoubleClickBox: TComboBox;
+    pnlSubColor: TPanel;
+    lblSubColor: TLabel;
+    pnlSubBackground: TPanel;
+    lblSubBackground: TLabel;
+    pnlSubTransparency: TPanel;
+    lblSubTransparency: TLabel;
+    lblSubFont: TLabel;
+    chkPlayVideoOnLoad: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure tvSettingsClick(Sender: TObject);
-    procedure tvSettingsKeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure tvSettingsKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnOkClick(Sender: TObject);
     procedure btnSelectAllExtClick(Sender: TObject);
     procedure btnSelectZeroExtClick(Sender: TObject);
     procedure chkAssociateExtensionsClick(Sender: TObject);
     procedure chkSaveAutomaticallyClick(Sender: TObject);
-    procedure cmbFontsDrawItem(Control: TWinControl; Index: Integer;
-      Rect: TRect; State: TOwnerDrawState);
+    procedure cmbFontsDrawItem(Control: TWinControl; Index: Integer; Rect: TRect; State: TOwnerDrawState);
     procedure btnOutputSettingsClick(Sender: TObject);
-    procedure tvSettingsCollapsing(Sender: TObject; Node: TTreeNode;
-      var AllowCollapse: Boolean);
+    procedure tvSettingsCollapsing(Sender: TObject; Node: TTreeNode; var AllowCollapse: Boolean);
     procedure chkDrawBorderClick(Sender: TObject);
     procedure chkDrawShadowClick(Sender: TObject);
     procedure btnSubFontClick(Sender: TObject);
@@ -172,16 +199,21 @@ type
     procedure btnBrowse2Click(Sender: TObject);
     procedure rdoOriginalFormatClick(Sender: TObject);
     procedure rdoCustomFormatClick(Sender: TObject);
-    procedure chkRegExtOnStartMouseUp(Sender: TObject;
-      Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure chkRegExtOnStartKeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure chkRegExtOnStartMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure chkRegExtOnStartKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure chklstExtensionsClickCheck(Sender: TObject);
     procedure pnlUnTransColorClick(Sender: TObject);
     procedure chkUseOfficeXPStyleMenuClick(Sender: TObject);
     procedure btnSelectAllFormatClick(Sender: TObject);
     procedure btnSelectZeroFormatClick(Sender: TObject);
     procedure chkTransparentClick(Sender: TObject);
+    procedure pnlCPSrange1Click(Sender: TObject);
+    procedure pnlCPSrange2Click(Sender: TObject);
+    procedure pnlCPSrange3Click(Sender: TObject);
+    procedure pnlCPSrange4Click(Sender: TObject);
+    procedure pnlSubtitleAbsentClick(Sender: TObject);
+    procedure pnlSubtitleOKClick(Sender: TObject);
+    procedure pnlSubTransparencyClick(Sender: TObject);
   private
     procedure SetLanguage;
     procedure UpdateSubSamplePos;
@@ -271,6 +303,11 @@ begin
       chkNoInteractionWithTags.Caption := ReadString('Settings Form', '25', 'No interaction with tags');
       chkWorkWithStyleTags.Caption     := ReadString('Settings Form', '26', 'Work with style tags');
       edtRFLimit.EditLabel.Caption     := ReadString('Settings Form', '27', 'Recent files limit:');
+      lblDoubleClickBox.Caption        := ReadString('Settings Form', '99', 'Double click on Original/Translation box');
+      cmbDoubleClickBox.Items.Add(ReadString('Settings Form', '100', 'Default (select text)'));
+      cmbDoubleClickBox.Items.Add(ReadString('Settings Form', '101', 'Put cursor in front of first letter'));
+      cmbDoubleClickBox.Items.Add(ReadString('Settings Form', '102', 'Put cursor behind last letter'));
+      cmbDoubleClickBox.ItemIndex := frmMain.Vars.DblClickBox;
 
       // Advanced
       gbSmartLineAdjust.Caption                 := ReadString('Settings Form', '28', 'Smart line adjust');
@@ -285,6 +322,11 @@ begin
       lblCharacters3.Caption                    := lblCharacters1.Caption;
       edtShiftTime.EditLabel.Caption            := ReadString('Settings Form', '36', 'Shift time:');
       lblMilliseconds.Caption                   := ReadString('Settings Form', '37', 'milliseconds');
+      lblMilliseconds2.Caption                  := lblMilliseconds.Caption;
+      lblMilliseconds3.Caption                  := lblMilliseconds.Caption;
+      lblCPSColoring.Caption                    := ReadString('Settings Form', '92', 'CPS coloring');
+      edtNewSubDuration.EditLabel.Caption       := ReadString('Settings Form', '97', 'Add subtitle:');
+      edtGapBetweenSubs.EditLabel.Caption       := ReadString('Settings Form', '98', 'Gap between subtitles:');
 
       // Charsets
       chkShowInMainForm.Caption := ReadString('Settings Form', '38', 'Show in main form');
@@ -296,7 +338,7 @@ begin
       lblFormatsToShow.Caption     := ReadString('Settings Form', '42', 'Formats to show when "Save as":');
       chkShowCustomFormats.Caption := ReadString('Settings Form', '43', 'Show custom formats');
       btnSelectAllFormat.Caption   := ReadString('Settings Form', '44', 'Select &all');
-      btnSelectZeroFormat.Caption  := ReadString('Settings Form', '45', 'Select &zero');
+      btnSelectZeroFormat.Caption  := ReadString('Settings Form', '45', 'Select &none');
 
       // File types
       chkRegExtOnStart.Caption       := ReadString('Settings Form', '46', 'Register extensions on start');
@@ -325,19 +367,25 @@ begin
       lblRewindAndForward.Caption   := ReadString('Settings Form', '59', 'Rewind and forward time:');
       lblSeconds.Caption            := ReadString('Settings Form', '60', 'seconds.');
       lblDefaultAltPlayRate.Caption := ReadString('Settings Form', '61', 'Default altered playback rate:');
+      chkPlayVideoOnLoad.Caption    := ReadString('Settings Form', '103', 'Play video on load');
 
       // Video Preview Subtitles
       chkDrawBorder.Caption        := ReadString('Settings Form', '62', 'Draw border');
       chkDrawShadow.Caption        := ReadString('Settings Form', '63', 'Draw shadow');
       chkTransparent.Caption       := ReadString('Settings Form', '64', 'Try transparent background');
       chkForceUsingRegions.Caption := ReadString('Settings Form', '65', 'Force using regions (may be slow)');
-      btnSubFont.Caption     := ReadString('Settings Form', '66', 'Font...');
-      btnSubColor.Caption    := ReadString('Settings Form', '67', 'Color...');
-      btnBackground.Caption  := ReadString('Settings Form', '68', 'Background...');
+      lblSubFont.Caption           := ReadString('Settings Form', '66', 'Font...');
+      lblSubColor.Caption          := ReadString('Settings Form', '67', 'Color...');
+      lblSubBackground.Caption     := ReadString('Settings Form', '68', 'Background...');
+      lblSubTransparency.Caption   := ReadString('Settings Form', '103', 'Transparency...');
 
       edtBorderWidth.EditLabel.Caption := ReadString('Settings Form', '69', 'Border width:');
       edtShadowWidth.EditLabel.Caption := ReadString('Settings Form', '70', 'Shadow width:');
       subSample.Text                   := ReadString('Settings Form', '71', 'SAMPLE');
+
+      rgSubtitlePosition.Caption := ReadString('Settings Form', '94', 'Position');
+      rgSubtitlePosition.Items[0] := ReadString('Settings Form', '95', 'Screen top');
+      rgSubtitlePosition.Items[1] := ReadString('Settings Form', '96', 'Screen bottom');
 
       // External preview general
       edtVidPlayer.EditLabel.Caption  := ReadString('Settings Form', '72', 'Exe of the video player:');
@@ -363,12 +411,14 @@ begin
       cmbTextAlign.Items.Add(Copy(tmpItem, 1, Pos('|', tmpItem) - 1));
       cmbTextAlign.Items.Add(Copy(tmpItem, Pos('|', tmpItem) + 1, SmartPos('|', tmpItem, True, Pos('|', tmpItem) + 1) - (Pos('|', tmpItem) + 1)));
       cmbTextAlign.Items.Add(Copy(tmpItem, SmartPos('|', tmpItem, True, Pos('|', tmpItem) + 1) + 1, Length(tmpItem)));
+      chkShowColorBar.Caption            := ReadString('Settings Form', '93', 'Show color bar');
 
       // Look / List
       chkShowGridLines.Caption     := ReadString('Settings Form', '85', 'Show grid lines');
       chkApplyStyle.Caption        := ReadString('Settings Form', '86', 'Apply style to subtitles');
       chkMarkUnTransSubs.Caption   := ReadString('Settings Form', '87', 'Mark untranslated subtitles with color:');
       chkShowHorzScrollBar.Caption := ReadString('Settings Form', '88', 'Show horizontal scrollbar');
+      lblUntranslatedText.Caption  := ReadString('Settings Form', '91', 'Text for untranslated subtitles');
 
       // Look / Menu
       chkUseOfficeXPStyleMenu.Caption := ReadString('Settings Form', '89', 'Use Office XP style Menu');
@@ -543,46 +593,13 @@ end;
 
 procedure TfrmSettings.tvSettingsClick(Sender: TObject);
 begin
-{  case tvSettings.Selected.ImageIndex of
-    0: pgeCtrl.ActivePage := pgeGeneral;
-    1: pgeCtrl.ActivePage := pgeCharsets;
-    2: pgeCtrl.ActivePage := pgeFormats;
-    3: pgeCtrl.ActivePage := pgeFileTypes;
-    4: pgeCtrl.ActivePage := pgeSave;
-    5: pgeCtrl.ActivePage := pgeVideoPreview;
-    6: pgeCtrl.ActivePage := pgeVideoPreviewSubs;
-    7: pgeCtrl.ActivePage := nil;
-    8: pgeCtrl.ActivePage := pgeExternalPreviewGeneral;
-    9: pgeCtrl.ActivePage := pgeExternalPreviewAdvanced;
-    10: pgeCtrl.ActivePage := nil;
-    11: pgeCtrl.ActivePage := pgeProgramLook;
-    12: pgeCtrl.ActivePage := pgeListLook;
-    13: pgeCtrl.ActivePage := pgeMenuLook;
-  end; }
   pgeCtrl.ActivePageIndex := tvSettings.Selected.ImageIndex;
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmSettings.tvSettingsKeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmSettings.tvSettingsKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-  {case tvSettings.Selected.ImageIndex of
-    0: pgeCtrl.ActivePage := pgeGeneral;
-    1: pgeCtrl.ActivePage := pgeCharsets;
-    2: pgeCtrl.ActivePage := pgeFormats;
-    3: pgeCtrl.ActivePage := pgeFileTypes;
-    4: pgeCtrl.ActivePage := pgeSave;
-    5: pgeCtrl.ActivePage := pgeVideoPreview;
-    6: pgeCtrl.ActivePage := pgeVideoPreviewSubs;
-    7: pgeCtrl.ActivePage := nil;
-    8: pgeCtrl.ActivePage := pgeExternalPreviewGeneral;
-    9: pgeCtrl.ActivePage := pgeExternalPreviewAdvanced;
-    10: pgeCtrl.ActivePage := nil;
-    11: pgeCtrl.ActivePage := pgeProgramLook;
-    12: pgeCtrl.ActivePage := pgeListLook;
-    13: pgeCtrl.ActivePage := pgeMenuLook;
-  end; }
   pgeCtrl.ActivePageIndex := tvSettings.Selected.ImageIndex;
 end;
 
@@ -595,8 +612,6 @@ var
   Reg   : TRegistry;
   Items : TStrings;
 begin
-  // W: 530   H: 421
-
   SetLanguage;
   pgeCtrl.ActivePage := pgeGeneral;
 
@@ -619,15 +634,29 @@ begin
     chkWorkWithStyleTags.Checked     := Ini.ReadBool('Settings', 'Work with style tags', True);
     udRFLimit.Position               := Ini.ReadInteger('Settings', 'MaxRF', 10);
 
+    udCPSrange1.Position := frmMain.Vars.CPSrange1;
+    udCPSrange2.Position := frmMain.Vars.CPSrange2;
+    udCPSrange3.Position := frmMain.Vars.CPSrange3;
+
+    pnlCPSrange1.Color := frmMain.Vars.CPScolor1;
+    pnlCPSrange2.Color := frmMain.Vars.CPScolor2;
+    pnlCPSrange3.Color := frmMain.Vars.CPScolor3;
+    pnlCPSrange4.Color := frmMain.Vars.CPScolor4;
+
+    rgSubtitlePosition.ItemIndex := frmMain.PreviewSubPosition;
+
     // --------------------------------- //
     //             Advanced              //
     // --------------------------------- //
-    udTwoLinesIfLongerThan.Position := Ini.ReadInteger('Advanced', 'Two lines if longer than', 40);
-    chkToggleBreakPoint.Checked     := Ini.ReadBool('Advanced', 'Toggle breakpoint', False);
-    udBreakLineAfter.Position       := Ini.ReadInteger('Advanced', 'Break line after', 40);
     chkSLAAutomatically.Checked     := Ini.ReadBool('Advanced', 'Smart line adjust automatically', True);
-    udMaxLineLength.Position        := Ini.ReadInteger('Advanced', 'Maximum line length', 45);
-    udShiftTime.Position            := Ini.ReadInteger('Advanced', 'Shift time', 100);
+
+    udTwoLinesIfLongerThan.Position := frmMain.Vars.TwoLinesIfLongerThan;
+    chkToggleBreakPoint.Checked     := frmMain.Vars.ToggleBreakPoint;
+    udBreakLineAfter.Position       := frmMain.Vars.BreakLineAfter;
+    udMaxLineLength.Position        := frmMain.Vars.MaxLineLength;
+    udShiftTime.Position            := frmMain.Vars.ShiftTime;
+    udNewSubDuration.Position       := frmMain.Vars.NewSubDuration;
+    udGapBetweenSubs.Position       := frmMain.Vars.GapBetweenSubs;
 
     // --------------------------------- //
     //              Charsets             //
@@ -680,6 +709,7 @@ begin
     udSecsToJump2.Position             := Ini.ReadInteger('Video preview', 'Seconds to jump 2', 1);
     edtRewindAndForwardTime.Text       := Ini.ReadString('Video preview', 'Rewind and forward', '0,500');
     cmbDefaultAltPlayRate.ItemIndex    := Ini.ReadInteger('Video preview', 'Default altered playback rate', 0);
+    chkPlayVideoOnLoad.Checked         := frmMain.PlayOnLoad;
 
     // --------------------------------- //
     //       Video preview/Subtitles     //
@@ -689,12 +719,20 @@ begin
     chkDrawShadow.Checked        := Ini.ReadBool('Video preview subtitles', 'Draw shadow', True);
     subSample.Shadow             := Ini.ReadBool('Video preview subtitles', 'Draw shadow', True);
     chkTransparent.Checked       := Ini.ReadBool('Video preview subtitles', 'Transparent', True);
-    chkForceUsingRegions.Checked := Ini.ReadBool('Video preview subtitles', 'Force using regions', False);
+    chkForceUsingRegions.Checked := Ini.ReadBool('Video preview subtitles', 'Force using regions', True);
     subSample.Font.Name          := Ini.ReadString('Video preview subtitles', 'Font name', 'Tahoma');
     subSample.Font.Size          := Ini.ReadInteger('Video preview subtitles', 'Font size', 14);
+
     subSample.TextColor          := Ini.ReadInteger('Video preview subtitles', 'Font color', clWhite);
+    pnlSubColor.Color            := subSample.TextColor;
+
     subSample.BackgroundColor    := Ini.ReadInteger('Video preview subtitles', 'Background color', clBtnFace);
-    pnlSubSample.Color           := Ini.ReadInteger('Video preview subtitles', 'Background color', clBtnFace);
+    pnlSubBackground.Color       := subSample.BackgroundColor;
+    pnlSubSample.Color           := subSample.BackgroundColor;
+
+    subSample.TransparentColor   := Ini.ReadInteger('Video preview subtitles', 'Transparency color', RGB(5,5,5));
+    pnlSubTransparency.Color     := subSample.TransparentColor;
+
     udBorderWidth.Position       := Ini.ReadInteger('Video preview subtitles', 'Border width', 1);
     udShadowWidth.Position       := Ini.ReadInteger('Video preview subtitles', 'Shadow width', 1);
     subSample.Font.Style         := [];
@@ -706,7 +744,7 @@ begin
       subSample.Font.Style := subSample.Font.Style + [fsUnderline];
     UpdateSubSamplePos;
     chkForceUsingRegions.Enabled := chkTransparent.Checked;
-    
+
     // --------------------------------- //
     //      External preview/General     //
     // --------------------------------- //
@@ -756,6 +794,10 @@ begin
     if cmbTextAlign.ItemIndex <= -1 then
       cmbTextAlign.ItemIndex := 2;
 
+    chkShowColorBar.Checked := frmMain.Vars.ShowColorBar;
+    pnlSubtitleAbsent.Color := frmMain.Vars.SubtitleAbsent;
+    pnlSubtitleOK.Color := frmMain.Vars.SubtitleOK;
+
     // --------------------------------- //
     //             Look / List           //
     // --------------------------------- //
@@ -764,6 +806,8 @@ begin
     chkMarkUnTransSubs.Checked   := Ini.ReadBool('List look', 'Mark untranslated subtitles', True);
     pnlUnTransColor.Color        := Ini.ReadInteger('List look', 'Untranslated subtitles color', clRed);
     chkShowHorzScrollBar.Checked := Ini.ReadBool('List look', 'Show horizontal scrollbar', True);
+    edtUntranslatedText.Text     := Ini.ReadString('List look', 'Untranslated text', UntranslatedSub);
+    UntranslatedSub := edtUntranslatedText.Text;
 
     // --------------------------------- //
     //             Look / Menu           //
@@ -784,6 +828,7 @@ var
   i      : Integer;
   ExtStr : String;
   Ini    : TIniFile;
+  DefRate : TRateClass;
 begin
   ExtStr := '';
   Ini := TIniFile.Create(IniRoot);
@@ -813,23 +858,32 @@ begin
     frmMain.SelTextPL         := chkSelectTextPL.Checked;
     frmMain.RFMaxCount        := udRFLimit.Position;
     frmMain.UpdateRFMenus;
-//    SubtitleAPI.NoInteractionWithTags := chkNoInteractionWithTags.Checked;
+    SubtitleAPI.NoInteractionWithTags := chkNoInteractionWithTags.Checked;
     SubtitleAPI.WorkWithTags          := chkWorkWithStyleTags.Checked;
+    frmMain.Vars.DblClickBox := cmbDoubleClickBox.ItemIndex;
+
+    frmMain.Vars.CPSrange1 := udCPSrange1.Position;
+    frmMain.Vars.CPSrange2 := udCPSrange2.Position;
+    frmMain.Vars.CPSrange3 := udCPSrange3.Position;
+
+    frmMain.Vars.CPScolor1 := pnlCPSrange1.Color;
+    frmMain.Vars.CPScolor2 := pnlCPSrange2.Color;
+    frmMain.Vars.CPScolor3 := pnlCPSrange3.Color;
+    frmMain.Vars.CPScolor4 := pnlCPSrange4.Color;
 
     // --------------------------------- //
     //             Advanced              //
     // --------------------------------- //
-    Ini.WriteInteger('Advanced', 'Two lines if longer than', udTwoLinesIfLongerThan.Position);
-    Ini.WriteBool('Advanced', 'Toggle breakpoint', chkToggleBreakPoint.Checked);
-    Ini.WriteInteger('Advanced', 'Break line after', udBreakLineAfter.Position);
     Ini.WriteBool('Advanced', 'Smart line adjust automatically', chkSLAAutomatically.Checked);
-    Ini.WriteInteger('Advanced', 'Maximum line length', udMaxLineLength.Position);
-    Ini.WriteInteger('Advanced', 'Shift time', udShiftTime.Position);
-    frmMain.TwoLinesIfLongerThan := udTwoLinesIfLongerThan.Position;
-    frmMain.ToggleBreakPoint     := chkToggleBreakPoint.Checked;
-    frmMain.BreakLineAfter       := udBreakLineAfter.Position;
-    frmMain.MaxLineLength        := udMaxLineLength.Position;
-    frmMain.ShiftTime            := udShiftTime.Position;
+
+    frmMain.Vars.TwoLinesIfLongerThan := udTwoLinesIfLongerThan.Position;
+    frmMain.Vars.ToggleBreakPoint     := chkToggleBreakPoint.Checked;
+    frmMain.Vars.BreakLineAfter       := udBreakLineAfter.Position;
+    frmMain.Vars.MaxLineLength        := udMaxLineLength.Position;
+    frmMain.Vars.ShiftTime            := udShiftTime.Position;
+    frmMain.Vars.NewSubDuration       := udNewSubDuration.Position;
+    frmMain.Vars.GapBetweenSubs       := udGapBetweenSubs.Position;
+
 
     // --------------------------------- //
     //              Charsets             //
@@ -837,12 +891,16 @@ begin
     Ini.WriteBool('Settings', 'Show charsets in main form', chkShowInMainForm.Checked);
     Ini.WriteInteger('General', 'Original charset', cmbOrgCharset.ItemIndex);
     Ini.WriteInteger('General', 'Translation charset', cmbTransCharset.ItemIndex);
+
     frmMain.cmbOrgCharset.Visible        := chkShowInMainForm.Checked;
     frmMain.cmbTransCharset.Visible      := chkShowInMainForm.Checked;
+
     frmMain.cmbOrgCharset.ItemIndex      := cmbOrgCharset.ItemIndex;
     frmMain.cmbTransCharset.ItemIndex    := cmbTransCharset.ItemIndex;
+
     frmMain.OrgCharset                   := StrCharsetToInt(cmbOrgCharset.Items[cmbOrgCharset.ItemIndex]);
     frmMain.TransCharset                 := StrCharsetToInt(cmbTransCharset.Items[cmbTransCharset.ItemIndex]);
+
     frmMain.mmoSubtitleText.Font.Charset := frmMain.OrgCharset;
     frmMain.mmoTranslation.Font.Charset  := frmMain.TransCharset;
     if chkShowInMainForm.Checked then
@@ -904,7 +962,30 @@ begin
     frmMain.SecsToJump1     := udSecsToJump1.Position;
     frmMain.SecsToJump2     := udSecsToJump2.Position;
     frmMain.RewFFTime       := StrSecToMS(edtRewindAndForwardTime.Text);
-    frmMain.DefAltPlayRate  := cmbDefaultAltPlayRate.ItemIndex + 1;
+    Ini.WriteBool('Video preview', 'Play on load', chkPlayVideoOnLoad.Checked);
+    frmMain.PlayOnLoad      := chkPlayVideoOnLoad.Checked;
+
+
+//    frmMain.DefAltPlayRate  := cmbDefaultAltPlayRate.ItemIndex + 1;
+    case cmbDefaultAltPlayRate.ItemIndex of
+      0:  DefRate := rate10;
+      1:  DefRate := rate20;
+      2:  DefRate := rate30;
+      3:  DefRate := rate40;
+      4:  DefRate := rate50;
+      5:  DefRate := rate60;
+      6:  DefRate := rate70;
+      7:  DefRate := rate80;
+      8:  DefRate := rate90;
+      9:  DefRate := rate150;
+      10: DefRate := rate200;
+      11: DefRate := rate300;
+      12: DefRate := rate400;
+      else DefRate := rate200;
+    end;
+
+    frmMain.DefAltPlayRate  := DefRate;
+
     SetDefaultShortCut;
 
     // --------------------------------- //
@@ -918,11 +999,13 @@ begin
     Ini.WriteInteger('Video preview subtitles', 'Font size', subSample.Font.Size);
     Ini.WriteInteger('Video preview subtitles', 'Font color', subSample.TextColor);
     Ini.WriteInteger('Video preview subtitles', 'Background color', subSample.BackgroundColor);
+    Ini.WriteInteger('Video preview subtitles', 'Transparency color', subSample.TransparentColor);
     Ini.WriteInteger('Video preview subtitles', 'Border width', udBorderWidth.Position);
     Ini.WriteInteger('Video preview subtitles', 'Shadow width', udShadowWidth.Position);
     Ini.WriteBool('Video preview subtitles', 'Bold', fsBold in subSample.Font.Style);
     Ini.WriteBool('Video preview subtitles', 'Italic', fsItalic in subSample.Font.Style);
     Ini.WriteBool('Video preview subtitles', 'Underline', fsUnderline in subSample.Font.Style);
+    Ini.WriteInteger('Video preview subtitles', 'Position', rgSubtitlePosition.ItemIndex);
     frmMain.subSubtitle.Border    := chkDrawBorder.Checked;
     frmMain.subSubtitle.Shadow    := chkDrawShadow.Checked;
     frmMain.TransparentSubs       := chkTransparent.Checked;
@@ -933,8 +1016,11 @@ begin
     if chkTransparent.Checked then
       frmMain.subSubtitle.BackgroundColor := GetColorKeyFUNC else
       frmMain.subSubtitle.BackgroundColor := subSample.BackgroundColor;
+    frmMain.subSubtitle.TransparentColor := subSample.TransparentColor;
     frmMain.subSubtitle.BorderWidth := udBorderWidth.Position;
     frmMain.subSubtitle.ShadowWidth := udShadowWidth.Position;
+    frmMain.PreviewSubPosition := rgSubtitlePosition.ItemIndex;
+
     UpdateSubtitlesPos;
 
     // --------------------------------- //
@@ -975,6 +1061,10 @@ begin
       mmoTranslation.Font.Style  := Font.Style + [fsBold];
       mmoSubtitleText.Font.Size  := Font.Size + 2;
       mmoTranslation.Font.Size   := Font.Size + 2;
+      mdtSubtitleCPS.ParentFont    := True;
+      mdtTranslationCPS.ParentFont := True;
+      mdtSubtitleCPS.Font.Style    := Font.Style + [fsBold];
+      mdtTranslationCPS.Font.Style := Font.Style + [fsBold];
     end;
     Ini.WriteInteger('Program look', '"Text" and "Translation" fields align', cmbTextAlign.ItemIndex);
     case cmbTextAlign.ItemIndex of
@@ -985,6 +1075,11 @@ begin
     frmMain.mmoSubtitleText.Font.Charset := frmMain.OrgCharset;
     frmMain.mmoTranslation.Font.Charset  := frmMain.TransCharset;
 
+    frmMain.Vars.ShowColorBar := chkShowColorBar.Checked;
+    frmMain.Vars.SubtitleAbsent := pnlSubtitleAbsent.Color;
+    frmMain.Vars.SubtitleOK := pnlSubtitleOK.Color;
+
+
     // --------------------------------- //
     //             Look / List           //
     // --------------------------------- //
@@ -993,6 +1088,9 @@ begin
     Ini.WriteBool('List look', 'Mark untranslated subtitles', chkMarkUnTransSubs.Checked);
     Ini.WriteInteger('List look', 'Untranslated subtitles color', pnlUnTransColor.Color);
     Ini.WriteBool('List look', 'Show horizontal scrollbar', chkShowHorzScrollBar.Checked);
+    Ini.WriteString('List look', 'Untranslated text', edtUntranslatedText.Text);
+    UntranslatedSub := edtUntranslatedText.Text;
+
     if chkShowGridLines.Checked then
       frmMain.lstSubtitles.TreeOptions.PaintOptions := [toShowHorzGridLines, toShowVertGridLines, toShowButtons, toShowDropmark, toShowTreeLines,toThemeAware,toUseBlendedImages] else
       frmMain.lstSubtitles.TreeOptions.PaintOptions := [toShowButtons, toShowDropmark, toShowTreeLines,toThemeAware,toUseBlendedImages];
@@ -1051,7 +1149,10 @@ procedure TfrmSettings.btnSubColorClick(Sender: TObject);
 begin
   dlgSetColor.Color := subSample.TextColor;
   if (dlgSetColor.Execute) then
+  begin
     subSample.TextColor := dlgSetColor.Color;
+    pnlSubColor.Color   := dlgSetColor.Color;
+  end;
 end;
 
 // -----------------------------------------------------------------------------
@@ -1063,6 +1164,19 @@ begin
   begin
     subSample.BackgroundColor := dlgSetColor.Color;
     pnlSubSample.Color        := dlgSetColor.Color;
+    pnlSubBackground.Color    := dlgSetColor.Color;
+  end;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmSettings.pnlSubTransparencyClick(Sender: TObject);
+begin
+  dlgSetColor.Color := subSample.TransparentColor;
+  if (dlgSetColor.Execute) then
+  begin
+    subSample.TransparentColor := dlgSetColor.Color;
+    pnlSubTransparency.Color   := dlgSetColor.Color;
   end;
 end;
 
@@ -1206,5 +1320,41 @@ begin
 end;
 
 // -----------------------------------------------------------------------------
+
+procedure TfrmSettings.pnlCPSrange1Click(Sender: TObject);
+begin
+  if (dlgSetColor.Execute) then
+    pnlCPSrange1.Color := dlgSetColor.Color;
+end;
+
+procedure TfrmSettings.pnlCPSrange2Click(Sender: TObject);
+begin
+  if (dlgSetColor.Execute) then
+    pnlCPSrange2.Color := dlgSetColor.Color;
+end;
+
+procedure TfrmSettings.pnlCPSrange3Click(Sender: TObject);
+begin
+  if (dlgSetColor.Execute) then
+    pnlCPSrange3.Color := dlgSetColor.Color;
+end;
+
+procedure TfrmSettings.pnlCPSrange4Click(Sender: TObject);
+begin
+  if (dlgSetColor.Execute) then
+    pnlCPSrange4.Color := dlgSetColor.Color;
+end;
+
+procedure TfrmSettings.pnlSubtitleAbsentClick(Sender: TObject);
+begin
+  if (dlgSetColor.Execute) then
+    pnlSubtitleAbsent.Color := dlgSetColor.Color;
+end;
+
+procedure TfrmSettings.pnlSubtitleOKClick(Sender: TObject);
+begin
+  if (dlgSetColor.Execute) then
+    pnlSubtitleOK.Color := dlgSetColor.Color;
+end;
 
 end.

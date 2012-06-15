@@ -107,6 +107,7 @@ begin
         }
         p32 := bm32.bmBits;
         inc(PChar(p32), (bm32.bmHeight - 1) * bm32.bmWidthBytes);
+
         for y := 0 to hBmp.Height-1 do
         begin
           { Processa os pixels do bitmap da esquerda para a direita }

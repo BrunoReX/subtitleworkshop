@@ -324,15 +324,14 @@ var
   Text     : String;
   RepStr   : String;
   Replaces : Integer;
-  Bold, Italic, Underline: Boolean;
-  Color      : Integer;
+  StyleTag : TStyleTag;
   TextToFind : String;
   ReplaceBy  : String;
   UndoAction : PUndoAction;
 begin
   ClearUndoList(RedoList);
   frmMain.mnuRedo.Enabled := False;
-  
+
   Replaces := 0;
   LastNode := nil;
   TextToFind := ReplaceString(edtTextToFind2.Text, '|', #13#10);
@@ -360,10 +359,7 @@ begin
       PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := True;
       PFullTextChange(UndoAction^.Buffer)^.OldText := Text;
 
-      Bold      := Pos('<b>', Text) > 0;
-      Italic    := Pos('<i>', Text) > 0;
-      Underline := Pos('<u>', Text) > 0;
-      Color     := GetSubColor(Text);
+      StyleTag := StoreTags(Text);
       Text      := RemoveSWTags(Text, True, True, True, True);
 
       RepStr := Replace(Text, TextToFind, ReplaceBy, chkCaseSensitive.Checked, chkWholeWords.Checked, chkPreserveCase.Checked);
@@ -373,12 +369,7 @@ begin
           UndoList.Add(UndoAction);
         if SubtitleAPI.NoInteractionWithTags = False then
         begin
-          // Restore tags
-          if Underline = True then RepStr := '<u>' + RepStr;
-          if Bold      = True then RepStr := '<b>' + RepStr;
-          if Italic    = True then RepStr := '<i>' + RepStr;
-          if Color > -1 then
-            RepStr := SetColorTag(RepStr, Color);
+          RepStr := RestoreSWTags(RepStr, StyleTag);
         end;
 
         Data.Text := RepStr;
@@ -396,10 +387,7 @@ begin
         PFullTextChange(UndoAction^.Buffer)^.OldTrans := Text;
         UndoList.Add(UndoAction);
         
-        Bold      := Pos('<b>', Text) > 0;
-        Italic    := Pos('<i>', Text) > 0;
-        Underline := Pos('<u>', Text) > 0;
-        Color     := GetSubColor(Text);
+        StyleTag := StoreTags(Text);
         Text      := RemoveSWTags(Text, True, True, True, True);
 
         RepStr := Replace(Text, TextToFind, ReplaceBy, chkCaseSensitive.Checked, chkWholeWords.Checked, chkPreserveCase.Checked);
@@ -407,12 +395,7 @@ begin
         begin
           if SubtitleAPI.NoInteractionWithTags = False then
           begin
-            // Restore tags
-            if Underline = True then RepStr := '<u>' + RepStr;
-            if Bold      = True then RepStr := '<b>' + RepStr;
-            if Italic    = True then RepStr := '<i>' + RepStr;
-            if Color > -1 then
-              RepStr := SetColorTag(RepStr, Color);
+            RepStr := RestoreSWTags(RepStr, StyleTag);
           end;
           Data.Translation := RepStr;
           Inc(Replaces);

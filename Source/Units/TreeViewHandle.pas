@@ -2,6 +2,8 @@ unit TreeViewHandle;
 
 interface
 
+{ $DEFINE UTF8}
+
 uses Windows, SysUtils, Classes, VirtualTrees, USubtitleAPI,
      USubtitlesFunctions, ClipBrd, FastStrings;
 
@@ -30,12 +32,14 @@ type
                 etOpnDlgSubsOneLine,
                 etSpaceAfterCustChars,
                 etSpaceBeforeCustChars,
-                etUnnecessarySpaces
+                etUnnecessarySpaces,
+                etTooSmallCPS,
+                etTooBigCPS
                 );
   TErrorTypeSet = set of TErrorType;
   TSubtitleItem = record
     InitialTime, FinalTime : Integer; // MILLISECONDS
-    Text, Translation      : String;
+    Text, Translation      : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
     Marked                 : Boolean;
     ErrorType              : set of TErrorType;
   end;
@@ -50,18 +54,21 @@ procedure UpdateArray(Translated: Boolean = False);
 procedure DeleteSelectedNodes;
 procedure UnSelectAll(Sender: TVirtualStringTree);
 function GetNodeWithIndex(Sender: TVirtualStringTree; NdIndex: Integer): PVirtualNode;
-function InsertNode(After: Boolean = True; InitialTime: Integer = -1; FinalTime: Integer = -1; Text: String = ''; Translation: String = ''; Select: Boolean = True): PVirtualNode;
+function InsertNode(After: Boolean = True; InitialTime: Integer = -1; FinalTime: Integer = -1;
+  Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF} = '';
+  Translation: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF} = '';
+  Select: Boolean = True): PVirtualNode;
 // ------------------
 procedure SetStartTime(Node: PVirtualNode; StartTime: Integer);
 procedure SetFinalTime(Node: PVirtualNode; FinalTime: Integer);
-procedure SetText(Node: PVirtualNode; Text: String);
-procedure SetTranslation(Node: PVirtualNode; Text: String);
+procedure SetText(Node: PVirtualNode; Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF});
+procedure SetTranslation(Node: PVirtualNode; Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF});
 procedure AddError(Node: PVirtualNode; Error: TErrorTypeSet);
 // ------------------
 function GetStartTime(Node: PVirtualNode): Integer;
 function GetFinalTime(Node: PVirtualNode): Integer;
-function GetSubText(Node: PVirtualNode): String;
-function GetSubTranslation(Node: PVirtualNode): String;
+function GetSubText(Node: PVirtualNode): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+function GetSubTranslation(Node: PVirtualNode): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 // ------------------
 procedure CopyNodesToClipBoard;
 procedure PasteNodesFromClipBoard;
@@ -113,6 +120,7 @@ var
   Node      : PVirtualNode;
   NdIndex   : Integer;
   RootNodes : Integer;
+  {$IFDEF UTF8}s : String;{$ENDIF}
 begin
   frmMain.lstSubtitles.BeginUpdate;
   RootNodes := frmMain.lstSubtitles.RootNodeCount;
@@ -137,7 +145,12 @@ begin
       end;
     end else
     begin
+      {$IFDEF UTF8}
+      SubtitleAPI.GetSubtitle(Node.Index, Data.InitialTime, Data.FinalTime, s);
+      Data.Text := s;
+      {$ELSE}
       SubtitleAPI.GetSubtitle(Node.Index, Data.InitialTime, Data.FinalTime, Data.Text);
+      {$ENDIF}
       Data.ErrorType := [];
     end;
     Node := frmMain.lstSubtitles.GetNextSibling(Node);
@@ -241,7 +254,10 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function InsertNode(After: Boolean = True; InitialTime: Integer = -1; FinalTime: Integer = -1; Text: String = ''; Translation: String = ''; Select: Boolean = True): PVirtualNode;
+function InsertNode(After: Boolean = True; InitialTime: Integer = -1; FinalTime: Integer = -1;
+    Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF} = '';
+    Translation: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF} = '';
+    Select: Boolean = True): PVirtualNode;
 var
   Node: PVirtualNode;
   Time: Integer;
@@ -271,22 +287,22 @@ begin
         if After then
         begin
           if InitialTime = -1 then
-            SetStartTime(Node, GetFinalTime(Node.PrevSibling) + 1) else
+            SetStartTime(Node, GetFinalTime(Node.PrevSibling) + frmMain.Vars.GapBetweenSubs) else
             SetStartTime(Node, InitialTime);
           if FinalTime = -1 then
-            SetFinalTime(Node, GetStartTime(Node) + 1000) else
+            SetFinalTime(Node, GetStartTime(Node) + frmMain.Vars.NewSubDuration) else
             SetFinalTime(Node, FinalTime);
         end else
         begin
           if InitialTime = -1 then
           begin
-            Time := GetStartTime(Node.NextSibling) - 1001;
+            Time := GetStartTime(Node.NextSibling) - frmMain.Vars.NewSubDuration - frmMain.Vars.GapBetweenSubs;
             if Time < 0 then Time := 0;
             SetStartTime(Node, Time);
           end else
             SetStartTime(Node, InitialTime);
           if FinalTime = -1 then
-            SetFinalTime(Node, GetStartTime(Node) + 1000) else
+            SetFinalTime(Node, GetStartTime(Node) + frmMain.Vars.NewSubDuration) else
             SetFinalTime(Node, FinalTime);
         end;
       end else
@@ -300,7 +316,7 @@ begin
           SetStartTime(Node, 0) else
           SetStartTime(Node, InitialTime);
         if FinalTime = -1 then
-          SetFinalTime(Node, 1000) else
+          SetFinalTime(Node, frmMain.Vars.NewSubDuration) else
           SetFinalTime(Node, FinalTime);
       end;
 
@@ -308,7 +324,7 @@ begin
       SetTranslation(Node, Translation);
 
       frmMain.OrgModified   := True;
-      frmMain.TransModified := True;
+  	  frmMain.TransModified := True;
       Result := Node;
     end;
   end;
@@ -352,7 +368,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure SetText(Node: PVirtualNode; Text: String);
+procedure SetText(Node: PVirtualNode; Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF});
 var
   Data: PSubtitleItem;
 begin
@@ -369,7 +385,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure SetTranslation(Node: PVirtualNode; Text: String);
+procedure SetTranslation(Node: PVirtualNode; Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF});
 var
   Data: PSubtitleItem;
 begin
@@ -434,7 +450,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function GetSubText(Node: PVirtualNode): String;
+function GetSubText(Node: PVirtualNode): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 var
   Data: PSubtitleItem;
 begin
@@ -449,7 +465,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function GetSubTranslation(Node: PVirtualNode): String;
+function GetSubTranslation(Node: PVirtualNode): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 var
   Data: PSubtitleItem;
 begin
@@ -468,7 +484,7 @@ procedure CopyNodesToClipBoard;
 var
   Data : PSubtitleItem;
   Node : PVirtualNode;
-  Text : String;
+  Text : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 begin
   Text := '';
   try
@@ -490,7 +506,7 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure PasteNodesFromClipBoard;
-  procedure SetParams(Node: PVirtualNode; tmpText: String);
+  procedure SetParams(Node: PVirtualNode; tmpText: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF});
   var
     PosIt: Integer;
   begin
@@ -504,9 +520,9 @@ procedure PasteNodesFromClipBoard;
   end;
 var
   Node       : PVirtualNode;
-  Text       : String;
+  Text       : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   PosIt      : Integer;
-  tmpText    : String;
+  tmpText    : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   UndoAction : PUndoAction;
 begin
   ClearUndoList(RedoList);
@@ -767,7 +783,7 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure TextEffect(Effect: Byte; Param_1, Param_2: Integer);
-  function TextEffect2(InitialTime: Integer; FinalTime: Integer; Text: String; Effect: Byte; Param1: Integer; Param2: Integer): PVirtualNode;
+  function TextEffect2(InitialTime: Integer; FinalTime: Integer; Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; Effect: Byte; Param1: Integer; Param2: Integer): PVirtualNode;
   var
     ITime      : Integer;
     FTime      : Integer;
@@ -775,7 +791,7 @@ procedure TextEffect(Effect: Byte; Param_1, Param_2: Integer);
     CharDur    : Integer;
     Pos1, Pos2 : Byte;
     SumLen     : Byte;
-    s          : String;
+    s          : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
     UndoAction : PUndoAction;
   begin
     ITime  := InitialTime;
@@ -906,7 +922,7 @@ end;
 
 procedure SwapOrgTrans(Sender: TObject; AddUndo: Boolean = True);
 var
-  tmpTrans   : String;
+  tmpTrans   : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   Node       : PVirtualNode;
   OrgII      : Integer;
   UndoAction : PUndoAction;

@@ -10,9 +10,11 @@
 <body>
 <div align="center">
 	<h1>Руководство Subtitle Workshop</h1>
-	<h3>Версия Subtitle Workshop: <b>2.51</b></h3>
+	<h3>Версия Subtitle Workshop: <b>2.52 beta</b></h3>
 	<h5>Наилучшее средство для обработки субтитров!</h5>
-	Copyright &copy; 2001-2004 URUSoft.<br><br><br><br>
+	Copyright &copy; 2001-2004 URUSoft<br>
+	2011 Bedazzle<br>
+	<br><br><br>
 	<i>(Все комбинации клавиш, упомянутые в данном руководстве приведены для установок по умолчанию)</i><br><br><br><br>
 </div>
 
@@ -260,11 +262,13 @@ Subtitle Workshop создавался для того, чтобы редактирование субтитров стало очен
 <ul>
 	<li>Adobe Encore DVD (*.txt)</li>
 	<li>Advanced SubStation Alpha (*.ass)</li>
+	<li>Advanced Subtitles (*.xas)</li>
 	<li>AQTitle (*.aqt)</li>
 	<li>Captions 32 (*.txt)</li>
 	<li>Captions DAT (*.dat)</li>
 	<li>Captions DAT Text (*.dat)</li>
 	<li>Captions Inc. (*.txt)</li>
+	<li>Cavena (*.txt)</li>
 	<li>Cheetah (*.asc)</li>
 	<li>CPC-600 (*.txt)</li>
 	<li>DKS Subtitle Format (*.dks)</li>
@@ -277,7 +281,7 @@ Subtitle Workshop создавался для того, чтобы редактирование субтитров стало очен
 	<li>JACOSub 2.7+ (*.jss; *.js)</li>
 	<li>Karaoke Lyrics LRC (*.lrc)</li>
 	<li>Karaoke Lyrics VKT (*.vkt)</li>
-	<li>KoalaPlayer (*.txt) (один из вариантов TMPlayer)</li>
+	<li>KoalaPlayer (*.txt) (equal to one of the variations of TMPlayer)</li>
 	<li>MAC DVD Studio Pro (*.txt)</li>
 	<li>MacSUB (*.scr)</li>
 	<li>MicroDVD (*.sub)</li>
@@ -296,6 +300,7 @@ Subtitle Workshop создавался для того, чтобы редактирование субтитров стало очен
 	<li>SAMI Captioning (*.smi)</li>
 	<li>Sasami Script (*.s2k)</li>
 	<li>SBT (*.sbt)</li>
+	<li>Scantitle (*.890)</li>
 	<li>Sofni (*.sub)</li>
 	<li>Softitler RTF (*.rtf)</li>
 	<li>SonicDVD Creator (*.sub)</li>
@@ -310,12 +315,15 @@ Subtitle Workshop создавался для того, чтобы редактирование субтитров стало очен
 	<li>SubStation Alpha (*.ssa)</li>
 	<li>SubViewer 1.0 (*.sub)</li>
 	<li>SubViewer 2.0 (*.sub)</li>
-	<li>TMPlayer (*.txt) (пять вариантов)</li>
+	<li>Timed Text (*.xml)</li>
+	<li>Titlevision ANSI with cues (*.txt)</li>
+	<li>TMPlayer (*.txt) (five different variations)</li>
 	<li>Turbo Titler (*.txt)</li>
 	<li>Ulead DVD Workshop 2.0 (*.txt)</li>
 	<li>ViPlay Subtitle File (*.vsf)</li>
-	<li>ZeroG (*.zeg)</li>
-</ul>
+	<li>Wincaps text timecoded (*.txt)</li>
+	<li>Youtube (*.sbv)</li>
+	<li>ZeroG (*.zeg)</li></ul>
 <br>
 <br>
 
@@ -519,6 +527,22 @@ SubtitleWorkshop.exe "/DELAY(начальный_файл/конечный_файл/начальные_FPS/задержка
 Так как работа идёт с субтитрами, основанными на времени, значение FPS установлено в 0.
 Так же как и при конвертировании файла в другой формат, десятичной точкой для FPS будет служить символ, настроенный в Панели управления Windows.
 Если вы выберете неправильный FPS, будет использовано значение по умолчанию - 25 кадров в секунду.
+
+<br>
+<br>
+<br>
+
+<b>Для запуска скрипта на Паскале:<br>
+SubtitleWorkshop.exe "/SCRIPT(Input_File/Output_File/Input_FPS/Pascal_script)"
+</b>
+<br>
+<br>
+
+Пример:<br>
+<i>SubtitleWorkshop.exe /SCRIPT(C:\Subtitle.srt/C:\Subtitle_out.srt/25/Copyright.pas)</i><br><br>
+Такая команда открывает файл "Subtitle.srt", запускает скрипт Copyright.pas, и сохраняет результат в "Subtitle_out.srt". 
+Если требуется сохранить работу в другой формат, используйте параметр командной строки convert.
+Параметр FPS (кадры в секунду) необходим, только если исходный файл основан на кадрах.
 
 <br>
 <br>
@@ -2901,7 +2925,7 @@ Subtitle Workshop не умеет работать с многоязыковыми файлами SAMI, и этой функци
 <br><a name="FAQ"></a>
 <h2>ЧАсто задаваемые ВОпросы [ЧАВО]</h2>
 
-Обновлённую версию ЧАВО (FAQ) можно найти <a href="http://www.urusoft.net/main.php?section=9&lang=1">здесь</a>.
+Обновлённую версию ЧАВО (FAQ) можно найти <a href="http://www.urusoft.net/faq.php?cat=sw&lang=1">здесь</a> (на английском языке).
 <br>
 
 <ol>
@@ -3019,11 +3043,11 @@ charsets.txt в каталоге файлов языков.) Если вы всё ещё не можете видеть правиль
 <br>
 
 <a name="CONTACT"></a><h2>Контактная информация</h2>
-Посылайте свои комментарии, идеи, предложения, файлы языков, сообщения об ошибках по адресу, указанному в разделе "Contact us" на <a href="http://www.urusoft.net?section=7&lang=1">http://www.urusoft.net</a> (на английском языке).
+Посылайте свои комментарии, идеи, предложения, файлы языков, сообщения об ошибках по адресу <a href="mailto:sworkshop2012@gmail.com">sworkshop2012@gmail.com</a>.
 <br>
-Это можно также сделать на <a href="http://www.redox.si/viplay/forum/">форуме</a>.<br><br>
+Также это можно сделать на <a href="http://www.urusoft.net/forum/index.php">англоязычном</a> или <a href="http://subtitry.ru/feedback/index.php?showforum=19">русскоязычном</a> форуме.
 В Интернете нас можно найти по адресу: <a href="http://www.urusoft.net">http://www.urusoft.net</a>.<br><br>
-Перевод на русский язык: <a href="mailto:subtitles@subtitles.ee">Bedazzle</a>
+Перевод на русский язык: <a href="mailto:sworkshop2012@gmail.com">Bedazzle</a>
 <br>
 <br>
 <br>
@@ -3040,6 +3064,9 @@ charsets.txt в каталоге файлов языков.) Если вы всё ещё не можете видеть правиль
 Все файлы должны распространяться вместе, в первоначальном виде.<br><br>
 Если программа является обновлением более старой версии, вы можете использовать её или распространять только вместе со старой версией.
 Все названия принадлежат владельцам торговых марок. Автор данной программы НЕ связан с какой-либо компанией.
+<br>
+<br>
+Начиная с 2009-01-31 Subtitle Workshop выпускается под лицензией GNU/GPL 3.
 <br>
 <br>
 <b>ЕСЛИ ВЫ НЕ СОГЛАСНЫ С ДАННЫМИ УСЛОВИЯМИ, ВЫ ОБЯЗАНЫ ПРЕКРАТИТЬ ИСПОЛЬЗОВАНИЕ ПРОГРАММЫ И УДАЛИТЬ ЕЁ ФАЙЛЫ.</b>

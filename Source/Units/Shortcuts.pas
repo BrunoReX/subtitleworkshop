@@ -55,6 +55,11 @@ const
   aPascalScript3     = 'APASCALSCRIPT3';
   aPascalScript4     = 'APASCALSCRIPT4';
   aPascalScript5     = 'APASCALSCRIPT5';
+  aPascalScript6     = 'APASCALSCRIPT6';
+  aPascalScript7     = 'APASCALSCRIPT7';
+  aPascalScript8     = 'APASCALSCRIPT8';
+  aPascalScript9     = 'APASCALSCRIPT9';
+  aPascalScript10    = 'APASCALSCRIPT10';
 
   // ------------------ //
   //      File menu     //
@@ -103,6 +108,10 @@ const
   aFastDivideLines     = 'AFASTDIVIDELINES';
   aSetMaxLineLength    = 'ASETMAXLINELENGTH';
   aReadTextsFromFile   = 'AREADTEXTSFROMFILE';
+  aSetTagBold          = 'ASETTAGBOLD';
+  aSetTagItalic        = 'ASETTAGITALIC';
+  aSetTagUnderline     = 'ASETTAGUNDERLINE';
+  aSetTagColor         = 'ASETTAGCOLOR';
   // Subtitles
   aCombineSubs = 'ACOMBINESUBS';
   // Effects
@@ -319,6 +328,12 @@ begin
   if Action = aFastDivideLines   then Menu := frmMain.mnuFastDivideLines else
   if Action = aSetMaxLineLength  then Menu := frmMain.mnuSetMaxLineLength else
   if Action = aReadTextsFromFile then Menu := frmMain.mnuReadTextsFromFile else
+
+  if Action = aSetTagBold      then Menu := frmMain.mnuSetTagBold else
+  if Action = aSetTagItalic    then Menu := frmMain.mnuSetTagItalic else
+  if Action = aSetTagUnderline then Menu := frmMain.mnuSetTagUnderline else
+  if Action = aSetTagColor     then Menu := frmMain.mnuSetTagColor else
+
   // Edit/Subtitles
   if Action = aCombineSubs then Menu := frmMain.mnuCombineSubtitles else
   // Effects
@@ -364,6 +379,7 @@ begin
   if Action = aAddFPSFromAVI     then Menu := frmMain.mnuAddFPSfromAVI else
   if Action = aExternalPreview   then Menu := frmMain.mnuExternalPreview else
   if Action = aSAMILangExtractor then Menu := frmMain.mnuSAMILangExtractor else
+
   if Action = aPascalScript1 then
   begin
     if frmMain.mnuPascalScripts.Count > 0 then
@@ -388,6 +404,32 @@ begin
   begin
     if frmMain.mnuPascalScripts.Count > 4 then
       Menu := frmMain.mnuPascalScripts[4];
+  end else
+
+  if Action = aPascalScript6 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 5 then
+      Menu := frmMain.mnuPascalScripts[5];
+  end else
+  if Action = aPascalScript7 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 6 then
+      Menu := frmMain.mnuPascalScripts[6];
+  end else
+  if Action = aPascalScript8 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 7 then
+      Menu := frmMain.mnuPascalScripts[7];
+  end else
+  if Action = aPascalScript9 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 8 then
+      Menu := frmMain.mnuPascalScripts[8];
+  end else
+  if Action = aPascalScript10 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 9 then
+      Menu := frmMain.mnuPascalScripts[9];
   end else
 
   // ------------------ //

@@ -2,20 +2,23 @@ unit General;
 
 interface
 
-uses Forms, Windows, Classes, SysUtils, Controls, StdCtrls, VirtualTrees, 
+uses IFPS3CompExec, 
+     Forms, Windows, Classes, SysUtils, Controls, StdCtrls, VirtualTrees,
      USubtitleAPI, TreeViewHandle, Mask, USubtitlesFunctions, Menus, IniFiles,
      VideoPreview, FastStrings, ShortCuts;
 
 const
   ID_COMPANY      = 'URUSoft';
   ID_PROGRAM      = 'Subtitle Workshop';
-//  ID_VERSION      = '2.51';
-  ID_VERSION      = '2.51a';
-  ID_EMAIL        = 'DeK@urusoft.net';
-  ID_WEBPAGE      = 'http://www.urusoft.net';
-  ID_DONATIONPAGE = 'https://www.paypal.com/xclick/business=descoins%40adinet.com.uy&item_name=URUSoft&no_note=1&tax=0&currency_code=USD';
+  ID_VERSION      = '2.52 RC';
   ID_ININAME      = 'SubtitleWorkshop.ini';
-  ID_UPDATEINI    = 'http://www.urusoft.net/inis/swupdate.ini';
+//  ID_EMAIL        = 'DeK@urusoft.net';
+//  ID_WEBPAGE      = 'http://www.urusoft.net';
+//  ID_DONATIONPAGE = 'https://www.paypal.com/xclick/business=sauldescoins%40adinet.com.uy&item_name=URUSoft&no_note=1&tax=0&currency_code=USD';
+//  ID_UPDATEINI    = 'http://www.urusoft.net/inis/swupdate.ini';
+  ID_EMAIL        = 'sworkshop2012@gmail.com';
+  ID_WEBPAGE      = 'http://sw.binhoster.com';
+  ID_UPDATEINI    = 'http://sw.binhoster.com/sw_update.ini';
   ID_DLLNAME      = 'SubtitleAPI.dll';
   ID_DLLDIR       = 'SubtitleAPI';
   ID_CFPDIR       = 'CustomFormats';
@@ -71,9 +74,9 @@ var
   // -------------------- //
   ErrorMsg     : array[1..20] of String;
   QuestionMsg  : array[1..09] of String;
-  InfoMsg      : array[1..11] of String;
+  InfoMsg      : array[1..12] of String;
   IEMsgBoxes   : array[1..05] of String;
-  ErrorReports : array[1..20] of String;
+  ErrorReports : array[1..22] of String;
 
 // -----------------------------------------------------------------------------
 
@@ -158,7 +161,7 @@ begin
           begin
             TransFormat   := SubtitleAPI.CurrentFormatIndex;
             TransFile     := FileName;
-            TransModified := False;
+      			TransModified := False;
           end;
         end else
         begin
@@ -409,6 +412,7 @@ begin
         LoadSubtitle(Ini.ReadString('Subtitle files', 'Translated', ''), GetInputFPS, 0, True);
       end;
     end;
+
     if FileExists(Ini.ReadString('Movie file', 'Movie', '')) then
     begin
       SetVideoPreviewMode(True);
@@ -416,6 +420,7 @@ begin
       if Ini.ReadInteger('Movie file', 'Position', 0) >= 0 then
         SetVideoPos(Ini.ReadInteger('Movie file', 'Position', 0));
     end;
+
     if Ini.ReadInteger('Other', 'Focused node', 0) >= 0 then
     begin
       UnSelectAll(frmMain.lstSubtitles);
@@ -424,6 +429,7 @@ begin
       frmMain.lstSubtitles.Selected[frmMain.lstSubtitles.FocusedNode] := True;
       frmMain.RefreshTimes;
     end;
+    
     frmMain.AddToRecent(FileName);
   finally
     Ini.Free;
@@ -460,7 +466,8 @@ begin
       subSubtitle.Text  := '';
       OldInputFPS       := 0;
       OldFPS            := 0;
-      frmMain.Caption   := ID_PROGRAM;
+//      frmMain.Caption   := ID_PROGRAM;
+      frmMain.Caption   := ID_PROGRAM + ' ' + ID_VERSION;
       Application.Title := frmMain.Caption;
       EnableCtrls(False);
       ClearUndoList(UndoList);
@@ -555,26 +562,43 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure SetFormCaption;
+var
+  OrgAsterisk, TransAsterisk : String;
 begin
   with frmMain do
   begin
+    if OrgModified then
+      OrgAsterisk := ' *' else
+      OrgAsterisk := '';
+
+    if TransModified then
+      TransAsterisk := ' *' else
+      TransAsterisk := '';
+
+    // set mainform caption
     if mnuTranslatorMode.Checked then
     begin
       if (OrgFile <> '') and (TransFile <> '') then
-        frmMain.Caption := ID_PROGRAM + ' - ' + ExtractFileName(OrgFile) + ' / ' + ExtractFileName(TransFile) else
+        frmMain.Caption := ID_PROGRAM + ' ' + ID_VERSION + ' - ' + ExtractFileName(OrgFile) + OrgAsterisk + ' / ' + ExtractFileName(TransFile) + TransAsterisk else
       if (OrgFile <> '') and (TransFile = '') then
-        frmMain.Caption := ID_PROGRAM + ' - ' + ExtractFileName(OrgFile) + ' / ?' else
+        frmMain.Caption := ID_PROGRAM + ' ' + ID_VERSION + ' - ' + ExtractFileName(OrgFile) + OrgAsterisk + ' / ?' else
       if (OrgFile = '') and (TransFile <> '') then
-        frmMain.Caption := ID_PROGRAM + ' - ? / ' + ExtractFileName(TransFile) else
+        frmMain.Caption := ID_PROGRAM + ' ' + ID_VERSION + ' - ? / ' + ExtractFileName(TransFile) + TransAsterisk else
       if (OrgFile = '') and (TransFile = '') then
-        frmMain.Caption := ID_PROGRAM;
+        frmMain.Caption := ID_PROGRAM+ ' ' + ID_VERSION ;
     end else
     begin
       if OrgFile <> '' then
-        frmMain.Caption := ID_PROGRAM + ' - ' + ExtractFileName(OrgFile) else
-        frmMain.Caption := ID_PROGRAM;
+        frmMain.Caption := ID_PROGRAM + ' ' + ID_VERSION + ' - ' + ExtractFileName(OrgFile) + OrgAsterisk else
+        frmMain.Caption := ID_PROGRAM+ ' ' + ID_VERSION ;
     end;
-    Application.Title := frmMain.Caption;
+
+    // set taskbar button caption
+    if (OrgFile <> '') then
+      Application.Title := ExtractFileName(OrgFile) + ' - ' + ID_PROGRAM + ' ' + ID_VERSION else
+    if (TransFile <> '') then
+      Application.Title := ExtractFileName(TransFile) + ' - ' + ID_PROGRAM + ' ' + ID_VERSION else
+    Application.Title := ID_PROGRAM + ' ' + ID_VERSION;
   end;
 end;
 
@@ -612,6 +636,7 @@ begin
     Ini := TIniFile.Create(IniRoot);
     try
       mnuTranslatorMode.Checked := Flag;
+
       if (Flag = True) then
       begin
         // Show new column
@@ -637,12 +662,16 @@ begin
         lblTranslation.Caption := LabelTranslation + ':';
         lblTranslation.Enabled := InterfaceEnabled;
         mmoTranslation.Enabled := InterfaceEnabled;
+        mdtTranslationCPS.Enabled := InterfaceEnabled;
 
         if mmoTranslation.Visible = False then
           mmoTranslation.Show;
         if lblTranslation.Visible = False then
           lblTranslation.Show;
-        
+        if mdtTranslationCPS.Visible = False then
+          mdtTranslationCPS.Show;
+
+
         // Work with the menus...
         mnuLoadSubtitle.ShortCut := 0;
         mnuLoadSubtitle.Visible  := False;
@@ -690,6 +719,9 @@ begin
         mmoTranslation.Clear;
         mmoTranslation.Hide;
         lblTranslation.Hide;
+        mdtTranslationCPS.Enabled := False;
+        mdtTranslationCPS.Hide;
+
         SetTranslationCtrlsPositions;
 
         // Menus...
@@ -732,6 +764,7 @@ procedure CommandLineProcess(Cli: String);
     InputFPS  : Single;
     OutputFPS : Single;
   begin
+    // SubtitleWorkshop.exe "/CONVERT(Input_File/Output_File/Output_Format/Input_FPS/Output_FPS)"
     Param    := Copy(Param, 10, Length(Param)-1);
     Input    := Copy(Param, 1, Pos('/', Param)-1);               // Input file
     Param    := Copy(Param, Pos('/', Param) + 1, Length(Param));
@@ -746,7 +779,7 @@ procedure CommandLineProcess(Cli: String);
     SubtitleAPI.LoadSubtitle(Input, InputFPS);
     SubtitleAPI.SaveSubtitle(Output, Format, OutputFPS);
     SubtitleAPI.CloseSubtitle;
-    
+
     //ExitProcess(0);
     Application.Terminate;
   end;
@@ -758,6 +791,7 @@ procedure CommandLineProcess(Cli: String);
     FPS    : Single;
     Delay  : Integer;
   begin
+    // SubtitleWorkshop.exe "/DELAY(Input_File/Output_File/Input_FPS/Delay_in_Milliseconds)"
     Param  := Copy(Param, 8, Length(Param)-1);
     Input  := Copy(Param, 1, Pos('/', Param)-1);
     Param  := Copy(Param, Pos('/', Param) + 1, Length(Param));
@@ -784,6 +818,7 @@ procedure CommandLineProcess(Cli: String);
     i       : Integer;
     Formats : TStringList;
   begin
+    // SubtitleWorkshop.exe /GetSupportedFormats
     Formats := TStringList.Create;
     Formats.Add('This are the formats you should use for command line parameters.');
     Formats.Add('Do NOT modify a single character because it will not work, note that it is not case sensitive.');
@@ -795,6 +830,64 @@ procedure CommandLineProcess(Cli: String);
       Formats.SaveToFile(ExtractFilePath(Application.ExeName) + 'SupportedFormats.txt');
       Formats.Free;
     end;
+    Application.Terminate;
+  end;
+
+  procedure ParamRunScript(Param: String);
+  var
+    Input     : String;
+    Output    : String;
+    Script    : String;
+    FPS  : Single;
+    err : Boolean;
+    l          : LongInt;
+    ErrorsText : String;
+  begin
+    try
+      // SubtitleWorkshop.exe "/SCRIPT(Input_File/Output_File/Input_FPS/Pascal_script)"
+      Param    := Copy(Param, 9, Length(Param)-1);
+      Input    := Copy(Param, 1, Pos('/', Param)-1);               // Input file
+      Param    := Copy(Param, Pos('/', Param) + 1, Length(Param));
+      Output   := Copy(Param, 1, Pos('/',Param)-1);                // Output file
+      Param    := Copy(Param, Pos('/', Param)+1, Length(Param));
+      FPS      := StrToFloatDef(Copy(Param, 1, Pos('/', Param)-1), 25); // Input FPS
+      Param    := Copy(Param, Pos('/', Param) + 1, Length(Param));
+      Script   := Copy(Param, 1, Length(Param)-1);                // Pascal script
+
+      LoadSubtitle(Input, FPS);
+      SubtitleAPI.LoadSubtitle(Input, FPS);
+
+      // run script
+      err := FALSE;
+      frmMain.psCompExec.Script.LoadFromFile(ExtractFilePath(Application.ExeName) + 'PascalScripts\' + Script);
+
+      if frmMain.psCompExec.Compile then
+      begin
+        if not frmMain.psCompExec.Execute then
+          err := TRUE;
+      end else
+        err := TRUE;
+
+      if err = TRUE then
+      begin
+        ErrorsText := '';
+        for l := 0 to frmMain.psCompExec.CompilerMessageCount - 1 do
+        begin
+          ErrorsText := ErrorsText + #13#10 + frmMain.psCompExec.CompilerErrorToStr(l);
+        end;
+        MsgBox('Compiler errors:' + #13#10#13#10 + ErrorsText, BTN_OK, '', '', MB_ICONERROR, nil);
+      end;
+
+      // save work
+      SubtitleAPI.SetOutputSettingsEncoding(StrCharsetToInt(frmMain.cmbOrgCharset.Items[frmMain.cmbOrgCharset.ItemIndex]));
+      UpdateArray;
+      SaveFile(Output, frmMain.OrgFormat, FPS);
+      SubtitleAPI.ClearSubtitles;
+
+    except on E:Exception do
+      MsgBox('Error:' + #13#10#13#10 + E.Message, BTN_OK, '', '', MB_ICONERROR, nil);
+    end;
+
     Application.Terminate;
   end;
 
@@ -813,14 +906,16 @@ begin
     if (LowerCase(ExtractFileExt(Param)) = ID_SRFEXT) then
       LoadSRF(Param) else
     if (FileExists(Param)) then
-      LoadSubtitle(Param, GetInputFPS);      
+      LoadSubtitle(Param, GetInputFPS);
   end else
   if AnsiUpperCase(Copy(Cli, 1, 9)) = '/CONVERT(' then
     ParamConvertFile(Cli) else
   if AnsiUpperCase(Copy(Cli, 1, 7)) = '/DELAY(' then
     ParamDelayFile(Cli) else
   if AnsiUpperCase(Copy(Cli, 1, 20)) = '/GETSUPPORTEDFORMATS' then
-    SaveFormatsToFile;
+    SaveFormatsToFile else
+  if AnsiUpperCase(Copy(Cli, 1, 8)) = '/SCRIPT(' then
+    ParamRunScript(Cli);
 end;
 
 // -----------------------------------------------------------------------------

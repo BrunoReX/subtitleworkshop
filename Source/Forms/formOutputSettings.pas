@@ -121,8 +121,7 @@ type
     btnSAMISetFont: TButton;
     procedure FormCreate(Sender: TObject);
     procedure tvFormatsClick(Sender: TObject);
-    procedure tvFormatsKeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure tvFormatsKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btnOkClick(Sender: TObject);
     procedure rdoSAMILeftClick(Sender: TObject);
     procedure rdoSAMICenterClick(Sender: TObject);
@@ -428,17 +427,18 @@ begin
     if Ini.ReadInteger('SSA', 'BorderStyle', 1) = 1 then
       cmbSSABorderStyle.ItemIndex := 0 else
       cmbSSABorderStyle.ItemIndex := 1;
-    pnlSSAPrimary.Color            := Ini.ReadInteger('SSA', 'Primary Color',   16777215);
-    pnlSSASecondary.Color          := Ini.ReadInteger('SSA', 'Secondary Color', 16777215);
-    pnlSSATertiary.Color           := Ini.ReadInteger('SSA', 'Tertiary Color',  16777215);
-    pnlSSAShadow.Color             := Ini.ReadInteger('SSA', 'Shadow Color',    12632256);
+
+    pnlSSAPrimary.Color            := Ini.ReadInteger('SSA', 'Primary Color',   65535{16777215});
+    pnlSSASecondary.Color          := Ini.ReadInteger('SSA', 'Secondary Color', 16711680{16777215});
+    pnlSSATertiary.Color           := Ini.ReadInteger('SSA', 'Tertiary Color',  65280{16777215});
+    pnlSSAShadow.Color             := Ini.ReadInteger('SSA', 'Shadow Color',    0{12632256});
     pnlSSASample.Font.Color        := pnlSSAPrimary.Color;
     pnlSSASample.Color             := clBlack;
     seSSALeftMargin.Value          := Ini.ReadInteger('SSA', 'Left margin',       30);
     seSSARightMargin.Value         := Ini.ReadInteger('SSA', 'Right margin',      30);
     seSSAVerticalMargin.Value      := Ini.ReadInteger('SSA', 'Vertical margin',   10);
-    seSSAOutline.Value             := Ini.ReadInteger('SSA', 'Outline',           1);
-    seSSAShadow.Value              := Ini.ReadInteger('SSA', 'Shadow',            1);
+    seSSAOutline.Value             := Ini.ReadInteger('SSA', 'Outline',           2{1});
+    seSSAShadow.Value              := Ini.ReadInteger('SSA', 'Shadow',            3{1});
     cmbSSAAlignment.ItemIndex      := Ini.ReadInteger('SSA', 'Alignment',         2) - 1;
     cmbSSASubTopMidTitle.ItemIndex := Ini.ReadInteger('SSA', 'Type of subtitles', 0);
     case Ini.ReadInteger('SSA', 'Encoding', 0) of
@@ -677,7 +677,7 @@ begin
                                                  seSSALeftMargin.Value,
                                                  seSSARightMargin.Value,
                                                  seSSAVerticalMargin.Value,
-                                                 StrCharsetToInt(cmbSSAEncoding.Items[cmbSSAEncoding.ItemIndex]));
+                                                 0 {StrCharsetToInt(cmbSSAEncoding.Items[cmbSSAEncoding.ItemIndex])} );
                                                  
     // ------------------------ //
     //          TMPlayer        //

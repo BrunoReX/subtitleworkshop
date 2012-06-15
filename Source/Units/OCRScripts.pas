@@ -11,14 +11,15 @@ uses SysUtils, HTMLPars, FastStrings, Functions, RegExpr;
 // -----------------------------------------------------------------------------
 type
   TOCRError = record
-    Find                 : String;
-    ReplaceBy            : String;
-    UseRE                : Boolean;
-    UseREOnlyToFind      : Boolean;
+    Find            : String;
+    ReplaceBy       : String;
+    SubstituteBy    : String;
+    UseRE           : Boolean;
+    UseREOnlyToFind : Boolean;
     // Only if UseRE is false
-    CaseSensitive        : Boolean;
-    WholeWord            : Boolean;
-    PreserveCase         : Boolean;
+    CaseSensitive   : Boolean;
+    WholeWord       : Boolean;
+    PreserveCase    : Boolean;
   end;
 
 // -----------------------------------------------------------------------------
@@ -73,16 +74,18 @@ begin
             begin
               OCRWordChars := Param.Value;
               if OCRWordChars = '' then
-                OCRWordChars := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_Ò—·ÈÌÛ˙¡…Õ”⁄‰ÎÔˆ¸';
+                OCRWordChars := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_Ò—·ÈÌÛ˙¡…Õ”⁄‰ÎÔˆ¸ƒÀœ÷‹';
             end;
           end else
-            OCRWordChars := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_Ò—·ÈÌÛ˙¡…Õ”⁄‰ÎÔˆ¸';
+            OCRWordChars := '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_Ò—·ÈÌÛ˙¡…Õ”⁄‰ÎÔˆ¸ƒÀœ÷‹';
 
           Result := True;
           if Tag.Name = 'ERROR' then
           begin
             SetLength(OCRErrors, AMax + 1);
             OCRErrors[AMax].UseRE           := True;
+            OCRErrors[AMax].ReplaceBy       := '';
+            OCRErrors[AMax].SubstituteBy    := '';
             OCRErrors[AMax].UseREOnlyToFind := True;
             OCRErrors[AMax].CaseSensitive   := False;
             OCRErrors[AMax].WholeWord       := False;
@@ -94,6 +97,8 @@ begin
                 OCRErrors[AMax].Find := Param.Value;
               if Param.Key = 'REPLACEBY' then
                 OCRErrors[AMax].ReplaceBy := Param.Value;
+              if Param.Key = 'SUBSTITUTEBY' then
+                OCRErrors[AMax].SubstituteBy := Param.Value;
               // Read values from tag parameters
               if Param.Key = 'USERE' then
                 OCRErrors[AMax].UseRE := StrToBool(Param.Value);
@@ -147,6 +152,31 @@ end;
 
 // -----------------------------------------------------------------------------
 
+function SubstituteRE(RE: String; AInputString, ASubstituteString: String): String;
+var
+  r: TRegExpr;
+  prev: String;
+begin
+  r := TRegExpr.Create;
+  r.WordChars := OCRWordChars;
+  Result := AInputString;
+  try
+    r.Expression := RE;
+    while r.Exec(Result) do
+    begin
+      prev := Result;
+      Result := r.Substitute(ASubstituteString);
+      if Result = Prev then break;
+      if Length(Result) <> Length(Prev) then
+        if Length(Result) > Length(Prev) then break;
+    end;
+  finally
+    r.Free;
+  end;
+end;
+
+// -----------------------------------------------------------------------------
+
 function FixOCRErrors(Text: String): String;
 var
   i: Integer;
@@ -156,9 +186,13 @@ begin
   begin
     if OCRErrors[i].UseRE then
     begin
-      if OCRErrors[i].UseREOnlyToFind = True then
-        Text := RepRE(OCRErrors[i].Find, Text, OCRErrors[i].ReplaceBy) else
-        Text := ReplaceRegExpr(OCRErrors[i].Find, Text, OCRErrors[i].ReplaceBy);
+      if (OCRErrors[i].ReplaceBy <> '') then
+      begin
+        if OCRErrors[i].UseREOnlyToFind = False then
+          Text := ReplaceRegExpr(OCRErrors[i].Find, Text, OCRErrors[i].ReplaceBy) else
+          Text := RepRE(OCRErrors[i].Find, Text, OCRErrors[i].ReplaceBy);
+      end else
+        Text := SubstituteRE(OCRErrors[i].Find, Text, OCRErrors[i].SubstituteBy);
     end else
       Text := Replace(Text, OCRErrors[i].Find, OCRErrors[i].ReplaceBy, OCRErrors[i].CaseSensitive, OCRErrors[i].WholeWord, OCRErrors[i].PreserveCase);
   end;

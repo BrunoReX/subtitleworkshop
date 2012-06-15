@@ -1,10 +1,10 @@
 object frmAbout: TfrmAbout
-  Left = 246
-  Top = 114
+  Left = 607
+  Top = 180
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'frmAbout'
-  ClientHeight = 312
+  ClientHeight = 340
   ClientWidth = 337
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -15,14 +15,18 @@ object frmAbout: TfrmAbout
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
+  DesignSize = (
+    337
+    340)
   PixelsPerInch = 96
   TextHeight = 13
   object pgeCtrl: TPageControl
     Left = 8
     Top = 8
     Width = 321
-    Height = 265
-    ActivePage = pgeCredits
+    Height = 288
+    ActivePage = pgeInformation
+    Anchors = [akLeft, akTop, akBottom]
     TabOrder = 0
     OnChange = pgeCtrlChange
     object pgeInformation: TTabSheet
@@ -68,16 +72,16 @@ object frmAbout: TfrmAbout
       end
       object lblCopyright2: TLabel
         Left = 8
-        Top = 204
+        Top = 140
         Width = 297
         Height = 17
         Alignment = taCenter
         AutoSize = False
-        Caption = 'Copyright '#169' 2001-2004 URUSoft'
+        Caption = 'Copyright '#169' 2001-2008 URUSoft'
       end
       object lblWeb2: TLabel
         Left = 8
-        Top = 172
+        Top = 104
         Width = 297
         Height = 17
         Cursor = crHandPoint
@@ -90,7 +94,7 @@ object frmAbout: TfrmAbout
       end
       object lblEMail: TLabel
         Left = 8
-        Top = 188
+        Top = 120
         Width = 297
         Height = 17
         Cursor = crHandPoint
@@ -101,47 +105,58 @@ object frmAbout: TfrmAbout
         OnMouseEnter = lblWebMouseEnter
         OnMouseLeave = lblWebMouseLeave
       end
-      object lblDonation: TLabel
+      object lblCopyrightBdzl: TLabel
         Left = 8
-        Top = 120
+        Top = 156
         Width = 297
-        Height = 49
-        Cursor = crHandPoint
+        Height = 17
         Alignment = taCenter
         AutoSize = False
-        Caption = 
-          'If you like this software, we would really appreciate you could ' +
-          'make a donation. Click here to do it.'
+        Caption = '2011 Bedazzle'
+      end
+      object lblCopyrightGPL: TLabel
+        Left = 4
+        Top = 200
+        Width = 297
+        Height = 13
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'Subtitle Workshop is released'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
         Font.Name = 'Tahoma'
         Font.Style = [fsBold]
         ParentFont = False
-        Visible = False
-        WordWrap = True
-        OnClick = lblDonationClick
-        OnMouseEnter = lblWebMouseEnter
-        OnMouseLeave = lblWebMouseLeave
       end
-      object Label1: TLabel
-        Left = 8
-        Top = 220
+      object lblCopyrightGPL2: TLabel
+        Left = 4
+        Top = 216
         Width = 297
-        Height = 17
+        Height = 13
         Alignment = taCenter
         AutoSize = False
-        Caption = '2008 Bedazzle'
+        Caption = 'under the GNU/GPL 3 license.'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold]
+        ParentFont = False
       end
     end
     object pgeCredits: TTabSheet
       Caption = 'Credits'
       ImageIndex = 1
+      DesignSize = (
+        313
+        260)
       object pnlBase: TPanel
         Left = 8
         Top = 8
         Width = 297
-        Height = 221
+        Height = 242
+        Anchors = [akLeft, akTop, akRight, akBottom]
         BevelOuter = bvNone
         BorderStyle = bsSingle
         TabOrder = 0
@@ -149,7 +164,7 @@ object frmAbout: TfrmAbout
           Left = 0
           Top = -312
           Width = 293
-          Height = 769
+          Height = 1077
           BevelOuter = bvNone
           FullRepaint = False
           TabOrder = 0
@@ -226,7 +241,7 @@ object frmAbout: TfrmAbout
           end
           object lblTranslators: TLabel
             Left = 8
-            Top = 440
+            Top = 448
             Width = 273
             Height = 17
             Alignment = taCenter
@@ -274,7 +289,7 @@ object frmAbout: TfrmAbout
           end
           object lblDirectShowProg: TLabel
             Left = 8
-            Top = 372
+            Top = 376
             Width = 273
             Height = 17
             Alignment = taCenter
@@ -289,7 +304,7 @@ object frmAbout: TfrmAbout
           end
           object lblAML2: TLabel
             Left = 8
-            Top = 392
+            Top = 400
             Width = 273
             Height = 17
             Alignment = taCenter
@@ -298,7 +313,7 @@ object frmAbout: TfrmAbout
           end
           object lblDeKSoft2: TLabel
             Left = 8
-            Top = 408
+            Top = 416
             Width = 273
             Height = 17
             Alignment = taCenter
@@ -331,7 +346,7 @@ object frmAbout: TfrmAbout
           end
           object lblTranslatorsList: TLabel
             Left = 8
-            Top = 464
+            Top = 472
             Width = 273
             Height = 17
             Alignment = taCenter
@@ -347,7 +362,7 @@ object frmAbout: TfrmAbout
             AutoSize = False
             Caption = 'Bedazzle'
           end
-          object Label2: TLabel
+          object lblBedazzle3: TLabel
             Left = 8
             Top = 352
             Width = 273
@@ -358,9 +373,9 @@ object frmAbout: TfrmAbout
           end
           object pnlBelowTranslators: TPanel
             Left = 0
-            Top = 488
+            Top = 500
             Width = 293
-            Height = 273
+            Height = 401
             BevelOuter = bvNone
             TabOrder = 0
             object lblBetaTesters: TLabel
@@ -416,7 +431,7 @@ object frmAbout: TfrmAbout
             end
             object lblForUpdVisit: TLabel
               Left = 4
-              Top = 160
+              Top = 212
               Width = 285
               Height = 17
               Alignment = taCenter
@@ -431,7 +446,7 @@ object frmAbout: TfrmAbout
             end
             object lblWeb: TLabel
               Left = 4
-              Top = 176
+              Top = 228
               Width = 285
               Height = 17
               Cursor = crHandPoint
@@ -444,7 +459,7 @@ object frmAbout: TfrmAbout
             end
             object imgIcon: TImage
               Left = 126
-              Top = 208
+              Top = 260
               Width = 41
               Height = 33
               Center = True
@@ -1397,16 +1412,16 @@ object frmAbout: TfrmAbout
             end
             object lblCopyright: TLabel
               Left = 4
-              Top = 256
+              Top = 308
               Width = 285
               Height = 17
               Alignment = taCenter
               AutoSize = False
-              Caption = 'Copyright '#169' 2001-2004 URUSoft'
+              Caption = 'Copyright '#169' 2001-2008 URUSoft'
             end
             object lblDefaultIconBy: TLabel
               Left = 8
-              Top = 112
+              Top = 164
               Width = 285
               Height = 17
               Alignment = taCenter
@@ -1421,12 +1436,78 @@ object frmAbout: TfrmAbout
             end
             object lblKornKid: TLabel
               Left = 8
-              Top = 128
+              Top = 180
               Width = 285
               Height = 17
               Alignment = taCenter
               AutoSize = False
               Caption = '<<[KoRNkID]>>'
+            end
+            object lblBedazzle2: TLabel
+              Left = 4
+              Top = 328
+              Width = 285
+              Height = 17
+              Alignment = taCenter
+              AutoSize = False
+              Caption = '2011 Bedazzle'
+            end
+            object lblCopyrightGPL3: TLabel
+              Left = 4
+              Top = 356
+              Width = 285
+              Height = 17
+              Alignment = taCenter
+              AutoSize = False
+              Caption = 'Subtitle Workshop is released'
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+            end
+            object lblCopyrightGPL4: TLabel
+              Left = 4
+              Top = 372
+              Width = 285
+              Height = 17
+              Alignment = taCenter
+              AutoSize = False
+              Caption = 'under the GNU/GPL 3 license.'
+              Font.Charset = ANSI_CHARSET
+              Font.Color = clWindowText
+              Font.Height = -11
+              Font.Name = 'Tahoma'
+              Font.Style = [fsBold]
+              ParentFont = False
+            end
+            object lblBetaTester5: TLabel
+              Left = 4
+              Top = 96
+              Width = 285
+              Height = 17
+              Alignment = taCenter
+              AutoSize = False
+              Caption = 'perelli'
+            end
+            object lblBetaTester6: TLabel
+              Left = 4
+              Top = 112
+              Width = 285
+              Height = 17
+              Alignment = taCenter
+              AutoSize = False
+              Caption = 'jairovital'
+            end
+            object lblBetaTester7: TLabel
+              Left = 4
+              Top = 128
+              Width = 285
+              Height = 17
+              Alignment = taCenter
+              AutoSize = False
+              Caption = 'helder1965'
             end
           end
         end
@@ -1435,9 +1516,10 @@ object frmAbout: TfrmAbout
   end
   object btnOk: TButton
     Left = 128
-    Top = 280
+    Top = 307
     Width = 81
     Height = 25
+    Anchors = [akLeft, akBottom]
     Cancel = True
     Caption = '&Ok'
     Default = True
@@ -1454,7 +1536,5 @@ object frmAbout: TfrmAbout
     Enabled = False
     Interval = 35
     OnTimer = TimerTimer
-    Left = 8
-    Top = 280
   end
 end

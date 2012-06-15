@@ -27,10 +27,10 @@ type
     function GetCurrentFormatIndex: Integer;
     function GetPlaybackDelay: Integer;
     procedure SetPlaybackDelay(Time: Integer);
-    function GetNoInteractionWithTags: Boolean;
-    procedure SetNoInteractionWithTags(Value: Boolean);
-    function GetWorkWithTags: Boolean;
-    procedure SetWorkWithTags(Value: Boolean);
+    function GetNoInteractionWithTags: LongBool {Boolean};
+    procedure SetNoInteractionWithTags(Value: LongBool {Boolean});
+    function GetWorkWithTags: LongBool {Boolean};
+    procedure SetWorkWithTags(Value: LongBool {Boolean});
     function GetInitialized: Boolean;
   public
     constructor Create(DLLFileName: String);
@@ -67,8 +67,8 @@ type
     property CurrentFormatName     : String  read GetCurrentFormatName;
     property CurrentFormatIndex    : Integer read GetCurrentFormatIndex;
     property PlaybackDelay         : Integer read GetPlaybackDelay          write SetPlaybackDelay;
-    property NoInteractionWithTags : Boolean read GetNoInteractionWithTags  write SetNoInteractionWithTags;
-    property WorkWithTags          : Boolean read GetWorkWithTags           write SetWorkWithTags;
+    property NoInteractionWithTags : LongBool {Boolean} read GetNoInteractionWithTags  write SetNoInteractionWithTags;
+    property WorkWithTags          : LongBool {Boolean} read GetWorkWithTags           write SetWorkWithTags;
     property Initialized           : Boolean read GetInitialized;
     // -------------------------------------- //
     //             Output settings            //
@@ -81,6 +81,7 @@ type
     procedure SetOutputSettingsSubViewer2(Assigned: Boolean; Title, Author, Source, vProgram, Path: String; Delay, CDTrack: Integer; Comment, FontName: String; FontSize, FontColor: Integer; Bold, Italic, Underline, StrikeOut: Boolean);
     procedure SetOutputSettingsSubStationAlpha(Assigned: Boolean; Title, Script, FontName: String; FontSize: Integer; Bold, Italic: Boolean; BorderStyle, PrimaryColor, SecondaryColor, TertiaryColor, ShadowColor, Outline, Shadow, Alignment, LeftMargin, RightMargin, VerticalMargin, Encoding : Integer);
     procedure SetOutputSettingsTMPlayer(Assigned: Boolean; TypeOfFormat: TTMPlayerFormat);
+    procedure SetOutputSettingsEncoding(Encoding: Integer);
   end;
 
 // -----------------------------------------------------------------------------
@@ -573,7 +574,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function TSubtitleApi.GetNoInteractionWithTags: Boolean;
+function TSubtitleApi.GetNoInteractionWithTags: LongBool {Boolean};
 var
   GetNoInterWithTags: function: LongBool; stdcall;
 begin
@@ -589,7 +590,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TSubtitleApi.SetNoInteractionWithTags(Value: Boolean);
+procedure TSubtitleApi.SetNoInteractionWithTags(Value: LongBool {Boolean});
 var
   SetNoInterWithTags: procedure(Value: Boolean); stdcall;
 begin
@@ -603,7 +604,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function TSubtitleApi.GetWorkWithTags: Boolean;
+function TSubtitleApi.GetWorkWithTags: LongBool {Boolean};
 var
   GetSubWorkWithTags: function: LongBool; stdcall;
 begin
@@ -619,7 +620,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TSubtitleApi.SetWorkWithTags(Value: Boolean);
+procedure TSubtitleApi.SetWorkWithTags(Value: LongBool {Boolean});
 var
   SetSubWorkWithTags: procedure(Value: Boolean); stdcall;
 begin
@@ -909,5 +910,17 @@ begin
 end;
 
 // -----------------------------------------------------------------------------
+
+procedure TSubtitleApi.SetOutputSettingsEncoding(Encoding: Integer);
+var
+  SetOSEncoding: procedure(Encoding: Integer); stdcall;
+begin
+  If FInstance <> 0 Then
+  Begin
+    SetOSEncoding := GetProcAddress(FInstance, 'SetOutputSettingsEncoding');
+    If @SetOSEncoding <> NIL Then
+      SetOSEncoding(Encoding);
+  End;
+end;
 
 end.

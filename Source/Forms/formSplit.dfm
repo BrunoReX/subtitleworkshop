@@ -1,6 +1,6 @@
 object frmSplit: TfrmSplit
-  Left = 206
-  Top = 113
+  Left = 673
+  Top = 514
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'frmSplit'
@@ -62,86 +62,13 @@ object frmSplit: TfrmSplit
     TabOrder = 3
     object pgeSimple: TTabSheet
       Caption = 'Simple'
-      object rdoSelectedItem: TRadioButton
-        Left = 0
-        Top = 8
-        Width = 257
-        Height = 17
-        Caption = 'Selected item'
-        Checked = True
-        TabOrder = 0
-        TabStop = True
-        OnClick = rdoSelectedItemClick
-      end
-      object rdoItemNumber: TRadioButton
-        Left = 0
-        Top = 32
-        Width = 257
-        Height = 17
-        Caption = 'Item number:'
-        TabOrder = 1
-        OnClick = rdoSelectedItemClick
-      end
-      object rdoGivenTime: TRadioButton
-        Left = 0
-        Top = 80
-        Width = 257
-        Height = 17
-        Caption = 'Given time:'
-        TabOrder = 3
-        OnClick = rdoSelectedItemClick
-      end
-      object rdoGivenFrame: TRadioButton
-        Left = 0
-        Top = 128
-        Width = 257
-        Height = 17
-        Caption = 'Given frame:'
-        TabOrder = 4
-        OnClick = rdoSelectedItemClick
-      end
-      object edtItemNumber: TEdit
-        Left = 16
-        Top = 48
-        Width = 87
-        Height = 21
-        Enabled = False
-        TabOrder = 2
-        Text = '0'
-      end
-      object edtGivenFrame: TEdit
-        Left = 16
-        Top = 144
-        Width = 87
-        Height = 21
-        Enabled = False
-        TabOrder = 5
-        Text = '0'
-      end
-      object rdoEndOfVideo: TRadioButton
-        Left = 0
-        Top = 176
-        Width = 257
-        Height = 17
-        Caption = 'End of video:'
-        TabOrder = 6
-        OnClick = rdoSelectedItemClick
-      end
-      object edtEndOfVideo: TEdit
-        Left = 16
-        Top = 192
-        Width = 281
-        Height = 21
-        Enabled = False
-        TabOrder = 7
-      end
       object gbNaming1: TGroupBox
         Left = 0
         Top = 224
-        Width = 385
+        Width = 401
         Height = 73
         Caption = 'Naming'
-        TabOrder = 8
+        TabOrder = 0
         object lblPart1Ext: TLabel
           Left = 293
           Top = 22
@@ -179,110 +106,135 @@ object frmSplit: TfrmSplit
           TabOrder = 1
         end
       end
-      object btnBrowse1: TButton
-        Left = 304
-        Top = 192
-        Width = 89
-        Height = 25
-        Caption = 'Browse'
-        TabOrder = 9
-        OnClick = btnBrowse1Click
-      end
-      object tmeGivenTime: TTimeMaskEdit
-        Left = 16
-        Top = 96
-        Width = 89
-        Height = 22
-        ChangeTimeOnModify = True
-        FPS = 25.000000000000000000
-        MinTime = 0
-        TabOrder = 10
-        Time = 0
-        TimeMode = tmTime
+      object GroupBox1: TGroupBox
+        Left = 0
+        Top = -4
+        Width = 401
+        Height = 225
+        TabOrder = 1
+        object rdoSelectedItem: TRadioButton
+          Left = 8
+          Top = 12
+          Width = 257
+          Height = 17
+          Caption = 'Selected item'
+          Checked = True
+          TabOrder = 0
+          TabStop = True
+          OnClick = rdoSelectedItemClick
+        end
+        object rdoItemNumber: TRadioButton
+          Left = 8
+          Top = 36
+          Width = 257
+          Height = 17
+          Caption = 'Item number:'
+          TabOrder = 9
+          OnClick = rdoSelectedItemClick
+        end
+        object rdoGivenTime: TRadioButton
+          Left = 8
+          Top = 80
+          Width = 257
+          Height = 17
+          Caption = 'Given time:'
+          TabOrder = 3
+          OnClick = rdoSelectedItemClick
+        end
+        object rdoGivenFrame: TRadioButton
+          Left = 8
+          Top = 128
+          Width = 257
+          Height = 17
+          Caption = 'Given frame:'
+          TabOrder = 4
+          OnClick = rdoSelectedItemClick
+        end
+        object tmeGivenTime: TTimeMaskEdit
+          Left = 24
+          Top = 96
+          Width = 95
+          Height = 22
+          ChangeTimeOnModify = True
+          FPS = 25.000000000000000000
+          MinTime = 0
+          TabOrder = 8
+          Time = 0
+          TimeMode = tmTime
+        end
+        object edtItemNumber: TEdit
+          Left = 24
+          Top = 52
+          Width = 95
+          Height = 21
+          Enabled = False
+          TabOrder = 2
+          Text = '0'
+        end
+        object edtGivenFrame: TEdit
+          Left = 24
+          Top = 144
+          Width = 95
+          Height = 21
+          Enabled = False
+          TabOrder = 5
+          Text = '0'
+        end
+        object rdoEndOfVideo: TRadioButton
+          Left = 8
+          Top = 176
+          Width = 257
+          Height = 17
+          Caption = 'End of video:'
+          TabOrder = 6
+          OnClick = rdoSelectedItemClick
+        end
+        object edtEndOfVideo: TEdit
+          Left = 24
+          Top = 192
+          Width = 277
+          Height = 21
+          Enabled = False
+          TabOrder = 7
+        end
+        object btnBrowse1: TButton
+          Left = 304
+          Top = 192
+          Width = 89
+          Height = 25
+          Caption = 'Browse'
+          TabOrder = 1
+          OnClick = btnBrowse1Click
+        end
       end
     end
     object pgeAdvanced: TTabSheet
       Caption = 'Advanced'
       ImageIndex = 1
-      object rdoEndOfVideos: TRadioButton
-        Left = 0
-        Top = 192
-        Width = 241
-        Height = 17
-        Caption = 'At the ends of videos'
-        ParentShowHint = False
-        ShowHint = False
-        TabOrder = 0
-        OnClick = rdoEqualInLinesClick
-      end
-      object rdoEqualInLines: TRadioButton
-        Left = 0
-        Top = 176
-        Width = 241
-        Height = 16
-        Caption = 'Parts equal in lines'
-        Checked = True
-        TabOrder = 1
-        TabStop = True
-        OnClick = rdoEqualInLinesClick
-      end
-      object rdoEqualInTime: TRadioButton
-        Left = 0
-        Top = 160
-        Width = 241
-        Height = 16
-        Caption = 'Parts equal in time'
-        TabOrder = 2
-        OnClick = rdoEqualInLinesClick
-      end
-      object edtNumberOfParts: TLabeledEdit
-        Left = 248
-        Top = 176
-        Width = 81
-        Height = 21
-        EditLabel.Width = 82
-        EditLabel.Height = 13
-        EditLabel.Caption = 'Number of parts:'
-        TabOrder = 3
-        Text = '2'
-      end
-      object udNumberOfParts: TUpDown
-        Left = 329
-        Top = 176
-        Width = 15
-        Height = 21
-        Associate = edtNumberOfParts
-        Min = 2
-        Max = 2
-        Position = 2
-        TabOrder = 4
-        Thousands = False
-        OnChangingEx = udNumberOfPartsChangingEx
-      end
       object gbNaming2: TGroupBox
         Left = 0
-        Top = 217
+        Top = 224
         Width = 401
-        Height = 80
+        Height = 73
         Caption = 'Naming'
-        TabOrder = 5
+        TabOrder = 0
         object lblPlus: TLabel
           Left = 256
-          Top = 47
+          Top = 43
           Width = 8
           Height = 13
           Caption = '+'
         end
         object lblAutoExt: TLabel
           Left = 360
-          Top = 48
+          Top = 44
           Width = 20
           Height = 13
           Caption = '.Ext'
         end
         object edtPrefixName: TEdit
           Left = 16
-          Top = 44
+          Top = 40
           Width = 233
           Height = 21
           TabOrder = 0
@@ -290,7 +242,7 @@ object frmSplit: TfrmSplit
         end
         object chkAutoName: TCheckBox
           Left = 16
-          Top = 24
+          Top = 20
           Width = 353
           Height = 17
           Caption = 'Auto-name the parts:'
@@ -301,7 +253,7 @@ object frmSplit: TfrmSplit
         end
         object cmbSuffixName: TComboBox
           Left = 272
-          Top = 44
+          Top = 40
           Width = 81
           Height = 21
           ItemHeight = 0
@@ -316,6 +268,7 @@ object frmSplit: TfrmSplit
         Width = 401
         Height = 145
         Header.AutoSizeIndex = 0
+        Header.DefaultHeight = 17
         Header.Font.Charset = ANSI_CHARSET
         Header.Font.Color = clWindowText
         Header.Font.Height = -11
@@ -323,7 +276,7 @@ object frmSplit: TfrmSplit
         Header.Font.Style = []
         Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoVisible]
         Header.Style = hsFlatButtons
-        TabOrder = 6
+        TabOrder = 1
         TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoDeleteMovedNodes]
         TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toInitOnSave, toReportMode, toToggleOnDblClick, toWheelPanning]
         TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowTreeLines, toThemeAware, toUseBlendedImages]
@@ -357,6 +310,68 @@ object frmSplit: TfrmSplit
             Width = 60
             WideText = 'Lines'
           end>
+      end
+      object GroupBox2: TGroupBox
+        Left = 0
+        Top = 152
+        Width = 401
+        Height = 65
+        TabOrder = 2
+        object rdoEndOfVideos: TRadioButton
+          Left = 8
+          Top = 44
+          Width = 241
+          Height = 17
+          Caption = 'At the ends of videos'
+          ParentShowHint = False
+          ShowHint = False
+          TabOrder = 0
+          OnClick = rdoEqualInLinesClick
+        end
+        object rdoEqualInLines: TRadioButton
+          Left = 8
+          Top = 28
+          Width = 241
+          Height = 16
+          Caption = 'Parts equal in lines'
+          Checked = True
+          TabOrder = 1
+          TabStop = True
+          OnClick = rdoEqualInLinesClick
+        end
+        object rdoEqualInTime: TRadioButton
+          Left = 8
+          Top = 12
+          Width = 241
+          Height = 16
+          Caption = 'Parts equal in time'
+          TabOrder = 2
+          OnClick = rdoEqualInLinesClick
+        end
+        object edtNumberOfParts: TLabeledEdit
+          Left = 272
+          Top = 36
+          Width = 81
+          Height = 21
+          EditLabel.Width = 82
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Number of parts:'
+          TabOrder = 3
+          Text = '2'
+        end
+        object udNumberOfParts: TUpDown
+          Left = 353
+          Top = 36
+          Width = 15
+          Height = 21
+          Associate = edtNumberOfParts
+          Min = 2
+          Max = 2
+          Position = 2
+          TabOrder = 4
+          Thousands = False
+          OnChangingEx = udNumberOfPartsChangingEx
+        end
       end
     end
   end

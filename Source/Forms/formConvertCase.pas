@@ -169,24 +169,21 @@ var
   Node       : PVirtualNode;
   Text       : String;
   tmpText    : String;
-  Bold       : Boolean;
-  Italic     : Boolean;
-  Underline  : Boolean;
-  Color      : Integer;
+  StyleTag   : TStyleTag;
   Ini        : TIniFile;
   ConvType   : Integer;
   UndoAction : PUndoAction;
 begin
   ClearUndoList(RedoList);
   frmMain.mnuRedo.Enabled := False;
-  
+
   if rdoAllSubs.Checked then
     Node := frmMain.lstSubtitles.GetFirst else
     Node := frmMain.lstSubtitles.GetFirstSelected;
   while Assigned(Node) do
   begin
     Text := GetSubText(Node);
-    
+
     New(UndoAction);
     UndoAction^.UndoActionType := uaFullTextChange;
     UndoAction^.BufferSize     := SizeOf(TFullTextChange);
@@ -198,11 +195,7 @@ begin
 
     // We store if the subtitle has tags or not, because we don't have to
     // convert case of tags
-    Bold      := Pos('<b>', Text) > 0;
-    Italic    := Pos('<i>', Text) > 0;
-    Underline := Pos('<u>', Text) > 0;
-    Color     := GetSubColor(Text);
-
+    StyleTag := StoreTags(Text);
     Text := RemoveSWTags(Text, True, True, True, True);
     if Text <> '' then
     begin
@@ -228,12 +221,7 @@ begin
 
       if SubtitleAPI.NoInteractionWithTags = False then
       begin
-        // Restore tags
-        if Underline = True then Text := '<u>' + Text;
-        if Bold      = True then Text := '<b>' + Text;
-        if Italic    = True then Text := '<i>' + Text;
-        if Color > -1 then
-          Text := SetColorTag(Text, Color);
+        Text := RestoreSWTags(Text, StyleTag);
       end;
 
       SetText(Node, Text);

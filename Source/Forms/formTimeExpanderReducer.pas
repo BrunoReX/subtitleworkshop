@@ -240,6 +240,7 @@ begin
         if Length(GetSubText(Node)) <= udChars.Position then
           Flag := False;
       end;
+
       FinalTime := GetFinalTime(Node);
       if Flag = True then
       begin
@@ -255,6 +256,7 @@ begin
               Flag := False;
           end;
         end;
+        
         if Flag = True then
         begin
           New(UndoAction);
@@ -274,12 +276,12 @@ begin
             if chkPreventOverlapping.Checked then
             begin
               if (FinalTime > GetStartTime(Node.NextSibling)) and (Node <> lstSubtitles.GetLast) then
-                FinalTime := GetStartTime(Node.NextSibling) - 1;
+                FinalTime := GetStartTime(Node.NextSibling) - frmMain.Vars.GapBetweenSubs;
             end;
           end else
           begin
             FinalTime := FinalTime - ExpandOrReduce;
-            if (FinalTime - GetStartTime(Node)) < 600 then
+            if (FinalTime - GetStartTime(Node)) < 600 then    // magick numbers
               FinalTime := GetStartTime(Node) + 600;
           end;
 

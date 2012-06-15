@@ -61,6 +61,8 @@ type
     btnBrowse2: TButton;
     btnBrowse1: TButton;
     tmeGivenTime: TTimeMaskEdit;
+    GroupBox1: TGroupBox;
+    GroupBox2: TGroupBox;
     procedure btnSplitClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnBrowse1Click(Sender: TObject);

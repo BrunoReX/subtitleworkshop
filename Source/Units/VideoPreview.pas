@@ -2,8 +2,10 @@ unit VideoPreview;
 
 interface
 
-uses Forms, Windows, Controls, ComCtrls, ExtCtrls, ActiveX, DirectShow9,   
-     USubtitlesFunctions, SysUtils, Menus, Classes;
+uses Forms, Windows, Controls, ComCtrls, ExtCtrls, ActiveX, DirectShow9,
+     USubtitlesFunctions, SysUtils, Menus, Classes, formMultipleStreams;
+
+{ $DEFINE UNIOFF}
 
 const
   CLSID_MPEG2Splitter           : TGUID = '{3AE86B20-7BE8-11D1-ABE6-00A0C905F375}';
@@ -11,10 +13,16 @@ const
   CLSID_GabestMatroskaSplitter  : TGUID = '{0A68C3B5-9164-4A54-AFAF-995B2FF0E0D4}';
   CLSID_GabestRealMediaSplitter : TGUID = '{E21BE468-5C18-43EB-B0CC-DB93A847D769}';
   CLSID_GabestAviSplitter       : TGUID = '{9736D831-9D6C-4E72-B6E7-560EF9181001}';
+  CLSID_HaaliMediaSplitter      : TGUID = '{55DA30FC-F16B-49FC-BAA5-AE59FC65F82D}';
+  CLSID_VideoRenderer           : TGUID = '{70E102B0-5556-11CE-97C0-00AA0055595A}';
+  CLSID_ffdshowVideDecoder      : TGUID = '{04FE9017-F873-410E-871E-AB91661A4EF7}';
+  CLSID_LAVSplitter             : TGUID = '{171252A0-8820-4AFE-9DF8-5C92B2D66B04}';
 
 // -----------------------------------------------------------------------------
 
 type
+  TRateClass = (rate100, rate10, rate20, rate30, rate40, rate50, rate60, rate70, rate80, rate90, rate150, rate200, rate300, rate400);
+
   // DirectShow Media Player.
   TDSMP = record
     Initialized  : Boolean;
@@ -84,34 +92,54 @@ begin
     if Flag = True then
     begin
       mnuVideoPreviewMode.Checked := True;
-      pnlVideo.Height := (pnlParent1.Height div 2) - (spSplitter.Height div 2);
+
+{     pnlVideo.Height := (pnlParent1.Height div 2) - (spSplitter.Height div 2);
       if (spSplitter.Top < 70) then
         spSplitter.Top := 70;
       lstSubtitles.Top := pnlVideo.Height + spSplitter.Height;
+
+      lstSubtitles.Height := pnlParent1.Height - spSplitter.Top - spSplitter.Height;
+}
+      pnlVolume.Height := (pnlParent1.Height div 2) - (spSplitter.Height div 2);
+
+      if (spSplitter.Top < 70) then
+        spSplitter.Top := 70;
+
+      lstSubtitles.Top := pnlVolume.Height + spSplitter.Height;
+      lstSubtitles.Height := pnlParent1.Height - spSplitter.Top - spSplitter.Height;
+
       if pnlVideo.Visible = False then
         pnlVideo.Show;
       if spSplitter.Visible = False then
         spSplitter.Show;
-      lstSubtitles.Height := pnlParent1.Height - spSplitter.Top - spSplitter.Height;
+      if pnlVolume.Visible = False then
+        pnlVolume.Show;
+
       sbSeekBar.Position := 0;
       sbSeekBar.Show;
-      UpdateVideoPos;
+      if frmMain.PlayOnLoad then
+        UpdateVideoPos;
+
       if Player.Initialized then
         tcTimeCounter.Show else
       begin
         tcTimeCounter.Text1 := '';
         tcTimeCounter.Text2 := '';
-      end;        
+      end;
+
     end else
     begin
       subSubtitle.Hide;
       mnuVideoPreviewMode.Checked := False;
       spSplitter.Hide;
-      pnlVideo.Hide;
+//      pnlVideo.Hide;
+      pnlVolume.Hide;
+
       lstSubtitles.Top := 0;
       lstSubtitles.Height := pnlParent1.Height;
       tcTimeCounter.Hide;
       sbSeekBar.Hide;
+      pnlVolume.Hide;
     end;
   end;
 end;
@@ -235,7 +263,7 @@ function LoadMovie(const FileName: String): Boolean;
       VideoRenderer := nil;
     end;
   end;
-
+  //------------------
   procedure PlayOnlyStream1(GraphBuilder: IGraphBuilder);
     function FindSplitter: IBaseFilter;
     var
@@ -243,6 +271,7 @@ function LoadMovie(const FileName: String): Boolean;
       Fetched : ULong;
       Fi      : IBaseFilter;
       g       : TGuid;
+      FilterInfo: TFilterInfo;
     begin
       Result := nil;
       if GraphBuilder = nil then
@@ -250,21 +279,59 @@ function LoadMovie(const FileName: String): Boolean;
 
       GraphBuilder.EnumFilters(EnumF);
       if EnumF <> nil then
-      while EnumF.Next(1, Fi, @Fetched) = S_OK do
+      while EnumF.Next(1, Fi, @Fetched) = S_OK do  // 1 = how many filters to retrieve
       begin
+
+        Fi.QueryFilterInfo(FilterInfo);
+//        MsgBox(FilterInfo.achName, BTN_OK, '', '', MB_ICONWARNING, frmMain);
+
         Fi.GetClassID(G);
-        if IsEqualGUID(G, CLSID_AviSplitter)            or
-           IsEqualGUID(G, CLSID_OGGSplitter)            or
-           IsEqualGUID(G, CLSID_MPEG1Splitter)          or
-           IsEqualGUID(G, CLSID_MPEG2Splitter)          or
-           IsEqualGUID(G, CLSID_GabestAviSplitter)      or
-           IsEqualGUID(G, CLSID_GabestMatroskaSplitter) or
-           IsEqualGUID(G, CLSID_GabestRealMediaSplitter) then
+        if IsEqualGUID(G, CLSID_AviSplitter)
+           or IsEqualGUID(G, CLSID_OGGSplitter)
+           or IsEqualGUID(G, CLSID_MPEG1Splitter)
+           or IsEqualGUID(G, CLSID_MPEG2Splitter)
+           or IsEqualGUID(G, CLSID_GabestAviSplitter)
+           or IsEqualGUID(G, CLSID_GabestMatroskaSplitter)
+           or IsEqualGUID(G, CLSID_GabestRealMediaSplitter)
+           or IsEqualGUID(G, CLSID_ffdshowVideDecoder)
+//           or IsEqualGUID(G, CLSID_HaaliMediaSplitter)
+//           or IsEqualGUID(G, CLSID_VideoRenderer)
+           or IsEqualGUID(G, CLSID_LAVSplitter)
+           then
           Result := Fi;
+
+
+//          break;
+//          if result = nil then
+//            MsgBox(String(FilterInfo.achName)+#13+IntToHex(G.D1, 8)+'-'+IntToHex(G.D2, 4)+'-'+IntToHex(G.D3, 4)+#13+'result is nil', BTN_OK, '', '', MB_ICONWARNING, frmMain)
+//          else
+//            MsgBox(String(FilterInfo.achName)+#13+IntToHex(G.D1, 8)+'-'+IntToHex(G.D2, 4)+'-'+IntToHex(G.D3, 4)+#13+#13+'result is NOT nil', BTN_OK, '', '', MB_ICONWARNING, frmMain);
+
       end;
       Fi    := nil;
       EnumF := nil;
+
     end;
+    //------------------
+    function CountAudioStreams(BaseFilter: IBaseFilter): Byte;
+    var
+      EnumPins : IEnumPins;
+      Fetched  : ULong;
+      Pin      : IPin;
+      PinType  : TAMMediaType;
+    begin
+      Result := 0;
+
+      BaseFilter.EnumPins(EnumPins);
+      while EnumPins.Next(1, Pin, @Fetched) = S_OK do // 1 = how many pins to retrieve
+      begin
+        if Pin.ConnectionMediaType(PinType) = S_OK then
+          if IsEqualGUID(PinType.MajorType, MEDIAType_Audio) then
+            Inc(Result);
+      end;
+      EnumPins := nil;
+    end;
+  //------------------
   var
     EnumPins : IEnumPins;
     Fetched  : ULong;
@@ -272,22 +339,63 @@ function LoadMovie(const FileName: String): Boolean;
     Pin2     : IPin;
     PinType  : TAMMediaType;
     Splitter : IBaseFilter;
-    a        : Byte;
+    i        : Byte;
+    Streams  : Byte;
+    KeepStream : Byte;
   begin
     Splitter := FindSplitter;
 
     if Assigned(Splitter) then
     begin
-      Splitter.EnumPins(EnumPins);
+      Streams := CountAudioStreams(Splitter);
+
+      if Streams > 1 then
+      begin
+        frmMultipleStreams := TfrmMultipleStreams.Create(Application);
+        frmMultipleStreams.cmbStreams.Clear;
+
+        for i := 1 to Streams do
+           frmMultipleStreams.cmbStreams.AddItem(IntToStr(i), nil);
+
+        frmMultipleStreams.cmbStreams.ItemIndex := 0;
+
+        frmMultipleStreams.ShowModal;
+        KeepStream := StrToInt(frmMultipleStreams.cmbStreams.Items[frmMultipleStreams.cmbStreams.ItemIndex]);
+        frmMultipleStreams.Free;
+
+        Splitter.EnumPins(EnumPins);
+
+        Streams := 1;
+        while EnumPins.Next(1, Pin, @Fetched) = S_OK do // 1 = how many pins to retrieve
+        begin
+          if Pin.ConnectionMediaType(PinType) = S_OK then
+          begin
+            if IsEqualGUID(PinType.MajorType, MEDIAType_Audio) then
+            begin
+              if Streams <> KeepStream then  // eliminate all audio links except chosen
+              begin
+                Pin.ConnectedTo(Pin2);
+                GraphBuilder.Disconnect(Pin);
+                GraphBuilder.Disconnect(Pin2);
+              end;
+              Inc(Streams);
+            end;
+          end;
+        end;
+        EnumPins := nil;
+        Splitter := nil;
+      end;
+
+{      Splitter.EnumPins(EnumPins);
 
       a := 0;
-      while EnumPins.Next(1, Pin, @Fetched) = S_OK do
+      while EnumPins.Next(1, Pin, @Fetched) = S_OK do // 1 = how many pins to retrieve
       begin
         if Pin.ConnectionMediaType(PinType) = S_OK then
         begin
           if IsEqualGUID(PinType.MajorType, MEDIAType_Audio) then
           begin
-            if a >= 1 then
+            if a >= 1 then  // eliminate all audio links except first one
             begin
               Pin.ConnectedTo(Pin2);
               GraphBuilder.Disconnect(Pin);
@@ -299,6 +407,7 @@ function LoadMovie(const FileName: String): Boolean;
       end;
       EnumPins := nil;
       Splitter := nil;
+}
     end;
   end;
 
@@ -329,7 +438,7 @@ begin
          (RenderResult <> VFW_S_PARTIAL_RENDER) and
          (RenderResult <> VFW_S_DUPLICATE_NAME) then
         exit else
-        MsgBox(InfoMsg[10], BTN_OK, '', '', MB_ICONWARNING, frmMain);
+        MsgBox(Format(InfoMsg[10], ['$'+IntToHex(RenderResult, 8)]), BTN_OK, '', '', MB_ICONWARNING, frmMain);
     end;
 
     // Remove VMR Renderer
@@ -396,9 +505,8 @@ begin
         end;
       end;
 
-      btnPlay.Hide;
-      btnPause.Show;
       MovieFile := FileName;
+//{$IFNDEF UNIOFF}
       if (mnuTranslatorMode.Checked) then
       begin
         if (mnuDisplayOriginal.Checked) then
@@ -406,8 +514,19 @@ begin
           subSubtitle.Font.Charset := TransCharset;
       end else
         subSubtitle.Font.Charset := OrgCharset;
+//{$ENDIF}
+      if frmMain.PlayOnLoad then
+      begin
+        btnPlay.Hide;
+        btnPause.Show;
+        Playing := True;
+      end else
+      begin
+        btnPlay.Show;
+        btnPause.Hide;
+        Playing := False;
+      end;
 
-      Playing := True;
       SetVideoPos(0);
       sbSeekBar.Max      := VideoDuration;
       sbSeekBar.Position := 0;
@@ -422,7 +541,7 @@ begin
     begin
       UpdateVideoPos;
       UpdateSubtitlesPos;
-    end;  
+    end;
 
     // --------------- //
     //  Playback rate  //
@@ -436,13 +555,19 @@ begin
     if frmMain.mnu70P.Checked then SetPlayBackRate(0.70, True) else
     if frmMain.mnu80P.Checked then SetPlayBackRate(0.80, True) else
     if frmMain.mnu90P.Checked then SetPlayBackRate(0.90, True) else
+    if frmMain.mnu150P.Checked then SetPlayBackRate(1.5, True) else
     if frmMain.mnu200P.Checked then SetPlayBackRate(2, True) else
     if frmMain.mnu300P.Checked then SetPlayBackRate(3, True) else
     if frmMain.mnu400P.Checked then SetPlayBackRate(4, True) else
       SetPlayBackRate(1, True);
 
-    MediaControl.Run;
+    if frmMain.PlayOnLoad then
+        MediaControl.Run;
+
     Result := True;
+
+//    if frmMain.PlayOnLoad = False then
+//      frmMain.btnPlayClick(nil);
   end;
 end;
 
@@ -521,23 +646,25 @@ begin
     mnu70P.ShortCut := 0;
     mnu80P.ShortCut := 0;
     mnu90P.ShortCut := 0;
+    mnu150P.ShortCut := 0;
     mnu200P.ShortCut := 0;
     mnu300P.ShortCut := 0;
     mnu400P.ShortCut := 0;
     // 16393 = [Ctrl]+[Tab]
     case DefAltPlayRate of
-      1: mnu10P.ShortCut := DefAltPlayRateShortcut;
-      2: mnu20P.ShortCut := DefAltPlayRateShortcut;
-      3: mnu30P.ShortCut := DefAltPlayRateShortcut;
-      4: mnu40P.ShortCut := DefAltPlayRateShortcut;
-      5: mnu50P.ShortCut := DefAltPlayRateShortcut;
-      6: mnu60P.ShortCut := DefAltPlayRateShortcut;
-      7: mnu70P.ShortCut := DefAltPlayRateShortcut;
-      8: mnu80P.ShortCut := DefAltPlayRateShortcut;
-      9: mnu90P.ShortCut := DefAltPlayRateShortcut;
-      10: mnu200P.ShortCut := DefAltPlayRateShortcut;
-      11: mnu300P.ShortCut := DefAltPlayRateShortcut;
-      12: mnu400P.ShortCut := DefAltPlayRateShortcut;
+      rate10: mnu10P.ShortCut := DefAltPlayRateShortcut;
+      rate20: mnu20P.ShortCut := DefAltPlayRateShortcut;
+      rate30: mnu30P.ShortCut := DefAltPlayRateShortcut;
+      rate40: mnu40P.ShortCut := DefAltPlayRateShortcut;
+      rate50: mnu50P.ShortCut := DefAltPlayRateShortcut;
+      rate60: mnu60P.ShortCut := DefAltPlayRateShortcut;
+      rate70: mnu70P.ShortCut := DefAltPlayRateShortcut;
+      rate80: mnu80P.ShortCut := DefAltPlayRateShortcut;
+      rate90: mnu90P.ShortCut := DefAltPlayRateShortcut;
+      rate150: mnu150P.ShortCut := DefAltPlayRateShortcut;
+      rate200: mnu200P.ShortCut := DefAltPlayRateShortcut;
+      rate300: mnu300P.ShortCut := DefAltPlayRateShortcut;
+      rate400: mnu400P.ShortCut := DefAltPlayRateShortcut;
     end;
   end;
 end;
@@ -588,7 +715,6 @@ begin
     begin
       tcTimeCounter.Text1 := TimeToString(CurrPos);
       tcTimeCounter.Text2 := TimeToString(VideoDuration);
-      tcTimeCounter.Text3 := FormatFloat('#.###', MovieFPS);
     end else
     begin
       tcTimeCounter.Text1 := IntToStr(TimeToFrames(CurrPos, MovieFPS));
@@ -606,8 +732,13 @@ begin
   begin
     if (mnuVideoPreviewMode.Checked) then
     begin
-      subSubtitle.Top := pnlVideoDisplay.Height - subSubtitle.Height - 5;
       subSubtitle.Left := (pnlParent1.Width div 2) - (subSubtitle.Width div 2);
+
+      if PreviewSubPosition = 0 then begin
+        subSubtitle.Top := 5;
+      end else begin
+        subSubtitle.Top := pnlVideoDisplay.Height - subSubtitle.Height - 5;
+      end;
     end;
   end;
 end;
@@ -636,7 +767,7 @@ begin
         NewLeft   := 0;
         NewWidth  := frmMain.pnlVideoDisplay.Width;
       end;
-      
+
     {  Player.VideoWindow.put_Top(0);
       Player.VideoWindow.put_Left(NewLeft);
       Player.VideoWindow.put_Width(NewWidth-NewLeft);

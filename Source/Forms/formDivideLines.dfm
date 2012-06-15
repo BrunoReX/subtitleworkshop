@@ -1,11 +1,11 @@
 object frmDivideLines: TfrmDivideLines
-  Left = 274
-  Top = 204
+  Left = 155
+  Top = 576
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'Divide lines'
   ClientHeight = 352
-  ClientWidth = 554
+  ClientWidth = 576
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object frmDivideLines: TfrmDivideLines
   PixelsPerInch = 96
   TextHeight = 13
   object btnDivide: TButton
-    Left = 376
+    Left = 396
     Top = 320
     Width = 81
     Height = 25
@@ -36,7 +36,7 @@ object frmDivideLines: TfrmDivideLines
     OnClick = btnDivideClick
   end
   object btnCancel: TButton
-    Left = 464
+    Left = 484
     Top = 320
     Width = 81
     Height = 25
@@ -48,7 +48,7 @@ object frmDivideLines: TfrmDivideLines
   object pnlDivideLines: TPanel
     Left = 8
     Top = 8
-    Width = 541
+    Width = 565
     Height = 305
     TabOrder = 2
     object lblDivideAfterLineNumber: TLabel
@@ -61,7 +61,7 @@ object frmDivideLines: TfrmDivideLines
     object Bevel1: TBevel
       Left = 8
       Top = 192
-      Width = 525
+      Width = 550
       Height = 3
     end
     object lblShowSub1: TLabel
@@ -227,8 +227,9 @@ object frmDivideLines: TfrmDivideLines
     object mmoSub1: TMemo
       Left = 184
       Top = 88
-      Width = 349
+      Width = 373
       Height = 70
+      Alignment = taCenter
       TabOrder = 0
       OnChange = mmoSub1Change
       OnKeyDown = mmoSub1KeyDown
@@ -236,8 +237,9 @@ object frmDivideLines: TfrmDivideLines
     object mmoSub2: TMemo
       Left = 184
       Top = 224
-      Width = 349
+      Width = 373
       Height = 70
+      Alignment = taCenter
       TabOrder = 1
       OnChange = mmoSub2Change
       OnKeyDown = mmoSub2KeyDown
@@ -252,9 +254,9 @@ object frmDivideLines: TfrmDivideLines
       OnClick = chkUseAutoDurClick
     end
     object tmeShowSub1: TTimeMaskEdit
-      Left = 88
+      Left = 86
       Top = 88
-      Width = 89
+      Width = 93
       Height = 22
       ChangeTimeOnModify = False
       Enabled = False
@@ -266,9 +268,9 @@ object frmDivideLines: TfrmDivideLines
       TimeMode = tmTime
     end
     object tmeHideSub1: TTimeMaskEdit
-      Left = 88
+      Left = 86
       Top = 112
-      Width = 89
+      Width = 93
       Height = 22
       ChangeTimeOnModify = False
       FPS = 25.000000000000000000
@@ -279,9 +281,9 @@ object frmDivideLines: TfrmDivideLines
       OnTimeChangeFromEditOnly = tmeHideSub1TimeChangeFromEditOnly
     end
     object tmeDuration1: TTimeMaskEdit
-      Left = 88
+      Left = 86
       Top = 136
-      Width = 89
+      Width = 93
       Height = 22
       ChangeTimeOnModify = False
       FPS = 25.000000000000000000
@@ -292,9 +294,9 @@ object frmDivideLines: TfrmDivideLines
       OnTimeChangeFromEditOnly = tmeDuration1TimeChangeFromEditOnly
     end
     object tmeShowSub2: TTimeMaskEdit
-      Left = 88
+      Left = 86
       Top = 224
-      Width = 89
+      Width = 93
       Height = 22
       ChangeTimeOnModify = False
       FPS = 25.000000000000000000
@@ -305,9 +307,9 @@ object frmDivideLines: TfrmDivideLines
       OnTimeChangeFromEditOnly = tmeShowSub2TimeChangeFromEditOnly
     end
     object tmeHideSub2: TTimeMaskEdit
-      Left = 88
+      Left = 86
       Top = 248
-      Width = 89
+      Width = 93
       Height = 22
       ChangeTimeOnModify = False
       Enabled = False
@@ -319,9 +321,9 @@ object frmDivideLines: TfrmDivideLines
       TimeMode = tmTime
     end
     object tmeDuration2: TTimeMaskEdit
-      Left = 88
+      Left = 86
       Top = 272
-      Width = 89
+      Width = 93
       Height = 22
       ChangeTimeOnModify = False
       Enabled = False

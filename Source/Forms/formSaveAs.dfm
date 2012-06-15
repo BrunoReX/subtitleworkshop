@@ -1,11 +1,11 @@
 object frmSaveAs: TfrmSaveAs
-  Left = 192
-  Top = 103
+  Left = 579
+  Top = 168
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'frmSaveAs'
-  ClientHeight = 458
-  ClientWidth = 638
+  ClientHeight = 469
+  ClientWidth = 672
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -15,7 +15,9 @@ object frmSaveAs: TfrmSaveAs
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
-  OnDestroy = FormDestroy
+  DesignSize = (
+    672
+    469)
   PixelsPerInch = 96
   TextHeight = 13
   object lblDblClick: TLabel
@@ -27,7 +29,7 @@ object frmSaveAs: TfrmSaveAs
   end
   object chkAllFormats: TCheckBox
     Left = 8
-    Top = 400
+    Top = 416
     Width = 457
     Height = 17
     Caption = 'All formats'
@@ -37,8 +39,8 @@ object frmSaveAs: TfrmSaveAs
   object lstFormats: TListView
     Left = 8
     Top = 24
-    Width = 625
-    Height = 369
+    Width = 657
+    Height = 389
     Columns = <>
     HideSelection = False
     LargeImages = ImageList
@@ -49,17 +51,18 @@ object frmSaveAs: TfrmSaveAs
     OnKeyDown = lstFormatsKeyDown
   end
   object btnCustomFormat: TButton
-    Left = 320
-    Top = 428
+    Left = 8
+    Top = 436
     Width = 225
     Height = 25
+    Anchors = [akLeft, akBottom]
     Caption = 'Custom format'
     TabOrder = 2
     OnClick = btnCustomFormatClick
   end
   object btnCancel: TButton
-    Left = 552
-    Top = 428
+    Left = 572
+    Top = 436
     Width = 81
     Height = 25
     Cancel = True

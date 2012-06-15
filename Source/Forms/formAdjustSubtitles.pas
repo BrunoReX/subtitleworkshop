@@ -36,21 +36,14 @@ type
     procedure btnAdjustClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure lstPointsGetNodeDataSize(Sender: TBaseVirtualTree;
-      var NodeDataSize: Integer);
-    procedure lstPointsFreeNode(Sender: TBaseVirtualTree;
-      Node: PVirtualNode);
-    procedure lstPointsInitNode(Sender: TBaseVirtualTree; ParentNode,
-      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-    procedure lstPointsGetText(Sender: TBaseVirtualTree;
-      Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
-      var CellText: WideString);
+    procedure lstPointsGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+    procedure lstPointsFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure lstPointsInitNode(Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure lstPointsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: WideString);
     procedure btnRemoveClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure lstPointsEditing(Sender: TBaseVirtualTree;
-      Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
-    procedure lstPointsNewText(Sender: TBaseVirtualTree;
-      Node: PVirtualNode; Column: TColumnIndex; NewText: WideString);
+    procedure lstPointsEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+    procedure lstPointsNewText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; NewText: WideString);
     procedure btnAddFromMediaClick(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
     procedure btnSaveToFileClick(Sender: TObject);
@@ -271,8 +264,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmAdjustSubtitles.FormClose(Sender: TObject;
-  var Action: TCloseAction);
+procedure TfrmAdjustSubtitles.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   frmMain.AdjustFormOpened := False;
   Action := caFree;

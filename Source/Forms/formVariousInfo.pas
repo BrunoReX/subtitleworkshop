@@ -32,22 +32,15 @@ type
     lstInfo: TVirtualStringTree;
     btnOk: TButton;
     dlgOpenAVI: TOpenDialog;
-    procedure lstInfoFreeNode(Sender: TBaseVirtualTree;
-      Node: PVirtualNode);
-    procedure lstInfoGetNodeDataSize(Sender: TBaseVirtualTree;
-      var NodeDataSize: Integer);
-    procedure lstInfoInitNode(Sender: TBaseVirtualTree; ParentNode,
-      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-    procedure lstInfoGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
-      Column: TColumnIndex; TextType: TVSTTextType;
-      var CellText: WideString);
+    procedure lstInfoFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure lstInfoGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+    procedure lstInfoInitNode(Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure lstInfoGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: WideString);
     procedure FormCreate(Sender: TObject);
     procedure btnCalculateClick(Sender: TObject);
     procedure edtWidthKeyPress(Sender: TObject; var Key: Char);
     procedure btnFromAVIClick(Sender: TObject);
-    procedure lstInfoPaintText(Sender: TBaseVirtualTree;
-      const TargetCanvas: TCanvas; Node: PVirtualNode;
-      Column: TColumnIndex; TextType: TVSTTextType);
+    procedure lstInfoPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
     procedure lstInfoDblClick(Sender: TObject);
   private
     procedure SetLanguage;
@@ -58,7 +51,7 @@ type
 var
   frmVariousInfo: TfrmVariousInfo;
   LongLineText  : String;
-  InfoTypes     : array[1..14] of String;
+  InfoTypes     : array[1..19] of String;
 
 implementation
 
@@ -96,6 +89,12 @@ begin
       InfoTypes[12] := ReadString('Various information', '15', 'Subtitles with more than two lines:');
       InfoTypes[13] := ReadString('Various information', '16', 'Longest line:');
       InfoTypes[14] := ReadString('Various information', '17', 'In subtitle %d with %d characters');
+      // added in 2.52 beta
+      InfoTypes[15] := ReadString('Various information', '25', 'Longest duration:');
+      InfoTypes[16] := ReadString('Various information', '26', 'Shortest duration:');
+      InfoTypes[17] := ReadString('Various information', '27', 'Biggest CPS:');
+      InfoTypes[18] := ReadString('Various information', '28', 'Smallest CPS:');
+      InfoTypes[19] := ReadString('Various information', '29', 'in subtitle %d');
 
       gbBestFontSize.Caption     := ReadString('Various information', '18', 'Best font size for playback');
       edtWidth.EditLabel.Caption := ReadString('Various information', '19', 'Resolution width:');
@@ -121,17 +120,14 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmVariousInfo.lstInfoGetNodeDataSize(Sender: TBaseVirtualTree;
-  var NodeDataSize: Integer);
+procedure TfrmVariousInfo.lstInfoGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
 begin
   NodeDataSize := SizeOf(TInfoClass);
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmVariousInfo.lstInfoInitNode(Sender: TBaseVirtualTree;
-  ParentNode, Node: PVirtualNode;
-  var InitialStates: TVirtualNodeInitStates);
+procedure TfrmVariousInfo.lstInfoInitNode(Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
   Data: PInfoClass;
 begin
@@ -142,8 +138,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmVariousInfo.lstInfoFreeNode(Sender: TBaseVirtualTree;
-  Node: PVirtualNode);
+procedure TfrmVariousInfo.lstInfoFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
 var
   Data: PInfoClass;
 begin
@@ -154,9 +149,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmVariousInfo.lstInfoGetText(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
-  var CellText: WideString);
+procedure TfrmVariousInfo.lstInfoGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: WideString);
 var
   Data: PInfoClass;
 begin
@@ -189,6 +182,7 @@ procedure TfrmVariousInfo.FormCreate(Sender: TObject);
       CloseFile(f);
     end;
   end;
+
   procedure AddInfo(const Info, Description: String; ShowBold: Boolean = False; SubNumber: Integer = -1);
   var
     Node: PVirtualNode;
@@ -209,6 +203,7 @@ procedure TfrmVariousInfo.FormCreate(Sender: TObject);
     Data.ShowBold    := ShowBold;
     Data.SubNumber   := SubNumber;
   end;
+
   function CheckLongestLine(MaxLength: Integer; Text: String): Integer;
   var
     PosEnter : Integer;
@@ -239,6 +234,7 @@ procedure TfrmVariousInfo.FormCreate(Sender: TObject);
     end else
       Result := MaxLength;
   end;
+
 var
   Node    : PVirtualNode;
   SubText : String;
@@ -254,6 +250,16 @@ var
   Tot1LSubs     : Integer;
   Tot2LSubs     : Integer;
   TotMore2LSubs : Integer;
+  LongestDur    : Integer;
+  ShortestDur   : Integer;
+  TempDur       : Integer;
+  SubLongDur    : Integer;
+  SubShortDur   : Integer;
+  BiggestCPS    : Real;
+  SmallestCPS   : Real;
+  TempCPS       : Real;
+  SubBigCPS     : Integer;
+  SubSmallCPS   : Integer;
 begin
   pgeCtrl.ActivePageIndex := 0;
   SetLanguage;
@@ -268,6 +274,14 @@ begin
     Tot1LSubs     := 0;
     Tot2LSubs     := 0;
     TotMore2LSubs := 0;
+    LongestDur    := 0;
+    ShortestDur   := MAXINT;
+    SubLongDur    := 0;
+    SubShortDur   := 0;
+    BiggestCPS    := 0;
+    SmallestCPS   := MAXINT;  // there is no "MAXREAL"
+    SubBigCPS     := 0;
+    SubSmallCPS   := 0;
 
     Node := lstSubtitles.GetFirst;
     while Assigned(Node) do
@@ -289,11 +303,42 @@ begin
         SubLongLine := Node.Index + 1;
       end;
 
+      // search for longest/shortest duration
+      TempDur := GetFinalTime(Node) - GetStartTime(Node);
+
+      if TempDur > LongestDur then
+      begin
+        LongestDur := TempDur;
+        SubLongDur := Node.Index + 1;
+      end;
+
+      if TempDur < ShortestDur then
+      begin
+        ShortestDur := TempDur;
+        SubShortDur := Node.Index + 1;
+      end;
+
+      //search for bigest/smallest CPS
+      TempCPS := GetCharsPerMSec(SubText, TempDur);
+
+      if TempCPS > BiggestCPS then
+      begin
+        BiggestCPS := TempCPS;
+        SubBigCPS := Node.Index + 1;
+      end;
+
+      if TempCPS < SmallestCPS then
+      begin
+        SmallestCPS := TempCPS;
+        SubSmallCPS := Node.Index + 1;
+      end;
+
       Node := Node.NextSibling;
     end;
 
     if mnuTranslatorMode.Checked then
       AddInfo(InfoTypes[01], '', True);
+
     AddInfo(InfoTypes[03], SubtitleAPI.GetFormatName(frmMain.OrgFormat));
     AddInfo(InfoTypes[04], frmMain.OrgFile);
     AddInfo(InfoTypes[05], Format('%f kb', [GetFileSize(frmMain.OrgFile)]));
@@ -305,6 +350,11 @@ begin
     AddInfo(InfoTypes[11], IntToStr(Tot2LSubs));
     AddInfo(InfoTypes[12], IntToStr(TotMore2LSubs));
     AddInfo(InfoTypes[13], Format(InfoTypes[14], [SubLongLine, LongestLine]), False, SubLongLine);
+    AddInfo(InfoTypes[15], TimeToString(LongestDur)+ ' '+ Format(InfoTypes[19], [SubLongDur]), False, SubLongDur);
+    AddInfo(InfoTypes[16], TimeToString(ShortestDur)+ ' '+ Format(InfoTypes[19], [SubShortDur]), False, SubShortDur);
+    AddInfo(InfoTypes[17], FormatFloat('00.00', BiggestCPS)+ ' '+ Format(InfoTypes[19], [SubBigCPS]), False, SubBigCPS);
+    AddInfo(InfoTypes[18], FormatFloat('00.00', SmallestCPS)+ ' '+ Format(InfoTypes[19], [SubSmallCPS]), False, SubSmallCPS);
+
 
     if mnuTranslatorMode.Checked then
     begin
@@ -316,6 +366,10 @@ begin
       Tot1LSubs     := 0;
       Tot2LSubs     := 0;
       TotMore2LSubs := 0;
+      BiggestCPS    := 0;
+      SmallestCPS   := MAXINT;  // there is no "MAXREAL"
+      SubBigCPS     := 0;
+      SubSmallCPS   := 0;
 
       Node := lstSubtitles.GetFirst;
       while Assigned(Node) do
@@ -330,11 +384,29 @@ begin
         end;
         Inc(TotalWords, sm.CountWords(SubText));
         Inc(TotalLetters, Length(SubText) - (StringCount(#13#10, SubText) * 2) - (StringCount(' ', SubText)));
+
         TempInt := CheckLongestLine(LongestLine, SubText);
         if TempInt > LongestLine then
         begin
           LongestLine := TempInt;
           SubLongLine := Node.Index + 1;
+        end;
+
+
+        //search for bigest/smallest CPS
+        TempDur := GetFinalTime(Node) - GetStartTime(Node);
+        TempCPS := GetCharsPerMSec(SubText, TempDur);
+
+        if TempCPS > BiggestCPS then
+        begin
+          BiggestCPS := TempCPS;
+          SubBigCPS := Node.Index + 1;
+        end;
+
+        if TempCPS < SmallestCPS then
+        begin
+          SmallestCPS := TempCPS;
+          SubSmallCPS := Node.Index + 1;
         end;
 
         Node := Node.NextSibling;
@@ -352,6 +424,8 @@ begin
       AddInfo(InfoTypes[11], IntToStr(Tot2LSubs));
       AddInfo(InfoTypes[12], IntToStr(TotMore2LSubs));
       AddInfo(InfoTypes[13], Format(InfoTypes[14], [SubLongLine, LongestLine]), False, SubLongLine);
+      AddInfo(InfoTypes[17], FormatFloat('00.00', BiggestCPS)+ ' '+ Format(InfoTypes[19], [SubBigCPS]), False, SubBigCPS);
+      AddInfo(InfoTypes[18], FormatFloat('00.00', SmallestCPS)+ ' '+ Format(InfoTypes[19], [SubSmallCPS]), False, SubSmallCPS);
     end;
   end;
 

@@ -1,0 +1,262 @@
+﻿2012.05.18
+* Additional Pascal functions
+  function GetVideoPosTime(): String;   
+  function GetVideoPosFrames(): String;
+
+2012.02.17
++ Fixed Tab press when time controls are off
+
+2012.01.19
++ Subtitle API, fixed Subrip loading:
+  if file contains only one subtitle;
+  if subtitle contains only digits
+
+2012.01.16
++ Refactoring, error check/fix settings moved to separate class
+
+2012.01.14
++ Refactoring, load/save windows position moved to separate class
+
+2012.01.13
++ Fixed bug with restoring always on top window
++ Refactoring, global vars
+
+2012.01.12
++ Refactoring of global vars (no changes for end-user)
+
+2011.12.27
+* Settings for play video on load
+
+2011.12.21
++ Full version number in About form
+
+2011.12.20
++ Force using regions is set by default
+
+2011.12.19
+* Subtitle transparency color added to settings
++ Little redesign of Settings->Video preview->Subtitles
+
+2011.12.17
++ Removed default hotkeys for
+  Edit->Subtitles->Effects->Type effect
+  Edit->Subtitles->Effects->Flash (Fast/Medium/Slow)
+
+2011.12.13
++ Total errors text in Information and errors window
++ Turned off scroll to end of list in Information and errors
++ Description column in Information and errors now fits window width
+
+2011.12.11
+* Asterisk in title bar to indicate that changes in original/translation are not saved.
+
+2011.12.10
++ Translation for CPS in main form
+* Settings for double click in Original/Translation box
+
+2011.12.08
++ Double click jump from Biggest/Smallest CPS, Biggest/Smallest duration in Various information window.
+
+2011.12.07
++ Widened a little time controls in Divide lines/Split subtitle
+
+2011.12.06
++ Fixed bug with TimeEdit component (bad MaxTime constant)
++ TimeEdit component Up/Down arrows now are little bigger
+
+2011.12.05
++ Fixed problem with getting state of Work with tags / No interaction with tags
+
+2011.12.02
++ Default setting for "Show color bar" now is set to off
+
+2011.12.01
++ Romanian manual added
++ Fixed bug with style tags counted in Fast divide lines
++ Fixed bug with original text clear in Fast divide lines
++ Smart line adjust (Ctrl+E) now works separately for original/translation
++ Fast divide lines (Ctrl+Shift+V) now works separately for original/translation 
+
+2011.11.29
++ Fixed bug with swapped panes in settings
+
+2011.11.28
+* Gap between subtitles for:
+  Insert subtitle, Extend length, Duration limits, Expand duration, Automatic durations
+
+2011.11.27
+* Divide lines, gap between subtitles
+
+2011.11.26
+* Settings for new subtitle duration
+
+2011.11.25
++ Some memory leaks fixed
+
+2011.11.23
++ Fixed bug with translation box redraw
+
+2011.11.21
++ Settings for 150% playback rate
++ Fixed bug with playback rate save and restore. Little refactoring, constants added.
+
+2011.11.18
++ Fixed infinite loop when typing pipe character
+
+2011.11.13
++ Fixed error coloring after settings change
++ Settings window redesign
+
+2011.11.12
++ Fixed time to zero bug in Adjust subtitles window
+
+2011.11.11
+* Choose top/bottom position for subtitle preview
+
+2011.11.10
++ Check for update now returns found version number
++ Check for updates enabled in menu
++ Little changes in About form
+
+2011.11.09
++ More style tags code refactoring (no changes for end-user)
+* Popup for style tags in edit controls
+
+2011.11.07
++ Fixed TAB circle issue
+
+2011.11.05
+* Hotkeys to tag selected part of subtitle text
+  Defaults are Alt+Q, Alt+W, Alt+E, Alt+R
++ Tags <i>, <u>, <b> are no more judged as hearing impaired subtitles
+  
+2011.11.04
+* Experimental tag highlighting in edit controls
+
+2011.11.02
++ More accurate CPS calculation when tags are used
++ More accurate long lines detection when tags are used
+* Added shortcuts for shift Show/Hide times separately
+
+2011.11.01
++ Close tags are no more shown in subtitle preview
+Subtitle API 1.12:
++ Added close tags (</b>, </i>, </u>, </c>)
++ Removed re-tagging of subtitles, where only part of subtitle was tagged
+
+2011.10.31
++ Style tags code refactoring (no changes for end-user)
++ Added close tags (</b>, </i>, </u>, </c>)
++ Information and errors report is now formatted with spaces instead of TABs
+
+2011.10.30
+* Too small/too big CPS added to check in Information and errors window
+
+2011.10.29
++ Information and errors is now non-modal window
++ To drag-and-drop supported files added *.avs
+
+2011.10.28
++ Information and errors set color button changed to color sample
+* Button to export Information and errors report to textfile
+
+2011.10.27
++ Shift+Tab jump from list to memo
++ CPS changed to two decimal places after comma
+* Added support for GetOrgFilename, GetOrgFilepath, same for translation and video in Pascal scrips
++ Changed default volume to max
+* Added volume icon
+
+2011.10.22
++ Fixed subtitle list covered by video
+
+2011.10.19
++ Added Avisynth to movie open dialog
+
+2011.10.18
++ Fixed final time of first subtitle for undo after combining
+* Possibility to choose audio stream from video
+
+2011.10.17
++ Fixed text selection bug when Shift+Enter or Ctrl+Enter pressed (second try)
+* Color bar for visual subtitle representation
+
+2011.10.16
++ Edit controls reverted to non-unicode (bug with font charset changing)
+
+2011.10.14
++ Added numeric code for play video errormessage
+
+2011.10.12
++ Added Hungarian language file by perelli
++ Fixed length of movie seekbar
++ Fixed bug with jump on double click when translator mode is off
+
+2011.10.11
++ Time controls are little resized
++ Added Serbian language file by Branko Pavlović
++ Changed tab order for text input boxes
++ Information and errors little redesign
++ File version information
+
+2011.10.10
++ Fixed bug with realtime CPS
++ Fixed bug with running Pascal scripts
+* Added volume save on program exit
+* Settings for CPS coloring
+
+2011.10.09
+* CPS coloring
+* Change duration based on entered CPS
+
+2011.10.08
++ Fixed bug with removing Bold/Underline style via popup
+
+2011.10.01
+* Volume control
+
+2011.09.30
+* Changed taskbar caption to subtitle file + Subtitle Workshop (instead of Subtitle Workshop + subtitle file)
+* Settings for untranslated subtitle text
++ Realtime CPS recalc on text change
+
+2011.09.26
+* Added command line parameter to run Pascal script
++ Minor update of English and Russian help files.
+
+2011.09.24
++ Changed bug support email
++ Fixed text selection bug when Shift+Enter or Ctrl+Enter pressed
+
+2011.09.20
++ SubStation Alpha is now saved with correct encoding instead of default 0
++ Changed default colors and outline/shadow size in default config for SubStation Alpha
+* More recent version of VirtualTreeView 4.8.7 is used for compilation 
+* More recent DX headers are used for compilation
+
+2011.09.18
+* Windows are little redesigned
+  Various information, Join subtitles, Split subtitle, Information and errors, Save as
+* Min/max CPS and duration in Various information
+* Added support for GetSWVersion and GetAPIVersion in Pascal scrips
+
+2011.09.17
++ Fixed bug with milliseconds in TimeEdit control
+* Added information about CPS (characters per seconds)
+  Thanks to Buzcatcher (more at http://www.urusoft.net/forum/viewtopic.php?id=5636)
+* Added support for GoToLineNumber in Pascal scripts
+  
+2011.09.16
++ Version number in caption
+* Shortcuts for 10 Pascal scripts instead of 5
+
+2011.09.13
++ Fixed font in "About"
++ Fixed bug charset after changing language
+* Turned off check for new version
+
+2011.09.12
+* Compiled from 2.52 sources provided by Dek.
+* About form GPL copyright
+* Support for "All files" in Movie->Open
+* Bigger "Divide lines", "Information & errors", "Save as" dialogs

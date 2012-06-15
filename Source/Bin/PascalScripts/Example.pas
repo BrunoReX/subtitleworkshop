@@ -2,6 +2,7 @@
 //                  Subtitle Workshop - Pascal scripts sample                 //
 //                        Copyright © 2001-2004 URUSoft                       //
 //                           http://www.urusoft.net                           //
+//                                2011 Bedazzle                               //
 //                                                                            //
 // This sample will go through all the subtitles in the file and will delete  //
 // all the ones which's text length is longer than 20 characters. This is     //
@@ -82,15 +83,47 @@
 //   function FormatDateTime(const Format: String;                            //
 //                           DateTime: TDateTime): String;                    //
 //   function GetYear: Integer;                                               //
-//   function MyGetMonth: Integer;                                            //
-//   function MyGetDay: Integer;                                              //
-//   function MyGetHour: Integer;                                             //
-//   function MyGetMinute: Integer;                                           //
-//   function MyGetSecond: Integer;                                           //
-//   function MyGetDate: String;                                              //
-//   function MyGetTime: String;                                              //
-//   function MyGetDateTime: String;                                          //
+//   function GetMonth: Integer;                                              //
+//   function GetDay: Integer;                                                //
+//   function GetHour: Integer;                                               //
+//   function GetMinute: Integer;                                             //
+//   function GetSecond: Integer;                                             //
+//   function GetDate: String;                                                //
+//   function GetTime: String;                                                //
+//   function GetDateTime: String;                                            //
 //                                                                            //
+// Declaration : procedure GoToLineNumber(const Line: Integer);               //
+// Use         : jumps to desired subtitle,                                   //
+//               to first if < 1, last if > subtitle count                    //
+//                                                                            //
+// Declaration : function GetSWVersion(): String;                             //
+// Use         : return main program version, e.g.  2.52                      //
+//                                                                            //
+// Declaration : function GetAPIVersion(): String;                            //
+// Use         : return Subtitle API version, e.g. 1.10                       //
+//                                                                            //
+// Functions for path and filename:                                           //
+//                                                                            //
+// Declaration : function GetOrgFilename(): String;                           //
+// Use         : return subtitle filename, e.g. Original_ENG.srt              //
+//                                                                            //
+// Declaration : function GetOrgFilepath(): String;                           //
+// Use         : return subtitle path, e.g. C:\Projects\Subtitles\            //
+//                                                                            //
+//   function GetTransFilename(): String;                                     //
+//   function GetTransFilepath(): String;                                     //
+//   function GetMovieFilename(): String;                                     //
+//   function GetMovieFilepath(): String;                                     //
+//                                                                            //
+// Functions for video preview handling:                                      //
+//                                                                            //
+// Declaration : function GetVideoPosTime(): String;                          //
+// Use         : return current video position in time format,                //
+//               or empty string if video is not loaded                       //
+//                                                                            //
+// Declaration : function GetVideoPosFrames(): String;                        //
+// Use         : return current video position in frames format,              //
+//               or empty string if video is not loaded                       //
 // -------------------------------------------------------------------------- //
 
 program DeleteShortSubs;

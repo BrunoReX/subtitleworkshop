@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   VirtualTrees, StdCtrls, ExtCtrls, TreeViewHandle, General, Functions, Undo,
-  InfoErrorsFunctions, StrMan, USubtitlesFunctions, IniFiles, OCRScripts;
+  InfoErrorsFunctions, StrMan, USubtitlesFunctions, IniFiles, OCRScripts, Math, StrUtils;
 
 type
   TErrorClass = (etError, etWarning, etInfo, etFixed);
@@ -39,6 +39,8 @@ type
                        deNoSpaceAfterChar,
                        deNoSpaceBeforeChar,
                        deUnnecessarySpaces,
+                       deTooSmallCPS,
+                       deTooBigCPS,
 
                        // ---------------------------- //
                        // Descriptions of fixed errors //
@@ -76,15 +78,13 @@ type
     btnOk: TButton;
     btnSettings: TButton;
     lstErrors: TVirtualStringTree;
-    procedure lstErrorsFreeNode(Sender: TBaseVirtualTree;
-      Node: PVirtualNode);
-    procedure lstErrorsGetNodeDataSize(Sender: TBaseVirtualTree;
-      var NodeDataSize: Integer);
-    procedure lstErrorsGetText(Sender: TBaseVirtualTree;
-      Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
-      var CellText: WideString);
-    procedure lstErrorsInitNode(Sender: TBaseVirtualTree; ParentNode,
-      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    btnReport: TButton;
+    dlgSave: TSaveDialog;
+    lblTotalErrors: TLabel;
+    procedure lstErrorsFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure lstErrorsGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+    procedure lstErrorsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: WideString);
+    procedure lstErrorsInitNode(Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure btnSettingsClick(Sender: TObject);
     procedure btnCheckClick(Sender: TObject);
     procedure btnFixErrorsClick(Sender: TObject);
@@ -92,12 +92,15 @@ type
     procedure FormActivate(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure lstErrorsPaintText(Sender: TBaseVirtualTree;
-      const TargetCanvas: TCanvas; Node: PVirtualNode;
-      Column: TColumnIndex; TextType: TVSTTextType);
+    procedure lstErrorsPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
+    procedure FormResize(Sender: TObject);
+    procedure lstErrorsColumnResize(Sender: TVTHeader; Column: TColumnIndex);
+    procedure btnReportClick(Sender: TObject);
+    procedure btnOkClick(Sender: TObject);
   private
     procedure SetLanguage;
     procedure AddInfoError(Subtitle: Integer; ErrorClass: TErrorClass; ErrorDescription: TErrorDescription; Tag: Integer = -1);
+    procedure ResizeLastColumn;
   public
     { Public declarations }
   end;
@@ -132,6 +135,9 @@ begin
       lstErrors.Header.Columns[0].Text := StringToWideStringEx(ReadString('Information and errors', '06', 'Subtitle'), CharSetToCodePage(frmMain.Font.Charset));
       lstErrors.Header.Columns[1].Text := StringToWideStringEx(ReadString('Information and errors', '07', 'Type'), CharSetToCodePage(frmMain.Font.Charset));
       lstErrors.Header.Columns[2].Text := StringToWideStringEx(ReadString('Information and errors', '08', 'Description'), CharSetToCodePage(frmMain.Font.Charset));
+      btnReport.Caption                := ReadString('Information and errors', '54', 'Report to file');
+      dlgSave.Filter                   := ReadString('Information and errors', '55', 'Report files') + '(*.txt)|*.txt';
+      dlgSave.Title                    := ReadString('Information and errors', '56', 'Choose report filename');
 
       // ------------- //
       //  Error types  //
@@ -173,6 +179,7 @@ begin
 
       lstErrors.Hint := ReadString('Information and errors', '53', 'Double-click to jump to line on main form');
       btnOk.Caption := BTN_OK;
+      lblTotalErrors.Caption := Format(InfoMsgs[1], [0]);
 
       // ------------------ //
       //      Set font      //
@@ -180,6 +187,7 @@ begin
       btnOk.ParentFont        := True;
       btnFixErrors.ParentFont := True;
       lstErrors.ParentFont    := True;
+      btnReport.ParentFont    := True;
       Font                    := frmMain.Font;
       lstErrors.Header.Font   := Font;
       btnOk.Font.Style        := frmMain.Font.Style + [fsBold];
@@ -192,9 +200,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmInfoErrors.lstErrorsInitNode(Sender: TBaseVirtualTree;
-  ParentNode, Node: PVirtualNode;
-  var InitialStates: TVirtualNodeInitStates);
+procedure TfrmInfoErrors.lstErrorsInitNode(Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
   Data: PInfoError;
 begin
@@ -206,8 +212,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmInfoErrors.lstErrorsFreeNode(Sender: TBaseVirtualTree;
-  Node: PVirtualNode);
+procedure TfrmInfoErrors.lstErrorsFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
 var
   Data: PInfoError;
 begin
@@ -219,17 +224,14 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmInfoErrors.lstErrorsGetNodeDataSize(
-  Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+procedure TfrmInfoErrors.lstErrorsGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
 begin
   NodeDataSize := SizeOf(TInfoError);
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmInfoErrors.lstErrorsPaintText(Sender: TBaseVirtualTree;
-  const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
-  TextType: TVSTTextType);
+procedure TfrmInfoErrors.lstErrorsPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
 var
   Data: PInfoError;
 begin
@@ -242,9 +244,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmInfoErrors.lstErrorsGetText(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
-  var CellText: WideString);
+procedure TfrmInfoErrors.lstErrorsGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: WideString);
 var
   Data: PInfoError;
 begin
@@ -299,6 +299,8 @@ begin
             deNoSpaceBeforeChar    : CellText := ErrorReports[18];
             deUnnecessarySpaces    : CellText := ErrorReports[19];
             deMarkedSubtitle       : CellText := ErrorReports[20];
+            deTooSmallCPS          : CellText := ErrorReports[21];
+            deTooBigCPS            : CellText := ErrorReports[22];
 
             // -------------------------------------------------------- //
             // Report of fixes that appears when you press "Fix" button //
@@ -363,6 +365,8 @@ begin
   lstErrors.Clear;
   btnCheck.Enabled     := False;
   btnFixErrors.Enabled := False;
+  btnSettings.Enabled  := False;
+  btnReport.Enabled    := False;
   if (ErrorsToCheck.eOCRErrors) and (FileExists(OCRDefFile)) then
     ParseOCRErrors(OCRDefFile);
   with frmMain do
@@ -392,6 +396,8 @@ begin
       if (etSpaceAfterCustChars  in ErrorsTypes) then begin AddInfoError(Node.Index + 1, etError, deNoSpaceAfterChar); Inc(TotalErrors); end;
       if (etSpaceBeforeCustChars in ErrorsTypes) then begin AddInfoError(Node.Index + 1, etError, deNoSpaceBeforeChar); Inc(TotalErrors); end;
       if (etUnnecessarySpaces    in ErrorsTypes) then begin AddInfoError(Node.Index + 1, etError, deUnnecessarySpaces); Inc(TotalErrors); end;
+      if (etTooSmalLCPS          in ErrorsTypes) then begin AddInfoError(Node.Index + 1, etError, deTooSmallCPS); Inc(TotalErrors); end;
+      if (etTooBigCPS            in ErrorsTypes) then begin AddInfoError(Node.Index + 1, etError, deTooBigCPS); Inc(TotalErrors); end;
 
       if Data.Marked then
       begin
@@ -401,11 +407,16 @@ begin
       Node := Node.NextSibling;
     end;
     AddInfoError(-1, etInfo, ifTotalErrors, TotalErrors);
-    lstErrors.ScrollIntoView(lstErrors.GetLast, True);
+//    lstErrors.ScrollIntoView(lstErrors.GetLast, True);
     lstSubtitles.Refresh;
   end;
+
+  lblTotalErrors.Caption := Format(InfoMsgs[1], [TotalErrors]);
+
   btnCheck.Enabled     := True;
   btnFixErrors.Enabled := True;
+  btnSettings.Enabled  := True;
+  btnReport.Enabled    := True;
 end;
 
 // -----------------------------------------------------------------------------
@@ -522,7 +533,7 @@ begin
         btnCheck.Enabled     := True;
         btnFixErrors.Enabled := True;
         OrgModified          := True;
-        TransModified        := True;
+    		TransModified        := True;
         AddInfoError(-1, etInfo, ifFixedErrors, FixedErrors);
         lstErrors.ScrollIntoView(lstErrors.GetLast, True);
         if UndoList.Count > 0 then
@@ -549,7 +560,7 @@ begin
     lstSubtitles.Refresh;
     RefreshTimes;
     OrgModified   := True;
-    TransModified := True;
+  	TransModified := True;
   end;
 
   btnCheck.Enabled     := True;
@@ -574,7 +585,6 @@ begin
       frmMain.lstSubtitles.FocusedNode := Node;
       frmMain.lstSubtitles.Selected[Node] := True;
       frmMain.RefreshTimes;
-      Close;
     end;
   end;
 end;
@@ -617,5 +627,142 @@ begin
 end;
 
 // -----------------------------------------------------------------------------
+
+procedure TfrmInfoErrors.FormResize(Sender: TObject);
+begin
+  ResizeLastColumn;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmInfoErrors.lstErrorsColumnResize(Sender: TVTHeader; Column: TColumnIndex);
+begin
+  ResizeLastColumn;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmInfoErrors.ResizeLastColumn;
+var
+  w : Integer;
+  Col: Integer;
+begin
+  w := 0;
+  for Col := 0 to 1 do
+    w := w + lstErrors.Header.Columns[Col].Width;
+
+  lstErrors.Header.Columns[2].Width := lstErrors.Width - w - round(GetSystemMetrics(SM_CXVSCROLL)*1.5);
+end;
+
+procedure TfrmInfoErrors.btnReportClick(Sender: TObject);
+  //----------------------------------------
+  procedure GetColWidths(var w1, w2 : Integer);
+  var
+    i : Integer;
+  begin
+    w1 := Max(5, length(lstErrors.Header.Columns[0].Text));   // let's assume there is no more than 99999 subtitles
+
+    w2 := length(lstErrors.Header.Columns[1].Text);
+    for i := Low(ErrorTypes) to High(ErrorTypes) do
+      if length(ErrorTypes[i]) > w2 then
+        w2 := length(ErrorTypes[i]);
+  end;
+  //----------------------------------------
+  function FillWithSpaces(Text: String; NewLength: Integer): String;
+  begin
+    if length(Text) >= NewLength then
+      Result := Text
+    else begin
+      Result := Text + DupeString(' ', NewLength - length(Text));
+    end;
+  end;
+  //----------------------------------------
+  procedure SaveReport(fn : String);
+  const
+    SPACES = 1;
+  var
+    f    : TextFile;
+    Node : PVirtualNode;
+    Data : WideString;
+    Msg  : String;
+    w1, w2 : Integer;
+  begin
+    GetColWidths(w1, w2);
+
+    try
+      try
+        AssignFile(f, fn);
+        ReWrite(f);
+
+        Msg := FillWithSpaces(lstErrors.Header.Columns[0].Text, w1+SPACES) +
+               FillWithSpaces(lstErrors.Header.Columns[1].Text, w2+SPACES) +
+               lstErrors.Header.Columns[2].Text;
+        WriteLn(f, Msg);
+
+        Node := lstErrors.GetFirst;
+        while Assigned(Node) do
+        begin
+          lstErrorsGetText(lstErrors, Node, 0, ttStatic, Data);
+          Msg := FillWithSpaces(Data, w1+SPACES);
+          lstErrorsGetText(lstErrors, Node, 1, ttStatic, Data);
+          Msg := Msg + FillWithSpaces(Data, w2+SPACES);
+          lstErrorsGetText(lstErrors, Node, 2, ttStatic, Data);
+          Msg := Msg + Data;
+
+          WriteLn(f, Msg);
+
+          Node := Node.NextSibling;
+        end;
+
+      except on E:Exception do
+        begin
+          MsgBox(Format(InfoMsg[12], [E.Message]), BTN_OK, '', '', MB_ICONWARNING, frmMain);
+        end;
+      end;
+    finally
+      CloseFile(f);
+    end;
+  end;
+  //----------------------------------------
+var
+  fname : String;
+  code  : Integer;
+begin
+  if (dlgSave.Execute) and (dlgSave.FileName <> '') then
+  begin
+    if AnsiLowerCase(ExtractFileExt(dlgSave.FileName)) = '.txt' then
+      fname := dlgSave.FileName else
+      fname := dlgSave.FileName + '.txt';
+
+    if FileExists(fname) = False then begin
+      SaveReport(fname);
+      exit;
+    end;
+
+    code := MsgBox(Format(QuestionMsg[02], [fname]), BTN_YES, BTN_NO, '', MB_ICONWARNING, frmMain);
+    if code <> 1 then exit;
+
+    if FileIsReadOnly(fname) = False then begin
+      SaveReport(fname);
+      exit;
+    end;
+
+    code := MsgBox(Format(QuestionMsg[09], [fname]), BTN_YES, BTN_NO, '', MB_ICONWARNING, frmMain);
+    if code <> 1 then exit;
+
+    if FileSetReadOnly(fname, False) then begin
+      SaveReport(fname);
+      exit;
+    end;
+
+    MsgBox(Format(ErrorMsg[12], [fname]), BTN_OK, '', '', MB_ICONERROR, frmMain);
+  end;
+end;
+
+procedure TfrmInfoErrors.btnOkClick(Sender: TObject);
+begin
+  frmMain.AdjustFormOpened := False;
+  Close;
+end;
 
 end.

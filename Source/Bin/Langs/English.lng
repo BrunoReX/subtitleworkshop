@@ -1,12 +1,12 @@
-;   Subtitle Workshop 2.51
+;   Subtitle Workshop 2.52
 ;   English language file
 ;
-;   Translator : DeK
-;   E-mail     : deksoft@adinet.com.uy
-;   Web        : http://www.urusoft.net
+;   Translator : DeK, Bedazzle
+;   E-mail     : sworkshop2012@gmail.com (old one - deksoft@adinet.com.uy)
+;   Web        : http://sw.binhoster.com (old one - www.urusoft.net)
 
 [General]
-Translator=DeK
+Translator=DeK, Bedazzle
 Font Charset=0
 AllFiles=All supported files
 Help=Manual.html
@@ -41,6 +41,8 @@ SRF=Subtitle Report File
 14=Duration:
 15=%s (%s characters):
 16=- Untranslated subtitle -
+; added in 2.52
+17=CPS:
 
 [Main menu header]
 01=File
@@ -90,6 +92,9 @@ SRF=Subtitle Report File
 09=Automatic durations
 10=Read timings from file
 11=Shift %s milliseconds
+; added in 2.52
+12=Show %s milliseconds
+13=Hide %s milliseconds
 
 [Main menu/Edit/Texts]
 01=Texts
@@ -100,6 +105,11 @@ SRF=Subtitle Report File
 06=Fast divide lines
 07=Set maximum line length...
 08=Read texts from file
+; added in 2.52
+09=Set bold tag
+10=Set italic tag
+11=Set underline tag
+12=Set color tag
 
 [Main menu/Edit/Subtitles]
 01=Subtitles
@@ -276,6 +286,11 @@ SRF=Subtitle Report File
 25=No interaction with tags
 26=Work with style tags
 27=Recent files limit:
+; added in 2.52 
+99=Double click on Original/Translation box
+100=Default (select text)
+101=Put cursor in front of first letter
+102=Put cursor behind last letter
 ;----------;
 ; Advanced ;
 ;----------;
@@ -289,6 +304,10 @@ SRF=Subtitle Report File
 35=Maximum line length:
 36=Shift time:
 37=milliseconds
+; added in 2.52 
+92=CPS coloring
+97=Add subtitle:
+98=Gap between subtitles:
 ;----------;
 ; Charsets ;
 ;----------;
@@ -302,7 +321,7 @@ SRF=Subtitle Report File
 42=Formats to show when "Save as":
 43=Show custom formats
 44=Select &all
-45=Select &zero
+45=Select &none
 ;--------------------;
 ; File types section ;
 ;--------------------;
@@ -328,6 +347,8 @@ SRF=Subtitle Report File
 59=Rewind and foward time:
 60=seconds.
 61=Default altered playback rate:
+; added in 2.52 
+103=Play video on load
 ;-------------------------;
 ; Video preview Subtitles ;
 ;-------------------------;
@@ -341,6 +362,11 @@ SRF=Subtitle Report File
 69=Border width:
 70=Shadow width:
 71=SAMPLE
+; added in 2.52
+94=Position
+95=Screen top
+96=Screen bottom
+103=Transparency...
 ;--------------------------;
 ; External Preview General ;
 ;--------------------------;
@@ -363,6 +389,8 @@ SRF=Subtitle Report File
 82=Font size:
 83="Text" and "Translation" fields align:
 84=Left|Right|Center
+; added in 2.52
+93=Show color bar
 ;-------------;
 ; Look / List ;
 ;-------------;
@@ -370,6 +398,8 @@ SRF=Subtitle Report File
 86=Apply style to subtitles
 87=Mark untranslated subtitles with color:
 88=Show horizontal scrollbar
+; added in 2.52 
+91=Text for untranslated subtitles
 ;-------------;
 ; Look / Menu ;
 ;-------------;
@@ -640,6 +670,10 @@ SRF=Subtitle Report File
 06=Subtitle
 07=Type
 08=Description
+; added in 2.52
+54=Report to file
+55=Report files
+56=Choose report filename
 ;-------;
 ; Types ;
 ;-------;
@@ -675,6 +709,9 @@ SRF=Subtitle Report File
 33=No space before custom character
 34=Unnecessary spaces
 35=Marked subtitle
+; added in 2.52
+57=Too small CPS
+58=Too big CPS
 ;-------------;
 ; Fix reports ;
 ;-------------;
@@ -757,6 +794,11 @@ SRF=Subtitle Report File
 54=Spaces after "¿" and "¡"
 55=Spaces before "?" and "!"
 56=Spaces between numbers
+; added in 2.52
+57=CPS smaller than:
+58=CPS bigger or equal:
+59=Too small CPS
+60=Too big CPS
 
 [Various information]
 01=Various information
@@ -783,6 +825,12 @@ SRF=Subtitle Report File
 22=Bold
 23=Italic
 24=Calculate
+; added in 2.52 beta
+25=Longest duration:
+26=Shortest duration:
+27=Biggest CPS:
+28=Smallest CPS:
+29=in subtitle %d
 
 [SAMI Language Extractor]
 01=SAMI Language Extractor
@@ -815,6 +863,9 @@ SRF=Subtitle Report File
 13=Beta testers
 14=Default icon by
 15=For updates visit:
+; added after 2.52
+16=Subtitle Workshop is released
+17=under the GNU/GPL 3 license.
 
 [Error messages]
 01=Could not initialize subtitle API. Please download the DLL "%s" from %s and copy it to the "%s" directory.
@@ -827,10 +878,10 @@ SRF=Subtitle Report File
 08=The search path does not exist.
 09=Item number is not a valid item.
 10=Please add two subtitles or more.
-11=Failed to connect to server!.
+11=Failed to connect to server!
 12=Couldn't remove the read-only attribute from "%s".||Possibly on a write protected drive.
-13=Error trying to connect to Microsoft Word!.
-14=Select the video(s) for previous part(s) first!.
+13=Error trying to connect to Microsoft Word!
+14=Select the video(s) for previous part(s) first!
 15=Select a valid output directory.
 16=Select at least one language to extract.
 17="%s" is not a valid SAMI file.
@@ -839,18 +890,18 @@ SRF=Subtitle Report File
 20=You need two or more points.
 
 [Question messages]
-01=File "%s" has changed.||Do you want to save the changes?.
-02=File "%s" already exists.||Do you want to replace it?.
-03=Original file ("%s") has changed.||Do you want to save the changes?.
-04=Translated file  ("%s") has changed.||Do you want to save the changes?.
-05=The selected subtitles are about to be deleted.||Do you want to proceed?.
+01=File "%s" has changed.||Do you want to save the changes?
+02=File "%s" already exists.||Do you want to replace it?
+03=Original file ("%s") has changed.||Do you want to save the changes?
+04=Translated file  ("%s") has changed.||Do you want to save the changes?
+05=The selected subtitles are about to be deleted.||Do you want to proceed?
 06=Point 1 Subtitle: %s|Point 1 Movie: %s||Point 2 Subtitle: %s|Point 2 Movie: %s||Synchronize subtitle?
-07=The video player's exe hasn't been specified or doesn't exist.||Do you want to configure external player?.
-08=A new version was found!.||Do you want to see the change list?.
-09=The file you are trying to save is read-only.||Try to save anyway?.
+07=The video player's exe hasn't been specified or doesn't exist.||Do you want to configure external player?
+08=A new version %s was found!||Do you want to see the change list?
+09=The file you are trying to save is read-only.||Try to save anyway?
 
 [Information messages]
-01=Couldn't find more instances of "%s".
+01=Couldn't find more instances of "%s"
 02=No new version available.
 03=Spell check finished.||%d change(s) made.
 04=Too many parts. Resetting...
@@ -859,12 +910,20 @@ SRF=Subtitle Report File
 07=Fittest font size for playback is: %d
 08=Total replacements: %d
 09=File name: %s|Size: %s|FPS: %s|Duration: %s|Total frames: %d|Resolution: %dx%d|FourCC: %s
-10=Some of the streams of the movie could not be rendered correctly. Probably the audio or video codec is missing.
+10=Some of the streams of the movie could not be rendered correctly.|Probably the audio or video codec is missing.|Error code: %s
 11=It is not necessary to set the movie fragment corresponding to the last subtitle.
+; added in 2.52
+12=Sudden error occured:|"%s"
 
 [Information and errors messages]
-01=Subtitle number %d is an empty subtitle and is about to be deleted.||Do you want to proceed?.
-02=Subtitle number %d:||"%s" has a prohibited character and is about to be deleted.||Do you want to proceed?.
-03=Subtitle number %d:||"%s" is about to be deleted.||Do you want to proceed?.
-04=Part of subtitle number %d:||"%s" is about to be deleted, so the subtitle will be:||"%s"||Do you want to proceed?.
-05=Subtitle number %d:||"%s" is a one-line subtitle and starts with "-".||Do you want to delete the "-" at the beginning?.
+01=Subtitle number %d is an empty subtitle and is about to be deleted.||Do you want to proceed?
+02=Subtitle number %d:||"%s" has a prohibited character and is about to be deleted.||Do you want to proceed?
+03=Subtitle number %d:||"%s" is about to be deleted.||Do you want to proceed?
+04=Part of subtitle number %d:||"%s" is about to be deleted, so the subtitle will be:||"%s"||Do you want to proceed?
+05=Subtitle number %d:||"%s" is a one-line subtitle and starts with "-".||Do you want to delete the "-" at the beginning?
+
+; added after 2.52
+[Audio streams]
+01=Multiple audio streams detected.
+02=Please choose audio to work with.
+03=OK

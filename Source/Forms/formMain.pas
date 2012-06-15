@@ -1,23 +1,35 @@
 unit formMain;
 
 {$WARN UNIT_PLATFORM OFF}
+{ $DEFINE UNIOFF}
 
-interface                                                                                    
+interface
 
 uses
+//  RichEdit,
+  VarLord, FormPosition,
+  StrUtils, TntDialogs, Functions, General, TreeViewHandle,
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Menus, VirtualTrees, ComCtrls, Mask, TreeViewHandle,
-  USubtitlesFunctions, Functions, MiMenu, General, USubtitleAPI, IniFiles,
-  ToolWin, MiSubtitulo, ImgList, VideoPreview, DirectShow9, ShellAPI, MiHint,
+  StdCtrls, ExtCtrls, Menus, VirtualTrees, ComCtrls, Mask,
+  USubtitlesFunctions, MiMenu, USubtitleAPI, IniFiles,
+  ToolWin, MiSubtitulo, ImgList, VideoPreview, DirectShow9, ShellAPI, {MiHint, } // removed due to lost MiHint.pas
   FileTypes, NFormSizing, FastStrings, InfoErrorsFunctions, ClipBrd, URLMon,
   SWSeekBar, SWButton, USSpeller, Undo, SWTimeCounter, StrMan, ShortCuts,
   TimeMaskEdit, VTInPlaceEdition, FileCtrl, IFPS3CompExec, ifpsComp, ifps3,
   ifpii_controls, ifpii_std, ifpii_classes, ifpii_graphics, ifpii_forms,
   ifpii_stdctrls, ifpii_extctrls, ifpii_menus, ifpiir_controls, ifpiir_std,
   ifpiir_classes, ifpiir_graphics, ifpiir_forms, ifpiir_stdctrls,
-  ifpiir_extctrls, ifpiir_menus, ifpidateutils, ifpidateutilsr;
+  ifpiir_extctrls, ifpiir_menus, ifpidateutils, ifpidateutilsr, TntStdCtrls,
+  RZNEdit, TntComCtrls;
 
 type
+  TTagClass = (tagBold, tagItalic, tagUnderline, tagColor, tagOff, tagBoldRemove, tagItalicRemove, tagUnderlineRemove, tagColorRemove);
+
+  TExtRichEdit = Class(TRichEdit)
+  public
+    property OnDblClick;
+  end;
+
   TfrmMain = class(TForm)
     mnuMain: TMainMenu;
     mnuFile: TMenuItem;
@@ -110,13 +122,11 @@ type
     rdoBoth: TRadioButton;
     lblText: TLabel;
     lblDuration: TLabel;
-    mmoSubtitleText: TMemo;
     lblHide: TLabel;
     lblShow: TLabel;
     MiMenu: TMiMenu;
     dlgLoadFile: TOpenDialog;
     tmrVideo: TTimer;
-    mmoTranslation: TMemo;
     lblTranslation: TLabel;
     N17: TMenuItem;
     mnuSubtitleToDisplay: TMenuItem;
@@ -156,7 +166,7 @@ type
     mnuSetColor: TMenuItem;
     dlgColor: TColorDialog;
     mnuRemoveColorTags: TMenuItem;
-    MiHint: TMiHint;
+{    MiHint: TMiHint; } // removed due to lost source of MiHint.pas
     tmrSaveWork: TTimer;
     N26: TMenuItem;
     mnuReadTimesFromFile: TMenuItem;
@@ -211,6 +221,56 @@ type
     pnlParent2: TPanel;
     pnlParent1: TPanel;
     spSplitter: TSplitter;
+    lstSubtitles: TVirtualStringTree;
+    mnuEffects: TMenuItem;
+    mnuTypeEffect: TMenuItem;
+    mnuFlash: TMenuItem;
+    mnuFastFlash: TMenuItem;
+    mnuMediumFlash: TMenuItem;
+    mnuSlowFlash: TMenuItem;
+    N37: TMenuItem;
+    mnuShowTimeControls: TMenuItem;
+    mnuOCRScripts: TMenuItem;
+    mnuShiftPlusMS: TMenuItem;
+    mnuShiftLessMS: TMenuItem;
+    mnuShiftMoreMSShow: TMenuItem;
+    mnuShiftLessMSShow: TMenuItem;
+    mnuShiftMoreMSHide: TMenuItem;
+    mnuShiftLessMSHide: TMenuItem;
+    mnuMovieInfo: TMenuItem;
+    mnuFastDivideLines: TMenuItem;
+    tmeShow: TTimeMaskEdit;
+    tmeHide: TTimeMaskEdit;
+    tmeDuration: TTimeMaskEdit;
+    mnuSaveMediaStartupFile: TMenuItem;
+    mnuSaveASX: TMenuItem;
+    mnuSaveSMIL: TMenuItem;
+    N34: TMenuItem;
+    mnuUndo: TMenuItem;
+    mnuRedo: TMenuItem;
+    mnuPascalScripts: TMenuItem;
+    psCompExec: TIFPS3CompExec;
+    mnu40P: TMenuItem;
+    mnu30P: TMenuItem;
+    mnu20P: TMenuItem;
+    mnu10P: TMenuItem;
+    mnuSynchronization: TMenuItem;
+    N38: TMenuItem;
+    mnuFirstSyncPoint: TMenuItem;
+    mnuLastSyncPoint: TMenuItem;
+    cmbOCRScripts: TComboBox;
+    mnuShowInMainForm: TMenuItem;
+    N39: TMenuItem;
+    mnuUseInPlaceEdition: TMenuItem;
+    mnuShowSubtitles: TMenuItem;
+    mnu150P: TMenuItem;
+    mnu200P: TMenuItem;
+    mnu400P: TMenuItem;
+    mnu300P: TMenuItem;
+    mnuJumpToNextSub: TMenuItem;
+    mnuJumpToPrevSub: TMenuItem;
+    lblCPS: TLabel;
+    pnlVolume: TPanel;
     pnlVideo: TPanel;
     pnlVideoControls: TPanel;
     sbSeekBar: TSWSeekBar;
@@ -230,63 +290,27 @@ type
     btnNextSub: TSWButton;
     tcTimeCounter: TSWTimeCounter;
     btnMoveSubtitle: TSWButton;
-    pnlVideoDisplay: TPanel;
-    subSubtitle: TMiSubtitulo;
-    lstSubtitles: TVirtualStringTree;
-    mnuEffects: TMenuItem;
-    mnuTypeEffect: TMenuItem;
-    mnuFlash: TMenuItem;
-    mnuFastFlash: TMenuItem;
-    mnuMediumFlash: TMenuItem;
-    mnuSlowFlash: TMenuItem;
-    N37: TMenuItem;
-    mnuShowTimeControls: TMenuItem;
-    mnuOCRScripts: TMenuItem;
-    mnuShiftPlusMS: TMenuItem;
-    mnuShiftLessMS: TMenuItem;
-    mnuMovieInfo: TMenuItem;
-    mnuFastDivideLines: TMenuItem;
-    tmeShow: TTimeMaskEdit;
-    tmeHide: TTimeMaskEdit;
-    tmeDuration: TTimeMaskEdit;
-    mnuSaveMediaStartupFile: TMenuItem;
-    mnuSaveASX: TMenuItem;
-    mnuSaveSMIL: TMenuItem;
-    N34: TMenuItem;
-    mnuUndo: TMenuItem;
-    mnuRedo: TMenuItem;
-    mnuPascalScripts: TMenuItem;
-    psCompExec: TIFPS3CompExec;
-    mnu40P: TMenuItem;
-    mnu30P: TMenuItem;
-    mnu20P: TMenuItem;
-    mnu10P: TMenuItem;
     btnSyncPoint1: TSWButton;
     btnSyncPoint2: TSWButton;
-    mnuSynchronization: TMenuItem;
-    N38: TMenuItem;
-    mnuFirstSyncPoint: TMenuItem;
-    mnuLastSyncPoint: TMenuItem;
-    cmbOCRScripts: TComboBox;
-    mnuShowInMainForm: TMenuItem;
-    N39: TMenuItem;
-    mnuUseInPlaceEdition: TMenuItem;
-    mnuShowSubtitles: TMenuItem;
-    mnu150P: TMenuItem;
-    mnu200P: TMenuItem;
-    mnu400P: TMenuItem;
-    mnu300P: TMenuItem;
-    mnuJumpToNextSub: TMenuItem;
-    mnuJumpToPrevSub: TMenuItem;
-    procedure lstSubtitlesInitNode(Sender: TBaseVirtualTree; ParentNode,
-      Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
-    procedure lstSubtitlesFreeNode(Sender: TBaseVirtualTree;
-      Node: PVirtualNode);
-    procedure lstSubtitlesGetNodeDataSize(Sender: TBaseVirtualTree;
-      var NodeDataSize: Integer);
-    procedure lstSubtitlesGetText(Sender: TBaseVirtualTree;
-      Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
-      var CellText: WideString);
+    subSubtitle: TMiSubtitulo;
+    scrVolume: TScrollBar;
+    mdtTranslationCPS: TRealEdit;
+    mdtSubtitleCPS: TRealEdit;
+    pnlVideoDisplay: TPanel;
+    imgSubsGraph: TImage;
+    Image1: TImage;
+    N40: TMenuItem;
+    mmoSubtitleText: TRichEdit;
+    mmoTranslation: TRichEdit;
+    N41: TMenuItem;
+    mnuSetTagItalic: TMenuItem;
+    mnuSetTagBold: TMenuItem;
+    mnuSetTagUnderline: TMenuItem;
+    mnuSetTagColor: TMenuItem;
+    procedure lstSubtitlesInitNode(Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+    procedure lstSubtitlesFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure lstSubtitlesGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+    procedure lstSubtitlesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: WideString);
     procedure FormCreate(Sender: TObject);
     procedure spSplitterMoved(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -383,8 +407,6 @@ type
     procedure mnuReadTimesFromFileClick(Sender: TObject);
     procedure mnuReadTextsFromFileClick(Sender: TObject);
     procedure mnuAdjustToSyncSubsClick(Sender: TObject);
-//  procedure lstSubtitlesGetHint(Sender: TBaseVirtualTree;      Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;      var CellText: WideString);  // removed by BDZL
-    procedure lstSubtitlesGetHint(Sender: TBaseVirtualTree;      Node: PVirtualNode; Column: TColumnIndex;          var LineBreakStyle: TVTTooltipLineBreakStyle;      var HintText: WideString);
     procedure mnuFixPunctuationClick(Sender: TObject);
     procedure mnuTimeExpanderReducerClick(Sender: TObject);
     procedure mnuAboutSubtitleWorkshopClick(Sender: TObject);
@@ -402,6 +424,10 @@ type
     procedure mnu80PClick(Sender: TObject);
     procedure mnu90PClick(Sender: TObject);
     procedure mnu100PClick(Sender: TObject);
+    procedure mnu150PClick(Sender: TObject);
+    procedure mnu200PClick(Sender: TObject);
+    procedure mnu300PClick(Sender: TObject);
+    procedure mnu400PClick(Sender: TObject);
     procedure mnuRecheckErrorsClick(Sender: TObject);
     procedure mnuJumpToNextErrorClick(Sender: TObject);
     procedure mnuFixAllErrorsClick(Sender: TObject);
@@ -414,27 +440,20 @@ type
     procedure mnuDeleteUnnecessaryLinksClick(Sender: TObject);
     procedure mnuCheckForNewVersionClick(Sender: TObject);
     procedure mnuDivideLinesClick(Sender: TObject);
-    procedure sbSeekBarMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure sbSeekBarMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure sbSeekBarMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
+    procedure sbSeekBarMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure sbSeekBarMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure sbSeekBarMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure btnAlterPlaybackRateClick(Sender: TObject);
     procedure mnuRewindClick(Sender: TObject);
     procedure mnuForwardClick(Sender: TObject);
     procedure btnScrollListClick(Sender: TObject);
     procedure mnuSpellCheckClick(Sender: TObject);
-    procedure btnRewMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure btnForwardMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure btnRewMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure btnForwardMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure mnuHelpOfProgramClick(Sender: TObject);
     procedure tmrSeekRewFFTimer(Sender: TObject);
-    procedure btnRewMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure btnForwardMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+    procedure btnRewMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+    procedure btnForwardMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure mnuSetMaxLineLengthClick(Sender: TObject);
     procedure mnuInsertBeforeClick(Sender: TObject);
     procedure mnuMarkSelectedSubsClick(Sender: TObject);
@@ -464,20 +483,16 @@ type
     procedure tmeShowTimeChangeFromEditOnly(Sender: TObject; NewTime: Cardinal);
     procedure tmeHideTimeChangeFromEditOnly(Sender: TObject; NewTime: Cardinal);
     procedure tmeDurationTimeChangeFromEditOnly(Sender: TObject; NewTime: Cardinal);
-    procedure lstSubtitlesCreateEditor(Sender: TBaseVirtualTree;
-      Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
-    procedure lstSubtitlesEditing(Sender: TBaseVirtualTree;
-      Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+    procedure lstSubtitlesCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
+    procedure lstSubtitlesEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
     procedure mnuSaveASXClick(Sender: TObject);
     procedure mnuSaveSMILClick(Sender: TObject);
     procedure mnuUndoClick(Sender: TObject);
     procedure mnuRedoClick(Sender: TObject);
     procedure psCompExecCompile(Sender: TIFPS3CompExec);
     procedure psCompExecExecute(Sender: TIFPS3CompExec);
-    procedure psCompExecCompImport(Sender: TObject;
-      x: TIFPSPascalCompiler);
-    procedure psCompExecExecImport(Sender: TObject; se: TIFPSExec;
-      x: TIFPSRuntimeClassImporter);
+    procedure psCompExecCompImport(Sender: TObject; x: TIFPSPascalCompiler);
+    procedure psCompExecExecImport(Sender: TObject; se: TIFPSExec; x: TIFPSRuntimeClassImporter);
     procedure psCompExecAfterExecute(Sender: TIFPS3CompExec);
     procedure btnSyncPoint1Click(Sender: TObject);
     procedure btnSyncPoint2Click(Sender: TObject);
@@ -487,15 +502,34 @@ type
     procedure mnuShowInMainFormClick(Sender: TObject);
     procedure mnuUseInPlaceEditionClick(Sender: TObject);
     procedure mnuShowSubtitlesClick(Sender: TObject);
-    procedure mnu150PClick(Sender: TObject);
-    procedure mnu200PClick(Sender: TObject);
-    procedure mnu300PClick(Sender: TObject);
-    procedure mnu400PClick(Sender: TObject);
     procedure mnuJumpToNextSubClick(Sender: TObject);
     procedure mnuJumpToPrevSubClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure lstSubtitlesGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: WideString);
+    procedure FormActivate(Sender: TObject);
+    procedure scrVolumeChange(Sender: TObject);
+    procedure mdtTranslationCPSKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure mdtSubtitleCPSKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure mmoTranslationKeyPress(Sender: TObject; var Key: Char);
+    procedure mmoSubtitleTextKeyPress(Sender: TObject; var Key: Char);
+    procedure lstSubtitlesKeyPress(Sender: TObject; var Key: Char);
+    procedure mnuShiftMoreMSShowClick(Sender: TObject);
+    procedure mnuShiftLessMSShowClick(Sender: TObject);
+    procedure mnuShiftMoreMSHideClick(Sender: TObject);
+    procedure mnuShiftLessMSHideClick(Sender: TObject);
+    procedure ProcessRE(re : TRichEdit; TextCol, TagCol: TColor);
+    procedure HighlightTags(IsSubtitleText: Boolean);
+    procedure mnuSetTagBoldClick(Sender: TObject);
+    procedure mnuSetTagItalicClick(Sender: TObject);
+    procedure mnuSetTagUnderlineClick(Sender: TObject);
+    procedure mnuSetTagColorClick(Sender: TObject);
   protected
     procedure CreateParams(var Params: TCreateParams); override;
+    procedure GoToLineNumber(Line : Integer);
+    function GetCPSColor(const CPS: Real): TColor;
+    procedure RepaintSubGraph();
+    procedure ShiftTimes(ShowShift: Integer; HideShift: Integer);
+    procedure SetPartialTag(const OTag, CTag: String);
   private
     procedure ReadString(var Msg: TWMCOPYDATA); message WM_COPYDATA;
     procedure GetLangs;
@@ -507,7 +541,18 @@ type
     procedure SetLanguage(LangFile: String);
     procedure AppExeption(Sender: TObject; E: Exception);
     procedure DroppedFile(var Msg: TWMDropFiles); message WM_DROPFILES;
+    procedure SetCurrentVolume;
+    procedure SetUndoTimeChange(Start : Boolean);
+    procedure ProcessTag(Tag : TTagClass; WholeSubtitle: Boolean; Color: TColor = clBlack);
+    procedure RichDblClick(Sender: TObject);
+    function GetOrgModified(): Boolean;
+    function GetTransModified(): Boolean;
+    procedure SetTransModified(const Value: Boolean);
+    procedure SetOrgModified(const Value: Boolean);
+    procedure CMDialogKey(var Msg: TCMDialogKey); message CM_DIALOGKEY;   // tab testing
   public
+    Vars : TVarLord;
+    FormPos : TFormPosition;
     FormatType     : (ftTime, ftFrames);
     ActualLangFile : String;
     // -----------------//
@@ -515,10 +560,10 @@ type
     // -----------------//
     OrgFile       : String;
     OrgFormat     : Integer;
-    OrgModified   : Boolean;
+    OrgFileModified   : Boolean;
     TransFile     : String;
     TransFormat   : Integer;
-    TransModified : Boolean;
+    TransFileModified : Boolean;
     OldInputFPS   : Single;
     OldFPS        : Single;
     MovieFile     : String;
@@ -537,6 +582,7 @@ type
     MarkUntransSubs   : Boolean; // Mark untranslated subtitles
     ApplyStyleInList  : Boolean; // Apply style to subtitles in the list
     ScrollList        : Boolean; // Scroll list to current subtitle
+
     // ------------------------
     RFMaxCount : Integer; // Max. number of recent files
     // --------------//
@@ -552,10 +598,12 @@ type
     SecsToJump1     : Byte;    // Seconds to jump on double click
     SecsToJump2     : Byte;    // Seconds to jump on shift-double click
     RewFFTime       : Integer; // Time to rewind/forward
-    DefAltPlayRate  : Integer; // Default altered playback rate
+    DefAltPlayRate  : TRateClass; // Default altered playback rate
     // For the Rew and FF buttons
     tmrSeekRewFF : TTimer;
     Seeking      : Boolean;
+    PreviewSubPosition : Byte;
+    PlayOnLoad   : Boolean;    // Play video after load
     // ----------------//
     // Synchronization //
     // ----------------//
@@ -569,20 +617,14 @@ type
     CaseSensitive   : Boolean;
     MatchWholeWords : Boolean;
     // ---------//
-    // Advanced //
-    // ---------//
-    TwoLinesIfLongerThan : Integer;
-    ToggleBreakPoint     : Boolean;
-    BreakLineAfter       : Integer;
-    MaxLineLength        : Integer;
-    ShiftTime            : Integer;
-    // ---------//
     //  Others  //
     // ---------//
-    UnTransSubsColor : Integer;
-    OrgCharset       : Integer;
-    TransCharset     : Integer;
-    AdjustFormOpened : Boolean;
+    UnTransSubsColor     : Integer;
+    OrgCharset           : Integer;
+    TransCharset         : Integer;
+    AdjustFormOpened     : Boolean;
+    InfoErrorsFormOpened : Boolean;
+    frmSaveAsExecuting: Boolean;
     // ----------
     procedure UpdateRFMenus;
     procedure RefreshTimes;
@@ -590,6 +632,8 @@ type
     procedure RFMenuClick(Sender: TObject);
     procedure EnableCtrls(const Flag: boolean);
     procedure SetTranslationCtrlsPositions;
+    property OrgModified: Boolean read GetOrgModified write SetOrgModified;
+    property TransModified: Boolean read GetTransModified write SetTransModified;
   end;
 
 var
@@ -612,6 +656,8 @@ var
   ID_STPROJECT      : String;
   ID_SRF            : String;
   ShiftMS           : String;
+  ShiftMSShow       : String;
+  ShiftMSHide       : String;
   // Recent files
   RecentFiles : TStringList;
   // Translator mode
@@ -654,8 +700,7 @@ end;
 //                                                                            //
 // ---------------------------------------------------------------------------//
 
-procedure TfrmMain.lstSubtitlesInitNode(Sender: TBaseVirtualTree; ParentNode,
-  Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
+procedure TfrmMain.lstSubtitlesInitNode(Sender: TBaseVirtualTree; ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
   Data: PSubtitleItem;
 begin
@@ -672,8 +717,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.lstSubtitlesFreeNode(Sender: TBaseVirtualTree;
-  Node: PVirtualNode);
+procedure TfrmMain.lstSubtitlesFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
 var
   Data: PSubtitleItem;
 begin
@@ -688,17 +732,14 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.lstSubtitlesGetNodeDataSize(Sender: TBaseVirtualTree;
-  var NodeDataSize: Integer);
+procedure TfrmMain.lstSubtitlesGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
 begin
   NodeDataSize := SizeOf(TSubtitleItem);
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.lstSubtitlesGetText(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
-  var CellText: WideString);
+procedure TfrmMain.lstSubtitlesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: WideString);
 var
   Data: PSubtitleItem;
 begin
@@ -719,8 +760,8 @@ begin
             CellText := TimeToString(Data.FinalTime) else
             CellText := IntToStr(TimeToFrames(Data.FinalTime, GetInputFPS));
         end;
-      3: CellText := StringToWideStringEx(ReplaceEnters(Data.Text, '|'), CharsetToCodePage(OrgCharset));
-      4: CellText := StringToWideStringEx(ReplaceEnters(Data.Translation, '|'), CharsetToCodePage(TransCharset));
+      3: CellText := {$IFDEF UTF8}ReplaceEnters(Data.Text, '|'){$ELSE}StringToWideStringEx(ReplaceEnters(Data.Text, '|'), CharsetToCodePage(OrgCharset)){$ENDIF};
+      4: CellText := {$IFDEF UTF8}ReplaceEnters(Data.Text, '|'){$ELSE}StringToWideStringEx(ReplaceEnters(Data.Translation, '|'), CharsetToCodePage(TransCharset)){$ENDIF};
     end;
   end;
 end;
@@ -755,10 +796,14 @@ begin
   ActualLangFile := LangFile;
   LF := TIniFile.Create(LangFile);
   try
+    Vars.UILanguage := Copy(ExtractFileName(ActualLangFile), 0, Length(ExtractFileName(ActualLangFile))-4);
+
     With LF do
     begin
+//{$IFNDEF UNIOFF}
       frmMain.Font.Charset      := ReadInteger('General', 'Font charset', 0);
       tcTimeCounter.FontCharset := frmMain.Font.Charset;
+//{$ENDIF}
       tcTimeCounter.Text4       := ReadString('General', 'FPS', 'FPS');
       ID_PLAINTEXT              := ReadString('General', 'PlainText', 'Plain Text') + ' (*.txt)|*.txt';
       ID_STPROJECT              := ReadString('General', 'STP', 'Subtitle Translation Project');
@@ -793,6 +838,7 @@ begin
       rdoFinalTime.Caption  := Copy(tmp, Pos('|', tmp) + 1, SmartPos('|', tmp, True, Pos('|', tmp) + 1) - (Pos('|', tmp) + 1));
       rdoBoth.Caption       := Copy(tmp, SmartPos('|', tmp, True, Pos('|', tmp) + 1) + 1, Length(tmp));
 
+//{$IFNDEF UNIOFF}
       lstSubtitles.Header.Columns[0].Text := StringToWideStringEx(ReadString('Main Form', '08', 'Num'), CharSetToCodePage(frmMain.Font.Charset));
       lstSubtitles.Header.Columns[1].Text := StringToWideStringEx(ReadString('Main Form', '09', 'Show'), CharSetToCodePage(frmMain.Font.Charset));
       lblShow.Caption                     := ReadString('Main Form', '09', 'Show') + ':';
@@ -803,9 +849,25 @@ begin
       TransLeftLines                      := ReadString('Main Form', '13', '%d untranslated lines');
       lblDuration.Caption                 := ReadString('Main Form', '14', 'Duration:');
       TextOrTransLength                   := ReadString('Main Form', '15', '%s (%s characters):');
-      UntranslatedSub                     := ReadString('Main Form', '16', '- Untranslated subtitle -');
+      lblCPS.Caption                      := ReadString('Main Form', '17', 'CPS:');
       lstSubtitles.Header.Columns[3].Text := StringToWideStringEx(LabelText, CharSetToCodePage(frmMain.Font.Charset));
       lstSubtitles.Header.Columns[4].Text := StringToWideStringEx(LabelTranslation, CharSetToCodePage(frmMain.Font.Charset));
+//{$ELSE}
+//      lstSubtitles.Header.Columns[0].Text := ReadString('Main Form', '08', 'Num');
+//      lstSubtitles.Header.Columns[1].Text := ReadString('Main Form', '09', 'Show');
+//      lstSubtitles.Header.Columns[2].Text := ReadString('Main Form', '10', 'Hide');
+//      lblShow.Caption                     := ReadString('Main Form', '09', 'Show') + ':';
+//      lblHide.Caption                     := ReadString('Main Form', '10', 'Hide') + ':';
+//      LabelText                           := ReadString('Main Form', '11', 'Text');
+//      LabelTranslation                    := ReadString('Main Form', '12', 'Translation');
+//      TransLeftLines                      := ReadString('Main Form', '13', '%d untranslated lines');
+//      lblDuration.Caption                 := ReadString('Main Form', '14', 'Duration:');
+//      TextOrTransLength                   := ReadString('Main Form', '15', '%s (%s characters):');
+//      lstSubtitles.Header.Columns[3].Text := LabelText;
+//      lstSubtitles.Header.Columns[4].Text := LabelTranslation;
+//{$ENDIF}
+
+      UntranslatedSub := ReadString('Main Form', '16', '- Untranslated subtitle -');
 
       if Assigned(lstSubtitles.FocusedNode) then
         mmoSubtitleTextChange(frmMain as TObject) else
@@ -818,329 +880,11 @@ begin
           lblTranslation.Caption := LabelTranslation + ':';
       end;
 
-      // --------------- //
-      //    Main Menu    //
-      // --------------- //
-
-      // Header
-      mnuFile.Caption     := ReadString('Main menu header', '01', 'File');
-      mnuEdit.Caption     := ReadString('Main menu header', '02', 'Edit');
-      mnuSearch.Caption   := ReadString('Main menu header', '03', 'Search');
-      mnuTools.Caption    := ReadString('Main menu header', '04', 'Tools');
-      mnuMovie.Caption    := ReadString('Main menu header', '05', 'Movie');
-      mnuSettings.Caption := ReadString('Main menu header', '06', 'Settings');
-      mnuHelp.Caption     := ReadString('Main menu header', '07', 'Help');
-
-      // --------- //
-      // File menu //
-      // --------- //
-      mnuNewSubtitle.Caption  := ReadString('Main menu/File', '01', 'New subtitle...');
-      mnuLoadSubtitle.Caption := ReadString('Main menu/File', '02', 'Load subtitle...');
-      mnuRecent.Caption       := ReadString('Main menu/File', '03', 'Recent files');
-      mnuClearList.Caption    := ReadString('Main menu/File', '04', 'Clear list');
-      // Translator mode
-      mnuLoad.Caption             := ReadString('Main menu/File', '05', 'Load');
-      mnuLoadProject.Caption      := ReadString('Main menu/File', '06', 'Project...');
-      mnuLoadOriginal.Caption     := ReadString('Main menu/File', '07', 'Original');
-      mnuLoadTranslated.Caption   := ReadString('Main menu/File', '08', 'Translated');
-      mnuTranslatorSave.Caption   := ReadString('Main menu/File', '09', 'Save');
-      mnuSaveProject.Caption      := mnuLoadProject.Caption;
-      mnuSaveOriginal.Caption     := mnuLoadOriginal.Caption;
-      mnuSaveTranslated.Caption   := mnuLoadTranslated.Caption;
-      mnuSaveOriginalAs.Caption   := ReadString('Main menu/File', '10', 'Original as...');
-      mnuSaveTranslatedAs.Caption := ReadString('Main menu/File', '11', 'Translated as...');
-      // ------
-      mnuSaveFile.Caption   := mnuTranslatorSave.Caption;
-      mnuSaveFileAs.Caption := ReadString('Main menu/File', '12', 'Save as...');
-      mnuClose.Caption      := ReadString('Main menu/File', '13', 'Close');
-      mnuExit.Caption       := ReadString('Main menu/File', '14', 'Exit');
-
-      // --------- //
-      // Edit menu //
-      // --------- //
-      mnuUndo.Caption           := ReadString('Main menu/Edit', '01', 'Undo');
-      mnuRedo.Caption           := ReadString('Main menu/Edit', '02', 'Redo');
-      mnuInsertSubtitle.Caption := ReadString('Main menu/Edit', '03', 'Insert subtitle');
-      mnuInsertBefore.Caption   := ReadString('Main menu/Edit', '04', 'Insert before');
-      mnuRemoveSelected.Caption := ReadString('Main menu/Edit', '05', 'Remove selected');
-      mnuCut.Caption            := ReadString('Main menu/Edit', '06', 'Cut');
-      mnuCopy.Caption           := ReadString('Main menu/Edit', '07', 'Copy');
-      mnuPaste.Caption          := ReadString('Main menu/Edit', '08', 'Paste');
-      mnuSelectAll.Caption      := ReadString('Main menu/Edit', '09', 'Select all');
-
-      // ------------ //
-      // Edit/Timings //
-      // ------------ //
-      mnuTimings.Caption             := ReadString('Main menu/Edit/Timings', '01', 'Timings');
-      mnuSetDurationLimits.Caption   := ReadString('Main menu/Edit/Timings', '02', 'Set duration limits...');
-      mnuSetDelay.Caption            := ReadString('Main menu/Edit/Timings', '03', 'Set delay...');
-      mnuAdjust.Caption              := ReadString('Main menu/Edit/Timings', '04', 'Adjust');
-      mnuAdjustSubtitles.Caption     := ReadString('Main menu/Edit/Timings', '05', 'Adjust subtitles...');
-      mnuAdjustToSyncSubs.Caption    := ReadString('Main menu/Edit/Timings', '06', 'Adjust to synchronized subtitles');
-      mnuTimeExpanderReducer.Caption := ReadString('Main menu/Edit/Timings', '07', 'Time expander/reducer');
-      mnuExtendLength.Caption        := ReadString('Main menu/Edit/Timings', '08', 'Extend length');
-      mnuAutomaticDurations.Caption  := ReadString('Main menu/Edit/Timings', '09', 'Automatic durations');
-      mnuReadTimesFromFile.Caption   := ReadString('Main menu/Edit/Timings', '10', 'Read timings from file');
-      ShiftMS                        := ReadString('Main menu/Edit/Timings', '11', 'Shift %s milliseconds');
-
-      // ---------- //
-      // Edit/Texts //
-      // ---------- //
-      mnuTexts.Caption             := ReadString('Main menu/Edit/Texts', '01', 'Texts');
-      mnuSmartLineAdjust.Caption   := ReadString('Main menu/Edit/Texts', '02', 'Smart line adjust');
-      mnuConvertCase.Caption       := ReadString('Main menu/Edit/Texts', '03', 'Convert case...');
-      mnuUnbreakSubtitles.Caption  := ReadString('Main menu/Edit/Texts', '04', 'Unbreak subtitles');
-      mnuDivideLines.Caption       := ReadString('Main menu/Edit/Texts', '05', 'Divide lines...');
-      mnuFastDivideLines.Caption   := ReadString('Main menu/Edit/Texts', '06', 'Fast divide lines');
-      mnuSetMaxLineLength.Caption  := ReadString('Main menu/Edit/Texts', '07', 'Set maximum line length');
-      mnuReadTextsFromFile.Caption := ReadString('Main menu/Edit/Texts', '08', 'Read texts from file');
-
-      // -------------- //
-      // Edit/Subtitles //
-      // -------------- //
-      mnuSubtitles.Caption              := ReadString('Main menu/Edit/Subtitles', '01', 'Subtitles');
-      mnuCombineSubtitles.Caption       := ReadString('Main menu/Edit/Subtitles', '02', 'Combine subtitles');
-      // ---
-      mnuEffects.Caption     := ReadString('Main menu/Edit/Subtitles', '03', 'Effects');
-      mnuTypeEffect.Caption  := ReadString('Main menu/Edit/Subtitles', '04', 'Type effect');
-      mnuFlash.Caption       := ReadString('Main menu/Edit/Subtitles', '05', 'Flash');
-      mnuFastFlash.Caption   := ReadString('Main menu/Edit/Subtitles', '06', 'Fast flash');
-      mnuMediumFlash.Caption := ReadString('Main menu/Edit/Subtitles', '07', 'Medium flash');
-      mnuSlowFlash.Caption   := ReadString('Main menu/Edit/Subtitles', '08', 'Slow flash');
-      // ---
-      mnuRightToLeft.Caption            := ReadString('Main menu/Edit/Subtitles', '09', 'Right-to-Left');
-      mnuReverseText.Caption            := ReadString('Main menu/Edit/Subtitles', '10', 'Reverse text');
-      mnuFixPunctuation.Caption         := ReadString('Main menu/Edit/Subtitles', '11', 'Fix punctuation');
-      mnuSort.Caption                   := ReadString('Main menu/Edit/Subtitles', '12', 'Sort');
-      mnuDeleteUnnecessaryLinks.Caption := ReadString('Main menu/Edit/Subtitles', '13', 'Delete unnecessary links');
-      mnuMarkSelectedSubs.Caption       := ReadString('Main menu/Edit/Subtitles', '14', 'Mark selected subtitles');
-      mnuUnmarkSelectedSubs.Caption     := ReadString('Main menu/Edit/Subtitles', '15', 'Unmark selected subtitles');
-
-      // ---------------- //
-      // Edit/Translation //
-      // ---------------- //
-      mnuTranslation.Caption    := ReadString('Main menu/Edit/Translation', '01', 'Translation');
-      mnuTranslatorMode.Caption := ReadString('Main menu/Edit/Translation', '02', 'Translator mode');
-      mnuSwap.Caption           := ReadString('Main menu/Edit/Translation', '03', 'Swap');
-
-      // ----------- //
-      // Search menu //
-      // ----------- //
-      mnuSubSearch.Caption        := ReadString('Main menu/Search', '01', 'Search...');
-      mnuFindNext.Caption         := ReadString('Main menu/Search', '02', 'Find next');
-      mnuSearchAndReplace.Caption := ReadString('Main menu/Search', '03', 'Search && Replace...');
-      mnuGoToLineNumber.Caption   := ReadString('Main menu/Search', '04', 'Go to line number...');
-
-      // ---------- //
-      // Tools menu //
-      // ---------- //
-      mnuSpellCheck.Caption           := ReadString('Main menu/Tools', '01', 'Spell check');
-      mnuBatchConvert.Caption         := ReadString('Main menu/Tools', '02', 'Batch convert...');
-      mnuSplitSubtitle.Caption        := ReadString('Main menu/Tools', '03', 'Split subtitle...');
-      mnuJoinSubtitle.Caption         := ReadString('Main menu/Tools', '04', 'Join subtitles...');
-      mnuInfoErrors.Caption           := ReadString('Main menu/Tools', '05', 'Information and errors');
-      mnuInformationAndErrors.Caption := ReadString('Main menu/Tools', '06', 'Information and errors...');
-      mnuVariousInformation.Caption   := ReadString('Main menu/Tools', '07', 'Various information...');
-      mnuOCRScripts.Caption           := ReadString('Main menu/Tools', '08', 'OCR Scripts');
-      mnuShowInMainForm.Caption       := ReadString('Main menu/Tools', '09', 'Show in main form');
-      mnuInfoErrorsSettings.Caption   := ReadString('Main menu/Tools', '10', 'Settings...');
-      mnuRecheckErrors.Caption        := ReadString('Main menu/Tools', '11', 'Recheck errors');
-      mnuFixAllErrors.Caption         := ReadString('Main menu/Tools', '12', 'Fix all errors');
-      mnuFixErrorsInSelSubs.Caption   := ReadString('Main menu/Tools', '13', 'Fix errors (selected subtitles)');
-      mnuJumpToNextError.Caption      := ReadString('Main menu/Tools', '14', 'Jump to next error');
-      mnuAddFPSfromAVI.Caption        := ReadString('Main menu/Tools', '15', 'Add FPS from AVI');
-      mnuExternalPreview.Caption      := ReadString('Main menu/Tools', '16', 'External preview');
-      mnuSAMILangExtractor.Caption    := ReadString('Main menu/Tools', '17', 'SAMI language extractor');
-      mnuPascalScripts.Caption        := ReadString('Main menu/Tools', '18', 'Pascal scripts');
-
-      // ---------- //
-      // Movie menu //
-      // ---------- //
-      mnuOpenMovie.Caption            := ReadString('Main menu/Movie', '01', 'Open...');
-      mnuCloseMovie.Caption           := ReadString('Main menu/Movie', '02', 'Close');
-      mnuMovieInfo.Caption            := ReadString('Main menu/Movie', '03', 'Information...');
-      mnuVideoPreviewMode.Caption     := ReadString('Main menu/Movie', '04', 'Video preview mode');
-      mnuShowSubtitles.Caption        := ReadString('Main menu/Movie', '05', 'Show subtitles');
-      mnuSaveMediaStartupFile.Caption := ReadString('Main menu/Movie', '06', 'Save media startup file');
-
-      // -------------- //
-      // Movie/Playback //
-      // -------------- //
-      mnuPlayback.Caption     := ReadString('Main menu/Movie/Playback', '01', 'Playback');
-      mnuPlayPause.Caption    := ReadString('Main menu/Movie/Playback', '02', 'Play/Pause');
-      mnuStop.Caption         := ReadString('Main menu/Movie/Playback', '03', 'Stop');
-      mnuRewind.Caption       := ReadString('Main menu/Movie/Playback', '04', 'Rewind');
-      mnuForward.Caption      := ReadString('Main menu/Movie/Playback', '05', 'Forward');
-      mnuBack5Sec.Caption     := ReadString('Main menu/Movie/Playback', '06', 'Back 5 seconds');
-      mnuFwd5Sec.Caption      := ReadString('Main menu/Movie/Playback', '07', 'Forward 5 seconds');
-      mnuPlaybackRate.Caption := ReadString('Main menu/Movie/Playback', '08', 'Playback rate');
-
-      // --------------- //
-      // Movie/Subtitles //
-      // --------------- //
-      mnuVidSubtitles.Caption  := ReadString('Main menu/Movie/Subtitles', '01', 'Subtitles');
-      mnuMoveSubtitle.Caption  := ReadString('Main menu/Movie/Subtitles', '02', 'Move subtitle');
-      mnuSetStartTime.Caption  := ReadString('Main menu/Movie/Subtitles', '03', 'Set start time');
-      mnuSetFinalTime.Caption  := ReadString('Main menu/Movie/Subtitles', '04', 'Set final time');
-      mnuStartSubtitle.Caption := ReadString('Main menu/Movie/Subtitles', '05', 'Start subtitle');
-      mnuEndSubtitle.Caption   := ReadString('Main menu/Movie/Subtitles', '06', 'End subtitle');
-
-      // --------------------- //
-      // Movie/Synchronization //
-      // --------------------- //
-      mnuSynchronization.Caption := ReadString('Main menu/Movie/Synchronization', '01', 'Synchronization');
-      mnuFirstSyncPoint.Caption  := ReadString('Main menu/Movie/Synchronization', '02', 'First sync point');
-      mnuLastSyncPoint.Caption   := ReadString('Main menu/Movie/Synchronization', '03', 'Last sync point');
-      mnuAddSyncPoint.Caption    := ReadString('Main menu/Movie/Synchronization', '04', 'Add synchronization point');
-
-      // ------------- //
-      // Movie/Display //
-      // ------------- //
-      mnuSubtitleToDisplay.Caption  := ReadString('Main menu/Movie/Display', '01', 'Display');
-      mnuDisplayOriginal.Caption    := ReadString('Main menu/Movie/Display', '02', 'Original');
-      mnuDisplayTranslation.Caption := ReadString('Main menu/Movie/Display', '03', 'Translation');
-
-      // ------------- //
-      // Settings menu //
-      // ------------- //
-      mnuSubSettings.Caption       := mnuInfoErrorsSettings.Caption;
-      mnuOutputSettings.Caption    := ReadString('Main menu/Settings', '01', 'Output settings...');
-      mnuLanguage.Caption          := ReadString('Main menu/Settings', '02', 'Language');
-      mnuShowLeftPanel.Caption     := ReadString('Main menu/Settings', '03', 'Show left panel');
-      mnuShowTimeControls.Caption  := ReadString('Main menu/Settings', '04', 'Show time controls');
-      mnuUseInPlaceEdition.Caption := ReadString('Main menu/Settings', '05', 'Use in-place edition');
-
-      // --------- //
-      // Help menu //
-      // --------- //
-      mnuHelpOfProgram.Caption         := mnuHelp.Caption;
-      mnuAboutSubtitleWorkshop.Caption := Format(ReadString('Main menu/Help', '01', 'About %s...'), [ID_PROGRAM]);
-      mnuCheckForNewVersion.Caption    := ReadString('Main menu/Help', '02', 'Check for new version');
-
-      // ---------- //
-      // Popup menu //
-      // ---------- //
-      mnuItalic.Caption          := ReadString('Popup Menu', '01', 'Italic');
-      mnuBold.Caption            := ReadString('Popup Menu', '02', 'Bold');
-      mnuUnderline.Caption       := ReadString('Popup Menu', '03', 'Underline');
-      mnuSetColor.Caption        := ReadString('Popup Menu', '04', 'Set color');
-      mnuRemoveColorTags.Caption := ReadString('Popup Menu', '05', 'Remove color tags');
-
-      // ------------------------ //
-      //    Video Preview Hints   //
-      // ------------------------ //
-      btnPlay.Hint               := Format(ReadString('Video preview hints', '01', 'Play/Pause (%s)'), [ShortCutToText(mnuPlayPause.ShortCut)]);
-      btnPause.Hint              := btnPlay.Hint;
-      btnStop.Hint               := Format(ReadString('Video preview hints', '02', 'Stop (%s)'), [ShortCutToText(mnuStop.ShortCut)]);
-      btnScrollList.Hint         := ReadString('Video preview hints', '03', 'Toggle scroll list');
-      btnPrevSub.Hint            := ReadString('Video preview hints', '04', 'Jump to previous subtitle');
-      btnNextSub.Hint            := ReadString('Video preview hints', '05', 'Jump to next subtitle');
-      btnRew.Hint                := Format(ReadString('Video preview hints', '06', 'Rewind (%s)'), [ShortCutToText(mnuRewind.ShortCut)]);
-      btnForward.Hint            := Format(ReadString('Video preview hints', '07', 'Forward (%s)'), [ShortCutToText(mnuForward.ShortCut)]);
-      btnAlterPlaybackRate.Hint  := ReadString('Video preview hints', '08', 'Alter playback rate');
-      btnMoveSubtitle.Hint       := Format(ReadString('Video preview hints', '09', 'Move subtitle (%s)'), [ShortCutToText(mnuMoveSubtitle.ShortCut)]);
-      btnSetStartTime.Hint       := Format(ReadString('Video preview hints', '10', 'Set start time (%s)'), [ShortCutToText(mnuSetStartTime.ShortCut)]);
-      btnSetFinalTime.Hint       := Format(ReadString('Video preview hints', '11', 'Set final time (%s)'), [ShortCutToText(mnuSetFinalTime.ShortCut)]);
-      btnStartSubtitle.Hint      := Format(ReadString('Video preview hints', '12', 'Start subtitle (%s)'), [ShortCutToText(mnuStartSubtitle.ShortCut)]);
-      btnEndSubtitle.Hint        := Format(ReadString('Video preview hints', '13', 'End subtitle (%s)'), [ShortCutToText(mnuEndSubtitle.ShortCut)]);
-      btnSyncPoint1.Hint         := Format(ReadString('Video preview hints', '14', 'Mark as first sync point (%s)'), [ShortCutToText(mnuFirstSyncPoint.ShortCut)]);
-      btnSyncPoint2.Hint         := Format(ReadString('Video preview hints', '15', 'Mark as last sync point (%s)'), [ShortCutToText(mnuLastSyncPoint.ShortCut)]);
-      btnAddSyncPoint.Hint       := Format(ReadString('Video preview hints', '16', 'Add subtitle/video synchronization point (%s)'), [ShortCutToText(mnuAddSyncPoint.ShortCut)]);
-
-      // Help file
-      HelpFile := ReadString('General', 'Help', 'Manual.html');
-
-      SelectOutputDir := ReadString('Split','19','Output directory:');
-
-      // ------------------------ //
-      //      Error messages      //
-      // ------------------------ //
-      ErrorMsg[01] := ReadString('Error messages', '01', 'Could not initialize subtitle API. Please download %s from %s and copy it to the "%s" directory.');
-      ErrorMsg[02] := ReadString('Error messages', '02', 'The following error (%s) was derived from object %s (%s):||"%s"||Please write to %s informing what you were doing when this error occurred.||Press Ok to continue, and Cancel to exit the program.');
-      ErrorMsg[03] := ReadString('Error messages', '03', 'The file "%s" is a bad subtitle or an unsupported format.');
-      ErrorMsg[04] := ReadString('Error messages', '04', 'The file "%s" is not in %s format or is not a valid subtitle file.');
-      ErrorMsg[05] := ReadString('Error messages', '05', '"%s" is not a valid video file.');
-      ErrorMsg[06] := ReadString('Error messages', '06', 'Not a valid line number.');
-      ErrorMsg[07] := ReadString('Error messages', '07', 'Select at least one extension to search for.');
-      ErrorMsg[08] := ReadString('Error messages', '08', 'The search path does not exist.');
-      ErrorMsg[09] := ReadString('Error messages', '09', 'Item number is not a valid item.');
-      ErrorMsg[10] := ReadString('Error messages', '10', 'Please add two subtitles or more.');
-      ErrorMsg[11] := ReadString('Error messages', '11', 'Failed to connect to server!.');
-      ErrorMsg[12] := ReadString('Error messages', '12', 'Couldn''t remove the read-only attribute from "%s".||Possibly on a write protected drive.');
-      ErrorMsg[13] := ReadString('Error messages', '13', 'Error trying to connect to Microsoft Word!.');
-      ErrorMsg[14] := ReadString('Error messages', '14', 'Select the video(s) for previous part(s) first!.');
-      ErrorMsg[15] := ReadString('Error messages', '15', 'Select a valid output directory.');
-      ErrorMsg[16] := ReadString('Error messages', '16', 'Select at least one language to extract.');
-      ErrorMsg[17] := ReadString('Error messages', '17', '"%s" is not a valid SAMI file.');
-      ErrorMsg[18] := ReadString('Error messages', '18', 'Select a subtitle part in the list.');
-      ErrorMsg[19] := ReadString('Error messages', '19', 'If you select a movie fragment for one part of the subtitle you need to select a movie fragment for all parts of the subtitle (except the last part of course).');
-      ErrorMsg[20] := ReadString('Error messages', '20', 'You need two or more points.');
-
-      // ------------------------ //
-      //    Question messages     //
-      // ------------------------ //
-      QuestionMsg[01] := ReadString('Question messages', '01', 'File "%s" has changed.||Do you want to save the changes?.');
-      QuestionMsg[02] := ReadString('Question messages', '02', 'File "%s" already exists.||Do you want to replace it?.');
-      QuestionMsg[03] := ReadString('Question messages', '03', 'Original file ("%s") has changed.||Do you want to save the changes?.');
-      QuestionMsg[04] := ReadString('Question messages', '04', 'Translated file ("%s") has changed.||Do you want to save the changes?.');
-      QuestionMsg[05] := ReadString('Question messages', '05', 'The selected subtitles are about to be deleted.||Do you want to proceed?.');
-      QuestionMsg[06] := ReadString('Question messages', '06', 'Point 1 Subtitle: %s|Point 1 Movie: %s||Point 2 Subtitle: %s|Point 2 Movie: %s||Synchronize subtitle?');
-      QuestionMsg[07] := ReadString('Question messages', '07', 'The video player''s exe hasn''t been specified or doesn''t exist.||Do you want to configure external player?.');
-      QuestionMsg[08] := ReadString('Question messages', '08', 'A new version was found!.||Do you want to see the change list?.');
-      QuestionMsg[09] := ReadString('Question messages', '09', 'The file you are trying to save is read-only.||Try to save anyway?.');
-
-      // ------------------------ //
-      //   Information messages   //
-      // ------------------------ //
-      InfoMsg[01] := ReadString('Information messages', '01', 'Could''t find more instances of "%s".');
-      InfoMsg[02] := ReadString('Information messages', '02', 'No new version available.');
-      InfoMsg[03] := ReadString('Information messages', '03', 'Spell check finished.||%d change(s) made.');
-      InfoMsg[04] := ReadString('Information messages', '04', 'Too many parts. Resetting...');
-      InfoMsg[05] := ReadString('Information messages', '05', 'Only one language was found.||If the file contains more languages, add the ones you wish manually opening the file in a text editor and searching for the correct class name.');
-      InfoMsg[06] := ReadString('Information messages', '06', 'Couldn''t locate "STYLE" start and/or close tag!.||Probably because of that reason, this file doesn''t contain more than one language.|If it does, try to add manually searching for the class name of the desired language(s).');
-      InfoMsg[07] := ReadString('Information messages', '07', 'Fittest font size for playback is: %d');
-      InfoMsg[08] := ReadString('Information messages', '08', 'Total replacements: %d');
-      InfoMsg[09] := ReadString('Information messages', '09', 'File name: %s|Size: %s|FPS: %s|Duration: %s|Total frames: %d|Resolution: %dx%d|FourCC: %s');
-      InfoMsg[10] := ReadString('Information messages', '10', 'Some of the streams of the movie could not be rendered correctly. Probably the audio or video codec is missing.');
-      InfoMsg[11] := ReadString('Information messages', '11', 'It is not necessary to set the movie fragment corresponding to the last subtitle.');
-
-      // --------------------------------- //
-      //  Information and errors messages  //
-      // --------------------------------- //
-      IEMsgBoxes[01] := ReadString('Information and errors messages', '01', 'Subtitle number %d is an empty subtitle and is about to be deleted.||Do you want to proceed?.');
-      IEMsgBoxes[02] := ReadString('Information and errors messages', '02', 'Subtitle number %d:||"%s" has a prohibited character and is about to be deleted.||Do you want to proceed?.');
-      IEMsgBoxes[03] := ReadString('Information and errors messages', '03', 'Subtitle number %d:||"%s" is about to be deleted.||Do you want to proceed?.');
-      IEMsgBoxes[04] := ReadString('Information and errors messages', '04', 'Part of subtitle number %d:||"%s" is about to be deleted, so the subtitle will be:||"%s"||Do you want to proceed?.');
-      IEMsgBoxes[05] := ReadString('Information and errors messages', '05', 'Subtitle number %d:||"%s" is a one-line subtitle and starts with "-".||Do you want to delete the "-" at the beginning?.');
-
-      // --------------- //
-      //  Error reports  //
-      // --------------- //
-      ErrorReports[01] := ReadString('Information and errors', '16', 'Contains lines without letters');
-      ErrorReports[02] := ReadString('Information and errors', '17', 'Empty subtitle');
-      // ---
-      ErrorReports[03] := ReadString('Information and errors', '18', 'Overlapping with previous subtitle');
-      ErrorReports[04] := ReadString('Information and errors', '19', 'Bad values');
-      ErrorReports[05] := ReadString('Information and errors', '20', 'Too long duration');
-      ErrorReports[06] := ReadString('Information and errors', '21', 'Too short duration');
-      ErrorReports[07] := ReadString('Information and errors', '22', 'Too long line(s)');
-      ErrorReports[08] := ReadString('Information and errors', '23', 'Over two lines');
-      // ---
-      ErrorReports[09] := ReadString('Information and errors', '24', 'Hearing impaired');
-      ErrorReports[10] := ReadString('Information and errors', '25', 'Has text before colon (":")');
-      ErrorReports[11] := ReadString('Information and errors', '26', 'Unnecessary dots');
-      ErrorReports[12] := ReadString('Information and errors', '27', 'Contains a prohibited character');
-      ErrorReports[13] := ReadString('Information and errors', '28', 'Repeated character');
-      ErrorReports[14] := ReadString('Information and errors', '29', 'Repeated subtitle');
-      ErrorReports[15] := ReadString('Information and errors', '30', 'OCR error');
-      // ---
-      ErrorReports[16] := ReadString('Information and errors', '31', 'One line subtitle starts with "-"');
-      ErrorReports[17] := ReadString('Information and errors', '32', 'No space after custom character');
-      ErrorReports[18] := ReadString('Information and errors', '33', 'No space before custom character');
-      ErrorReports[19] := ReadString('Information and errors', '34', 'Unnecessary spaces');
-      // ---
-      ErrorReports[20] := ReadString('Information and errors', '35', 'Marked subtitle');
-
+      // ---------------------------------------------------------------------------------------------------------------
+      {$include Units/_MainMenu.pas}
+      // ---------------------------------------------------------------------------------------------------------------
+      {$include Units/_Messages.pas}
+      // ---------------------------------------------------------------------------------------------------------------
     end;
   finally
     LF.Free;
@@ -1148,18 +892,27 @@ begin
 
   LF := TIniFile.Create(ExtractFilePath(Application.ExeName) + ID_ININAME);
   try
+//{$IFNDEF UNIOFF}
     Font.Name := LF.ReadString('Program look', 'Font', 'Tahoma');
     Font.Size := LF.ReadInteger('Program look', 'Font size', 8);
     MiMenu.Fuente.Name         := Font.Name;
     MiMenu.Fuente.Size         := Font.Size;
     MiMenu.Fuente.Charset      := frmMain.Font.Charset;
+//{$ENDIF}
+    MiMenu.RefreshMenu;
+//{$IFNDEF UNIOFF}
     lstSubtitles.ParentFont    := True;
     lstSubtitles.Header.Font   := Font;
+
     tmeShow.ParentFont         := True;
     tmeHide.ParentFont         := True;
     tmeDuration.ParentFont     := True;
     mmoSubtitleText.ParentFont := True;
     mmoTranslation.ParentFont  := True;
+    mdtSubtitleCPS.ParentFont    := True;
+    mdtTranslationCPS.ParentFont := True;
+//{$ENDIF}
+
     tmeShow.Font.Style         := Font.Style + [fsBold];
     tmeHide.Font.Style         := Font.Style + [fsBold];
     tmeDuration.Font.Style     := Font.Style + [fsBold];
@@ -1167,6 +920,8 @@ begin
     mmoTranslation.Font.Style  := Font.Style + [fsBold];
     mmoSubtitleText.Font.Size  := Font.Size + 2;
     mmoTranslation.Font.Size   := Font.Size + 2;
+    mdtSubtitleCPS.Font.Style     := Font.Style + [fsBold];
+    mdtTranslationCPS.Font.Style  := Font.Style + [fsBold];
   finally
     LF.Free;
   end;
@@ -1329,11 +1084,14 @@ begin
   tmeDuration.Enabled     := Flag;
   lblText.Enabled         := Flag;
   mmoSubtitleText.Enabled := Flag;
+  lblCPS.Enabled          := Flag;
+  mdtSubtitleCPS.Enabled  := Flag;
 
   if mnuTranslatorMode.Checked then
   begin
     mmoTranslation.Enabled := Flag;
     lblTranslation.Enabled := Flag;
+    mdtTranslationCPS.Enabled := Flag;
   end;
 
   InterfaceEnabled := Flag;
@@ -1387,7 +1145,7 @@ begin
       if (Ext = ID_SRFEXT) then // URUSoft Subtitle Report file
         LoadSRF(FileName) else
       // Video file
-      if (Ext = '.asf') or (Ext = '.avi') or (Ext = '.mp4') or (Ext = '.mkv') or
+      if (Ext = '.asf') or (Ext = '.avi')  or (Ext = '.avs') or (Ext = '.mp4') or (Ext = '.mkv') or
          (Ext = '.divx') or (Ext = '.mp3') or (Ext = '.mpg') or (Ext = '.mpeg') or
          (Ext = '.m1v') or (Ext = '.ogg') or (Ext = '.ogm') or (Ext = '.qt') or
          (Ext = '.vob') or (Ext = '.wav') or (Ext = '.wmv') then
@@ -1417,10 +1175,23 @@ end;
 //                                                                            //
 // ---------------------------------------------------------------------------//
 
+function TfrmMain.GetCPSColor(const CPS: Real): TColor;
+begin
+  if cps <= Vars.CPSrange1 then
+    Result := Vars.CPScolor1 else
+  if cps <= Vars.CPSrange2 then
+    Result := Vars.CPScolor2 else
+  if cps <= Vars.CPSrange3 then
+    Result := Vars.CPScolor3 else
+  Result := Vars.CPScolor4;
+end;
+
 procedure TfrmMain.RefreshTimes;
 var
   Data : PSubtitleItem;
   s    : Integer;
+  cps  : Real;
+  Dur  : Integer;
 begin
   if (lstSubtitles.SelectedCount = 1) and (Assigned(lstSubtitles.FocusedNode)) and (lstSubtitles.Selected[lstSubtitles.FocusedNode]) then
   begin
@@ -1430,15 +1201,27 @@ begin
       s := mmoSubtitleText.SelStart;
       mmoSubtitleText.Text := Data.Text;
       mmoSubtitleText.SelStart := s;
+
       if mnuTranslatorMode.Checked then
       begin
         s := mmoTranslation.SelStart;
         mmoTranslation.Text := Data.Translation;
         mmoTranslation.SelStart := s;
       end;
+
+      Dur              := Data.FinalTime - Data.InitialTime;
       tmeShow.Time     := Data.InitialTime;
       tmeHide.Time     := Data.FinalTime;
-      tmeDuration.Time := Data.FinalTime - Data.InitialTime;
+      tmeDuration.Time := Dur;
+
+	    // 1-8 blue >8 black >18 orange >24 red
+      cps := GetCharsPerMSec(Data.Text, Dur);
+      mdtSubtitleCPS.Value := cps;
+      mdtSubtitleCPS.Font.Color := GetCPSColor(cps);
+
+      cps := GetCharsPerMSec(Data.Translation, Dur);
+      mdtTranslationCPS.Value := cps;
+      mdtTranslationCPS.Font.Color := GetCPSColor(cps);
 
       if FormatType = ftTime then
       begin
@@ -1459,12 +1242,17 @@ begin
     tmeDuration.Clear;
     mmoSubtitleText.Clear;
     lblText.Caption := LabelText + ':';
+    mdtSubtitleCPS.Clear;
+
     if mnuTranslatorMode.Checked then
     begin
       lblTranslation.Caption := LabelTranslation + ':';
       mmoTranslation.Clear;
+      mdtTranslationCPS.Clear;
     end;
   end;
+
+  RepaintSubGraph;
 end;
 
 // ---------------------------------------------------------------------------//
@@ -1489,6 +1277,8 @@ begin
           LoadSubtitle(RecentFiles[i], GetInputFPS, 0, True) else
           LoadSubtitle(RecentFiles[i], GetInputFPS);
       end;
+      HighlightTags(True);
+      HighlightTags(False);
       break;
     end;
 end;
@@ -1543,24 +1333,51 @@ end;
 // ---------------------------------------------------------------------------//
 
 procedure TfrmMain.FormCreate(Sender: TObject);
+  procedure SetWorkshopPos(OnTop: Integer);
+  begin
+    SetWindowPos(frmMain.Handle, OnTop, frmMain.Left, frmMain.Top, frmMain.Width, frmMain.Height, SWP_NOMOVE + SWP_NOSIZE);
+  end;
+
 var
   Ini       : TIniFile;
   i         : Integer;
   NewItem   : TMenuItem;
   TextAlign : TTextAlign;
 begin
+  // --------------------------------- //
+  //      Window position & size       //
+  // --------------------------------- //
+  FormPos := TFormPosition.Create(frmMain,
+                                  ExtractFilePath(Application.ExeName) + '\' + ID_ININAME,
+                                  'Main Window',
+                                  (Screen.Width div 2) - (frmMain.Width div 2),
+                                  (Screen.Height div 2) - (frmMain.Height div 2),
+                                  frmMain.Width{724}, frmMain.Height{405});
+
+  TExtRichEdit(mmoSubtitleText).OnDblClick := RichDblClick;
+  TExtRichEdit(mmoTranslation).OnDblClick  := RichDblClick;
+
+  imgSubsGraph.Left := sbSeekBar.Left+6;
+  imgSubsGraph.Width := sbSeekBar.Width-12;
+  imgSubsGraph.Top := 0;
+  imgSubsGraph.Height := 5;
+
   Application.OnException := AppExeption; // Procedure to handle exceptions
+
+//  Application.OnShowHint := MiHintShowHint;
 
   // ---------------------------//
   //   Initialize SubtitleAPI   //
   // ---------------------------//
+
+  Vars := TVarLord.Create(ExtractFilePath(Application.ExeName) + '\' + ID_ININAME);
 
   Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + '\' + ID_ININAME);
   try
     GetLangs;
     GetPascalScripts;
     GetOCRScripts;
-    SetLanguage(Ini.ReadString('Language', 'Language', 'English'));
+    SetLanguage(Vars.UILanguage);
     ReadSetShortcuts;
 
     // ---------------------------------//
@@ -1595,7 +1412,9 @@ begin
     sbSeekBar.Position    := 0;
     dlgLoadFile.Filter    := SubtitleAPI.FillDialogFilter(AllSupportedFiles) + ID_SRF + '|' + ID_PLAINTEXT;
     AdjustFormOpened      := False;
-    SetLength(frmMain.SyncPointsArray, 0); 
+    InfoErrorsFormOpened  := False;
+    frmSaveAsExecuting    := False;
+    SetLength(frmMain.SyncPointsArray, 0);
     EnableCtrls(False);
     AddFPS(cmbInputFPS);
     AddFPS(cmbFPS);
@@ -1611,6 +1430,8 @@ begin
     tmeShow.Clear;
     tmeHide.Clear;
     tmeDuration.Clear;
+    mdtSubtitleCPS.Clear;
+    mdtTranslationCPS.Clear;
 
     // Undo and redo lists
     UndoList        := TList.Create;
@@ -1638,17 +1459,7 @@ begin
     AddRecentFiles;
     UpdateRFMenus;
 
-    // --------------------------------- //
-    //      Window position & size       //
-    // --------------------------------- //
-    Position := poDesigned;
-    Left     := Ini.ReadInteger('Main Window', 'Left', (Screen.Width div 2) - (frmMain.Width div 2));
-    Top      := Ini.ReadInteger('Main Window','Top', (Screen.Height div 2) - (frmMain.Height div 2));
-    Width    := Ini.ReadInteger('Main Window','Width', 724);
-    Height   := Ini.ReadInteger('Main Window','Height', 405);
-    if Ini.ReadBool('Main Window', 'Maximized', True) then
-      WindowState := wsMaximized else
-      WindowState := wsNormal;
+
 
     // --------------------------------- //
     //              General              //
@@ -1657,9 +1468,10 @@ begin
     // Read last folder
     dlgLoadFile.InitialDir := Ini.ReadString('General', 'Last folder', '');
 
-    if Ini.ReadBool('Settings','Always on top',False) then
-      SetWindowPos(frmMain.Handle, HWND_TOPMOST, frmMain.Left, frmMain.Top, frmMain.Width, frmMain.Height, SWP_NOMOVE + SWP_NOSIZE);
-      SetWindowPos(frmMain.Handle, HWND_NOTOPMOST, frmMain.Left, frmMain.Top, frmMain.Width, frmMain.Height, SWP_NOMOVE + SWP_NOSIZE);
+    if Ini.ReadBool('Settings','Always on top', False) then
+      SetWorkshopPos(HWND_TOPMOST) else
+      SetWorkshopPos(HWND_NOTOPMOST);
+
 
     case Ini.ReadInteger('General', 'Work with', 3) of
       1: rdoDuration.Checked := True;
@@ -1674,8 +1486,10 @@ begin
     cmbTransCharset.ItemIndex     := Ini.ReadInteger('General', 'Translated charset', 0);
     OrgCharset                    := StrCharsetToInt(cmbOrgCharset.Items[cmbOrgCharset.ItemIndex]);
     TransCharset                  := StrCharsetToInt(cmbTransCharset.Items[cmbTransCharset.ItemIndex]);
+//{$IFNDEF UNIOFF}
     mmoSubtitleText.Font.Charset  := OrgCharset;
     mmoTranslation.Font.Charset   := TransCharset;
+//{$ENDIF}
     if Ini.ReadBool('Settings', 'Show charsets in main form', True) then
     begin
       frmMain.cmbOCRScripts.Top := 288;
@@ -1703,15 +1517,6 @@ begin
     SubtitleAPI.NoInteractionWithTags := Ini.ReadBool('Settings', 'No interaction with tags', False);
     SubtitleAPI.WorkWithTags          := Ini.ReadBool('Settings', 'Work with style tags', True);
 
-    // ------------ //
-    //   Advanced   //
-    // ------------ //
-    TwoLinesIfLongerThan := Ini.ReadInteger('Advanced', 'Two lines if longer than', 40);
-    ToggleBreakPoint     := Ini.ReadBool('Advanced', 'Toggle breakpoint', False);
-    BreakLineAfter       := Ini.ReadInteger('Advanced', 'Break line after', 40);
-    MaxLineLength        := Ini.ReadInteger('Advanced', 'Maximum line length', 45);
-    ShiftTime            := Ini.ReadInteger('Advanced', 'Shift time', 100);
-
     // --------------------------------- //
     //            Save related           //
     // --------------------------------- //
@@ -1724,33 +1529,36 @@ begin
     // --------------------------------- //
     //           Video Preview           //
     // --------------------------------- //
-    //pnlVideoHeight  := Ini.ReadInteger('Video preview', 'Video panel height', (pnlParent.Height div 2) - (spSplitter.Height div 2));
+    //pnlVideo.Height := Ini.ReadInteger('Video preview', 'Video panel height', (pnlParent1.Height div 2) - (spSplitter.Height div 2));
     OnDoubleClick   := Ini.ReadInteger('Video preview', 'Double click in a subtitle', 1);
     OnShiftDblClick := Ini.ReadInteger('Video preview', 'Shift-double click in a subtitle', 2);
     SecsToJump1     := Ini.ReadInteger('Video preview', 'Seconds to jump 1', 1);
     SecsToJump2     := Ini.ReadInteger('Video preview', 'Seconds to jump 2', 1);
-    case Ini.ReadInteger('Video preview', 'Playback rate', 0) of
-      0: mnu100P.Checked := True;
-      1: mnu10P.Checked  := True;
-      2: mnu20P.Checked  := True;
-      3: mnu30P.Checked  := True;
-      4: mnu40P.Checked  := True;
-      5: mnu50P.Checked  := True;
-      6: mnu60P.Checked := True;
-      7: mnu70P.Checked := True;
-      8: mnu80P.Checked := True;
-      9: mnu90P.Checked := True;
-      10: mnu200P.Checked := True;
-      11: mnu300P.Checked := True;
-      12: mnu400P.Checked := True;
+    case TRateClass(Ini.ReadInteger('Video preview', 'Playback rate', Integer(rate100))) of
+      rate100: mnu100P.Checked := True;
+      rate10:  mnu10P.Checked  := True;
+      rate20:  mnu20P.Checked  := True;
+      rate30:  mnu30P.Checked  := True;
+      rate40:  mnu40P.Checked  := True;
+      rate50:  mnu50P.Checked  := True;
+      rate60:  mnu60P.Checked := True;
+      rate70:  mnu70P.Checked := True;
+      rate80:  mnu80P.Checked := True;
+      rate90:  mnu90P.Checked := True;
+      rate150: mnu150P.Checked := True;
+      rate200: mnu200P.Checked := True;
+      rate300: mnu300P.Checked := True;
+      rate400: mnu400P.Checked := True;
     end;
+    frmMain.DefAltPlayRate := TRateClass(Ini.ReadInteger('Video preview', 'Default altered playback rate', Integer(rate200)));
+
     RewFFTime := StrSecToMS(Ini.ReadString('Video preview', 'Rewind and forward', '0,500'));
-    frmMain.DefAltPlayRate := Ini.ReadInteger('Video preview', 'Default altered playback rate', 0) + 1;
     SetDefaultShortCut;
     ScrollList := Ini.ReadBool('Video preview', 'Scroll list', False);
     mnuDisplayOriginal.Checked := Ini.ReadBool('Video preview', 'Displaying original', True);
     mnuDisplayTranslation.Checked := not mnuDisplayOriginal.Checked;
     mnuShowSubtitles.Checked := Ini.ReadBool('Video preview', 'Show subtitles', True);
+    PlayOnLoad := Ini.ReadBool('Video preview', 'Play on load', True);
 
     // --------------------------------- //
     //      Video Preview subtitles      //
@@ -1758,11 +1566,12 @@ begin
     subSubtitle.Border      := Ini.ReadBool('Video preview subtitles','Draw border', True);
     subSubtitle.Shadow      := Ini.ReadBool('Video preview subtitles','Draw shadow', True);
     TransparentSubs         := Ini.ReadBool('Video preview subtitles','Transparent', True);
-    ForceUsingReg           := Ini.ReadBool('Video preview subtitles','Force using regions', False);
+    ForceUsingReg           := Ini.ReadBool('Video preview subtitles','Force using regions', True);
     subSubtitle.Font.Name   := Ini.ReadString('Video preview subtitles', 'Font name', 'Tahoma');
     subSubtitle.Font.Size   := Ini.ReadInteger('Video preview subtitles', 'Font size', 14);
     subSubtitle.TextColor   := Ini.ReadInteger('Video preview subtitles', 'Font color', clWhite);
     BackgroundColor         := Ini.ReadInteger('Video preview subtitles', 'Background color', clBtnFace);
+    subSubtitle.TransparentColor := Ini.ReadInteger('Video preview subtitles', 'Transparency color', RGB(5,5,5));
     subSubtitle.BorderWidth := Ini.ReadInteger('Video preview subtitles', 'Border width', 1);
     subSubtitle.ShadowWidth := Ini.ReadInteger('Video preview subtitles', 'Shadow width', 1);
     subSubtitle.Font.Style  := [];
@@ -1772,6 +1581,8 @@ begin
       subSubtitle.Font.Style := subSubtitle.Font.Style + [fsItalic];
     if Ini.ReadBool('Video preview subtitles', 'Underline', False) then
       subSubtitle.Font.Style := subSubtitle.Font.Style + [fsUnderline];
+    PreviewSubPosition := Ini.ReadInteger('Video preview subtitles', 'Position', 1);
+
 
     // -------------------------------- //
     //      Information and Errors      //
@@ -1803,82 +1614,18 @@ begin
     TooLongDuration      := Ini.ReadInteger('Information and Errors', 'Too long duration', 6000);
     TooShortDuration     := Ini.ReadInteger('Information and Errors', 'Too short duration', 700);
     TooLongLine          := Ini.ReadInteger('Information and Errors', 'Too long line', 45);
+    TooSmallCPS          := Ini.ReadFloat('Information and Errors', 'Too small CPS', 8.0);
+    TooBigCPS            := Ini.ReadFloat('Information and Errors', 'Too big CPS', 24.0);
 
     // ----------------------------- //
     //      Errors to check for      //
     // ----------------------------- //
-    ErrorsToCheck.eLinesWithoutLetters  := Ini.ReadBool('Errors to check for', 'Lines without letters',              True);
-    ErrorsToCheck.eEmptySubtitle        := Ini.ReadBool('Errors to check for', 'Empty subtitles',                    True);
-    ErrorsToCheck.eOverlapping          := Ini.ReadBool('Errors to check for', 'Overlapping subtitles',              True);
-    ErrorsToCheck.eBadValues            := Ini.ReadBool('Errors to check for', 'Bad values',                         True);
-    ErrorsToCheck.eTooLongDurations     := Ini.ReadBool('Errors to check for', 'Too long durations',                 True);
-    ErrorsToCheck.eTooShortDurations    := Ini.ReadBool('Errors to check for', 'Too short durations',                True);
-    ErrorsToCheck.eTooLongLines         := Ini.ReadBool('Errors to check for', 'Too long lines',                     True);
-    ErrorsToCheck.eOverTwoLines         := Ini.ReadBool('Errors to check for', 'Subtitles over two lines',           True);
-    ErrorsToCheck.eHearingImpaired      := Ini.ReadBool('Errors to check for', 'Hearing impaired subtitles',         True);
-    ErrorsToCheck.eTextBeforeColon      := Ini.ReadBool('Errors to check for', 'Text before colon (":")',            True);
-    ErrorsToCheck.eOnlyIfCapitalLetters := Ini.ReadBool('Errors to check for', 'Only if text is in capital letters', True);
-    ErrorsToCheck.eUnnecessaryDots      := Ini.ReadBool('Errors to check for', 'Unnecessary dots',                   True);
-    ErrorsToCheck.eProhibitedCharacter  := Ini.ReadBool('Errors to check for', 'Prohibited characters',              False);
-    ErrorsToCheck.eRepeatedCharacter    := Ini.ReadBool('Errors to check for', 'Repeated characters',                True);
-    ErrorsToCheck.eRepeatedSubtitle     := Ini.ReadBool('Errors to check for', 'Repeated subtitles',                 True);
-    ErrorsToCheck.eOCRErrors            := Ini.ReadBool('Errors to check for', 'OCR Errors',                         True);
-    ErrorsToCheck.eOpnDlgSubsOneLine    := Ini.ReadBool('Errors to check for', '"- " in subtitles with one line',    True);
-    ErrorsToCheck.eSpaceAfterCustChars  := Ini.ReadBool('Errors to check for', 'Space after custom characters',      True);
-    ErrorsToCheck.eSpaceBeforeCustChars := Ini.ReadBool('Errors to check for', 'Space before custom characters',     False);
-    ErrorsToCheck.eUnnecessarySpaces    := Ini.ReadBool('Errors to check for', 'Unnecessary spaces',                 True);
-    ErrorsToCheck.eWhatUnnecessarySpaces := [];
-    if Ini.ReadBool('Unnecessary spaces to check for', 'Enters and spaces at the beginning and end', True) then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [EntersAndSpacesBeginningEnd];
-    if Ini.ReadBool('Unnecessary spaces to check for', 'Spaces between enters (left and right)', True) then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [SpacesBetweenEnters];
-    if Ini.ReadBool('Unnecessary spaces to check for', 'Double spaces and enters', True) then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [DoubleSpacesAndEnters];
-    if Ini.ReadBool('Unnecessary spaces to check for', 'Spaces in front of punctuation marks', True) then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [SpacesFrontPunctuation];
-    if Ini.ReadBool('Unnecessary spaces to check for', 'Spaces after "¿" and "¡"', True) then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [SpacesAfterQuestionAndExclamation];
-    if Ini.ReadBool('Unnecessary spaces to check for', 'Spaces before "?" and  "!"', True) then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [SpacesBeforeQuestionAndExclamation];
-    if Ini.ReadBool('Unnecessary spaces to check for', 'Spaces between numbers', True) then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [SpacesBetweenNumbers];
-
+    ErrorsToCheck := TErrorsCheck.Create(IniRoot, 'Errors to check for', 'Unnecessary spaces to check for');
 
     // ----------------------- //
     //      Errors to fix      //
     // ----------------------- //
-    ErrorsToFix.eLinesWithoutLetters  := Ini.ReadBool('Errors to fix', 'Lines without letters',              True);
-    ErrorsToFix.eEmptySubtitle        := Ini.ReadBool('Errors to fix', 'Empty subtitles',                    True);
-    ErrorsToFix.eOverlapping          := Ini.ReadBool('Errors to fix', 'Overlapping subtitles',              True);
-    ErrorsToFix.eBadValues            := Ini.ReadBool('Errors to fix', 'Bad values',                         True);
-    ErrorsToFix.eOverTwoLines         := Ini.ReadBool('Errors to fix', 'Subtitles over two lines',           True);
-    ErrorsToFix.eHearingImpaired      := Ini.ReadBool('Errors to fix', 'Hearing impaired subtitles',         True);
-    ErrorsToFix.eTextBeforeColon      := Ini.ReadBool('Errors to fix', 'Text before colon (":")',            True);
-    ErrorsToFix.eOnlyIfCapitalLetters := Ini.ReadBool('Errors to fix', 'Only if text is in capital letters', True);
-    ErrorsToFix.eUnnecessaryDots      := Ini.ReadBool('Errors to fix', 'Unnecessary dots',                   True);
-    ErrorsToFix.eProhibitedCharacter  := Ini.ReadBool('Errors to fix', 'Prohibited characters',              False);
-    ErrorsToFix.eRepeatedCharacter    := Ini.ReadBool('Errors to fix', 'Repeated characters',                True);
-    ErrorsToFix.eRepeatedSubtitle     := Ini.ReadBool('Errors to fix', 'Repeated subtitles',                 True);
-    ErrorsToFix.eOCRErrors            := Ini.ReadBool('Errors to fix', 'OCR Errors',                         True);
-    ErrorsToFix.eOpnDlgSubsOneLine    := Ini.ReadBool('Errors to fix', '"-" in subtitles with one line',     False);
-    ErrorsToFix.eSpaceAfterCustChars  := Ini.ReadBool('Errors to fix', 'Space after custom characters',      True);
-    ErrorsToFix.eSpaceBeforeCustChars := Ini.ReadBool('Errors to fix', 'Space before custom characters',     False);
-    ErrorsToFix.eUnnecessarySpaces    := Ini.ReadBool('Errors to fix', 'Unnecessary spaces',                 True);
-    ErrorsToFix.eWhatUnnecessarySpaces := [];
-    if Ini.ReadBool('Unnecessary spaces to fix', 'Enters and spaces at the beginning and end', True) then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [EntersAndSpacesBeginningEnd];
-    if Ini.ReadBool('Unnecessary spaces to fix', 'Spaces between enters (left and right)', True) then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [SpacesBetweenEnters];
-    if Ini.ReadBool('Unnecessary spaces to fix', 'Double spaces and enters', True) then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [DoubleSpacesAndEnters];
-    if Ini.ReadBool('Unnecessary spaces to fix', 'Spaces in front of punctuation marks', True) then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [SpacesFrontPunctuation];
-    if Ini.ReadBool('Unnecessary spaces to fix', 'Spaces after "¿" and "¡"', True) then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [SpacesAfterQuestionAndExclamation];
-    if Ini.ReadBool('Unnecessary spaces to fix', 'Spaces before "?" and  "!"', True) then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [SpacesBeforeQuestionAndExclamation];
-    if Ini.ReadBool('Unnecessary spaces to fix', 'Spaces between numbers', True) then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [SpacesBetweenNumbers];
+    ErrorsToFix := TErrors.Create(IniRoot, 'Errors to fix', 'Unnecessary spaces to fix');
 
     // --------------------------------- //
     //             File Types            //
@@ -1939,6 +1686,8 @@ begin
     SetVideoPreviewMode(Ini.ReadBool('Interface', 'Video Preview Mode', False));
     SetTranslatorMode(Ini.ReadBool('Interface', 'Translator mode', False), False);
     EnableVPCtrls(False);
+
+    scrVolume.Position := Vars.Volume;
 
     // --------------------------------------//
     //    Command line parameters reading    //
@@ -2100,6 +1849,7 @@ begin
   end;
   SetTranslationCtrlsPositions;
   cmbOCRScripts.Visible := (mnuShowInMainForm.Checked) and (pnlControl.Height > (cmbOCRScripts.Height + cmbOCRScripts.Top + 3));
+  RepaintSubGraph;
 end;
 
 // -----------------------------------------------------------------------------
@@ -2129,6 +1879,7 @@ begin
         LoadSRF(dlgLoadFile.FileName) else
         LoadPlainText(dlgLoadFile.FileName);
     end;
+    HighlightTags(True);
   end;
 end;
 
@@ -2137,15 +1888,13 @@ end;
 procedure TfrmMain.FormDestroy(Sender: TObject);
 var
   Ini : TIniFile;
-  a   : Integer;
+  a   : TRateClass;
 begin
   SubtitleAPI.Free;
   SaveFPS(cmbInputFPS);
 
   Ini := TIniFile.Create(IniRoot);
   try
-    // Save current language...
-    Ini.WriteString('Language', 'Language', Copy(ExtractFileName(ActualLangFile), 0, Length(ExtractFileName(ActualLangFile))-4));
     // Save recent files...
     SaveRecentFiles;
     // Free recent files TStringList...
@@ -2189,36 +1938,28 @@ begin
     // --------------------------------- //
     //          WINDOW POSITION          //
     // --------------------------------- //
-    if WindowState = wsMaximized then
-    begin
-      Ini.WriteBool('Main Window', 'Maximized', True);
-    end else
-    begin
-      Ini.WriteInteger('Main Window', 'Left', Left);
-      Ini.WriteInteger('Main Window','Top', Top);
-      Ini.WriteInteger('Main Window','Width', Width);
-      Ini.WriteInteger('Main Window','Height', Height);
-      Ini.WriteBool('Main Window', 'Maximized', False);
-    end;
+    FreeAndNil(FormPos);
 
     // ----------------- //
     //   Video preview   //
     // ----------------- //
-    Ini.WriteInteger('Video preview', 'Video panel height', pnlVideo.Height);
-    if mnu10P.Checked then a := 1 else
-    if mnu20P.Checked then a := 2 else
-    if mnu30P.Checked then a := 3 else
-    if mnu40P.Checked then a := 4 else
-    if mnu50P.Checked then a := 5 else
-    if mnu60P.Checked then a := 6 else
-    if mnu70P.Checked then a := 7 else
-    if mnu80P.Checked then a := 8 else
-    if mnu90P.Checked then a := 9 else
-    if mnu200P.Checked then a := 10 else
-    if mnu300P.Checked then a := 11 else
-    if mnu400P.Checked then a := 12 else
-      a := 0;
-    Ini.WriteInteger('Video preview', 'Playback rate', a);
+    //Ini.WriteInteger('Video preview', 'Video panel height', pnlVideo.Height);
+    if mnu10P.Checked then a := rate10 else
+    if mnu20P.Checked then a := rate20 else
+    if mnu30P.Checked then a := rate30 else
+    if mnu40P.Checked then a := rate40 else
+    if mnu50P.Checked then a := rate50 else
+    if mnu60P.Checked then a := rate60 else
+    if mnu70P.Checked then a := rate70 else
+    if mnu80P.Checked then a := rate80 else
+    if mnu90P.Checked then a := rate90 else
+    if mnu150P.Checked then a := rate150 else
+    if mnu200P.Checked then a := rate200 else
+    if mnu300P.Checked then a := rate300 else
+    if mnu400P.Checked then a := rate400 else
+      a := rate100;
+    Ini.WriteInteger('Video preview', 'Playback rate', Integer(a));
+
     Ini.WriteBool('Video preview', 'Scroll list', ScrollList);
     Ini.WriteBool('Video preview', 'Displaying original', mnuDisplayOriginal.Checked);
     Ini.WriteBool('Video preview', 'Show subtitles', mnuShowSubtitles.Checked);
@@ -2238,6 +1979,9 @@ begin
   finally
     Ini.Free;
   end;
+
+  FreeAndNil(Vars);
+  FreeAndNil(ErrorsToCheck);
 end;
 
 // -----------------------------------------------------------------------------
@@ -2271,10 +2015,16 @@ begin
   mnuSelectAll.Enabled         := lstSubtitles.RootNodeCount > 0;
   // -------
   mnuTimings.Enabled           := lstSubtitles.RootNodeCount > 0;
-  mnuShiftPlusMS.Caption       := Format(ShiftMS, ['+' + IntToStr(ShiftTime)]);
-  mnuShiftLessMS.Caption       := Format(ShiftMS, ['-' + IntToStr(ShiftTime)]);  
+  mnuShiftPlusMS.Caption       := Format(ShiftMS, ['+' + IntToStr(Vars.ShiftTime)]);
+  mnuShiftLessMS.Caption       := Format(ShiftMS, ['-' + IntToStr(Vars.ShiftTime)]);
+  // -------
+  mnuShiftMoreMSShow.Caption   := Format(ShiftMSShow, ['+' + IntToStr(Vars.ShiftTime)]);
+  mnuShiftLessMSShow.Caption   := Format(ShiftMSShow, ['-' + IntToStr(Vars.ShiftTime)]);
+  mnuShiftMoreMSHide.Caption   := Format(ShiftMSHide, ['+' + IntToStr(Vars.ShiftTime)]);
+  mnuShiftLessMSHide.Caption   := Format(ShiftMSHide, ['-' + IntToStr(Vars.ShiftTime)]);
+  // -------
   mnuTexts.Enabled             := lstSubtitles.RootNodeCount > 0;
-  mnuDivideLines.Enabled       := (lstSubtitles.RootNodeCount > 0) and (lstSubtitles.SelectedCount = 1) and (Assigned(lstSubtitles.FocusedNode)) and ((Length(GetSubText(lstSubtitles.FocusedNode)) > BreakLineAfter) or (Pos(#13#10, GetSubText(lstSubtitles.FocusedNode)) > 0));
+  mnuDivideLines.Enabled       := (lstSubtitles.RootNodeCount > 0) and (lstSubtitles.SelectedCount = 1) and (Assigned(lstSubtitles.FocusedNode)) and ((Length(GetSubText(lstSubtitles.FocusedNode)) > Vars.BreakLineAfter) or (Pos(#13#10, GetSubText(lstSubtitles.FocusedNode)) > 0));
   mnuFastDivideLines.Enabled   := mnuDivideLines.Enabled;
   mnuSubtitles.Enabled         := lstSubtitles.RootNodeCount > 0;
   mnuEffects.Enabled           := GetSubText(frmMain.lstSubtitles.FocusedNode) <> '';
@@ -2326,16 +2076,16 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.lstSubtitlesFocusChanged(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; Column: TColumnIndex);
+procedure TfrmMain.lstSubtitlesFocusChanged(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex);
 begin
   RefreshTimes;
+  HighlightTags(True);
+  HighlightTags(False);
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.lstSubtitlesKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmMain.lstSubtitlesKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if Key = VK_DELETE then
     DeleteSelectedNodes;
@@ -2345,7 +2095,11 @@ end;
 
 procedure TfrmMain.mnuOpenMovieClick(Sender: TObject);
 begin
-  dlgLoadFile.Filter := AllSupportedFiles + '|*.asf;*.avi;*.mp4;*.mkv;*.divx;*.mp3;*.mpg;*.mpeg;*.m1v;*.ogm;*.ogg;*.qt;*.vob;*.wav;*.wmv|' + 'ASF (*.asf)|*.asf|AVI (*.avi)|*.avi|OGM (*.ogm)|*.ogm|OGG (*.ogg)|*.ogg|Matroska (*.mkv)|*.mkv|DivX (*.mp4; *.divx)|*.mp4; ' + '*.divx|MP3 (*.mp3)|*.mp3|MPEG (*.mpg; *.mpeg; *.m1v)|*.mpg; *.mpeg; *.m1v|QuickTime 2.0 (*.qt)|*.qt|VOB (*.vob)|*.vob|WAV (*.wav)|*.wmv|WMV (*.wmv)|*.wmv';
+  dlgLoadFile.Filter := AllSupportedFiles +
+                        '|*.asf;*.avi;*.avs;*.mp4;*.mkv;*.divx;*.mp3;*.mpg;*.mpeg;*.m1v;*.ogm;*.ogg;*.qt;*.vob;*.wav;*.wmv|' +
+                        'All files (*.*)|*.*|'+
+                        'ASF (*.asf)|*.asf|AVI (*.avi)|*.avi|Avisynth (*.avs)|*.avs|OGM (*.ogm)|*.ogm|OGG (*.ogg)|*.ogg|Matroska (*.mkv)|*.mkv|DivX (*.mp4; *.divx)|*.mp4; ' +
+                        '*.divx|MP3 (*.mp3)|*.mp3|MPEG (*.mpg; *.mpeg; *.m1v)|*.mpg; *.mpeg; *.m1v|QuickTime 2.0 (*.qt)|*.qt|VOB (*.vob)|*.vob|WAV (*.wav)|*.wmv|WMV (*.wmv)|*.wmv' ;
   if (dlgLoadFile.Execute) and (dlgLoadFile.FileName <> '') then
   begin
     if LoadMovie(dlgLoadFile.FileName) = False then
@@ -2354,8 +2108,11 @@ begin
       if mnuVideoPreviewMode.Checked = False then
         SetVideoPreviewMode(True);
     end;
+
+    SetCurrentVolume;
   end;
   dlgLoadFile.Filter := SubtitleAPI.FillDialogFilter(AllSupportedFiles) + ID_SRF + '|' + ID_PLAINTEXT;
+  RepaintSubGraph;
 end;
 
 // -----------------------------------------------------------------------------
@@ -2363,6 +2120,7 @@ end;
 procedure TfrmMain.mnuCloseMovieClick(Sender: TObject);
 begin
   FreeFile;
+  RepaintSubGraph;
 end;
 
 // -----------------------------------------------------------------------------
@@ -2401,9 +2159,12 @@ begin
           if subSubtitle.Text <> SubtitleText then
           begin
             subSubtitle.Hide;
+//{$IFNDEF UNIOFF}
             subSubtitle.Font.Charset := OrgCharset;
+//{$ENDIF}
             subSubtitle.Text := SubtitleText;
             UpdateSubtitlesPos;
+
             if ScrollList then
             begin
               UnSelectAll(lstSubtitles);
@@ -2414,13 +2175,13 @@ begin
             if mnuShowSubtitles.Checked then subSubtitle.Show;
           end;
           Break;
-        end 
+        end
         else if (CurrTime < Data.FinalTime) or (CurrTime > LastNodeData.FinalTime) then
         begin
           subSubtitle.Visible := False;
           subSubtitle.Text := '';
           Break;
-        end;  
+        end;
         Node := Node.NextSibling;
       end;
     end;
@@ -2444,7 +2205,7 @@ begin
       end;
     end;
 
-  end;  
+  end;
 end;
 
 // -----------------------------------------------------------------------------
@@ -2484,8 +2245,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.btnRewMouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TfrmMain.btnRewMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   SetVideoPos(GetCurrentPos - RewFFTime);
   Seeking := True;
@@ -2496,8 +2256,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.btnRewMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TfrmMain.btnRewMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   Seeking := False;
   tmrSeekRewFF.Enabled := False;
@@ -2506,8 +2265,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.btnForwardMouseDown(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TfrmMain.btnForwardMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   SetVideoPos(GetCurrentPos + RewFFTime);
   Seeking := True;
@@ -2518,8 +2276,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.btnForwardMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TfrmMain.btnForwardMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   Seeking := False;
   tmrSeekRewFF.Enabled := False;
@@ -2568,7 +2325,7 @@ begin
   mnuSubtitleToDisplay.Visible    := mnuTranslatorMode.Checked;
   mnuSaveMediaStartupFile.Enabled := (OrgFile <> '') and (MovieFile <> '');
   mnuSaveASX.Enabled              := (OrgFile <> '') and (MovieFile <> '');
-  mnuSaveSMIL.Enabled             := (OrgFile <> '') and (MovieFile <> '');   
+  mnuSaveSMIL.Enabled             := (OrgFile <> '') and (MovieFile <> '');
 end;
 
 // -----------------------------------------------------------------------------
@@ -2582,6 +2339,8 @@ begin
     SetWindowPos(frmMain.Handle, HWND_TOPMOST, frmMain.Left, frmMain.Top, frmMain.Width, frmMain.Height, SWP_NOMOVE + SWP_NOSIZE) else
     SetWindowPos(frmMain.Handle, HWND_NOTOPMOST, frmMain.Left, frmMain.Top, frmMain.Width, frmMain.Height, SWP_NOMOVE + SWP_NOSIZE);
   frmSettings.Free;
+
+  RepaintSubGraph;
 end;
 
 // -----------------------------------------------------------------------------
@@ -2645,12 +2404,10 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.tmeShowTimeChangeFromEditOnly(Sender: TObject; NewTime: Cardinal);
+procedure TfrmMain.SetUndoTimeChange(Start : Boolean);
 var
   UndoAction: PUndoAction;
 begin
-  if (lstSubtitles.SelectedCount = 1) then
-  begin
     ClearUndoList(RedoList);
     mnuRedo.Enabled := False;
     New(UndoAction);
@@ -2660,11 +2417,23 @@ begin
     UndoAction^.Node                           := lstSubtitles.FocusedNode;
     UndoAction^.LineNumber                     := UndoAction^.Node.Index;
     UndoAction^.BindToNext                     := False;
-    PTimeChange(UndoAction^.Buffer)^.StartTime := GetStartTime(lstSubtitles.FocusedNode);
-    PTimeChange(UndoAction^.Buffer)^.FinalTime := -1;
+    if Start = True then
+    begin
+      PTimeChange(UndoAction^.Buffer)^.StartTime := GetStartTime(lstSubtitles.FocusedNode);
+      PTimeChange(UndoAction^.Buffer)^.FinalTime := -1;
+    end else begin
+      PTimeChange(UndoAction^.Buffer)^.StartTime := -1;
+      PTimeChange(UndoAction^.Buffer)^.FinalTime := GetFinalTime(lstSubtitles.FocusedNode);
+    end;
     UndoList.Add(UndoAction);
     mnuUndo.Enabled := True;
+end;
 
+procedure TfrmMain.tmeShowTimeChangeFromEditOnly(Sender: TObject; NewTime: Cardinal);
+begin
+  if (lstSubtitles.SelectedCount = 1) then
+  begin
+    SetUndoTimeChange(True);
     SetStartTime(lstSubtitles.FocusedNode, NewTime);
     lstSubtitles.RepaintNode(lstSubtitles.FocusedNode);
     RefreshTimes;
@@ -2674,25 +2443,10 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.tmeHideTimeChangeFromEditOnly(Sender: TObject; NewTime: Cardinal);
-var
-  UndoAction: PUndoAction;
 begin
   if (lstSubtitles.SelectedCount = 1) then
   begin
-    ClearUndoList(RedoList);
-    mnuRedo.Enabled := False;
-    New(UndoAction);
-    UndoAction^.UndoActionType                 := uaTimeChange;
-    UndoAction^.BufferSize                     := SizeOf(TTimeChange);
-    UndoAction^.Buffer                         := AllocMem(UndoAction^.BufferSize);
-    UndoAction^.Node                           := lstSubtitles.FocusedNode;
-    UndoAction^.LineNumber                     := UndoAction^.Node.Index;
-    UndoAction^.BindToNext                     := False;
-    PTimeChange(UndoAction^.Buffer)^.StartTime := -1;
-    PTimeChange(UndoAction^.Buffer)^.FinalTime := GetFinalTime(lstSubtitles.FocusedNode);
-    UndoList.Add(UndoAction);
-    mnuUndo.Enabled := True;
-
+    SetUndoTimeChange(False);
     SetFinalTime(lstSubtitles.FocusedNode, NewTime);
     lstSubtitles.RepaintNode(lstSubtitles.FocusedNode);
     RefreshTimes;
@@ -2702,25 +2456,10 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.tmeDurationTimeChangeFromEditOnly(Sender: TObject; NewTime: Cardinal);
-var
-  UndoAction: PUndoAction;
 begin
   if (lstSubtitles.SelectedCount = 1) then
   begin
-    ClearUndoList(RedoList);
-    mnuRedo.Enabled := False;
-    New(UndoAction);
-    UndoAction^.UndoActionType                 := uaTimeChange;
-    UndoAction^.BufferSize                     := SizeOf(TTimeChange);
-    UndoAction^.Buffer                         := AllocMem(UndoAction^.BufferSize);
-    UndoAction^.Node                           := lstSubtitles.FocusedNode;
-    UndoAction^.LineNumber                     := UndoAction^.Node.Index;
-    UndoAction^.BindToNext                     := False;
-    PTimeChange(UndoAction^.Buffer)^.StartTime := -1;
-    PTimeChange(UndoAction^.Buffer)^.FinalTime := GetFinalTime(lstSubtitles.FocusedNode);
-    UndoList.Add(UndoAction);
-    mnuUndo.Enabled := True;
-    
+    SetUndoTimeChange(False);
     SetFinalTime(lstSubtitles.FocusedNode, Cardinal(GetStartTime(lstSubtitles.FocusedNode)) + NewTime);
     lstSubtitles.RepaintNode(lstSubtitles.FocusedNode);
     RefreshTimes;
@@ -2801,6 +2540,8 @@ procedure TfrmMain.mnuSaveFileClick(Sender: TObject);
 begin
   if OrgFile <> '' then
   begin
+    SubtitleAPI.SetOutputSettingsEncoding(StrCharsetToInt(cmbOrgCharset.Items[cmbOrgCharset.ItemIndex]));
+
     UpdateArray;
     if SaveFile(OrgFile, OrgFormat, GetFPS) then  // We save original file in it's original format
       OrgModified := False;
@@ -2827,6 +2568,10 @@ begin
 
     lblDuration.Left := pnlParent2.Left;
     tmeDuration.Left := pnlParent2.Left;
+
+    lblCPS.Left            := lblHide.Left;
+    mdtSubtitleCPS.Left    := lblHide.Left;
+    mdtTranslationCPS.Left := lblHide.Left + mdtSubtitleCPS.Width + 4;
   end else
   begin
     pnlControl.Visible := False;
@@ -2841,6 +2586,10 @@ begin
 
     lblDuration.Left := pnlControl.Left;
     tmeDuration.Left := pnlControl.Left;
+
+    lblCPS.Left            := lblHide.Left;
+    mdtSubtitleCPS.Left    := lblHide.Left;
+    mdtTranslationCPS.Left := lblHide.Left + mdtSubtitleCPS.Width + 4;
   end;
 
   if mnuShowTimeControls.Checked then
@@ -2855,7 +2604,7 @@ begin
     mmoTranslation.Height := mmoSubtitleText.Height;
   end else
     mmoSubtitleText.Width := (frmMain.ClientWidth - mmoSubtitleText.Left) - 8;
-    
+
   mmoSubtitleText.Top := tmeHide.Top;
   mmoTranslation.Top  := mmoSubtitleText.Top;
   // Label...
@@ -2876,7 +2625,12 @@ procedure TfrmMain.mnuLoadProjectClick(Sender: TObject);
 begin                 
   dlgLoadFile.Filter := ID_STPROJECT + ' (*' + ID_STPEXT + ')|*.stp';
   if (dlgLoadFile.Execute) and (dlgLoadFile.FileName <> '') then
+  begin
     LoadProject(dlgLoadFile.FileName);
+    SetCurrentVolume;
+    HighlightTags(True);
+    HighlightTags(False);
+  end;
   dlgLoadFile.Filter := SubtitleAPI.FillDialogFilter(AllSupportedFiles) + ID_SRF + '|' + ID_PLAINTEXT;
 end;
 
@@ -2884,16 +2638,20 @@ end;
 
 procedure TfrmMain.mnuLoadOriginalClick(Sender: TObject);
 begin
-  if (dlgLoadFile.Execute) and (dlgLoadFile.FileName <> '') then
+  if (dlgLoadFile.Execute) and (dlgLoadFile.FileName <> '') then begin
     LoadSubtitle(dlgLoadFile.FileName, GetInputFPS, dlgLoadFile.FilterIndex);
+    HighlightTags(True);
+  end;
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.mnuLoadTranslatedClick(Sender: TObject);
 begin
-  if (dlgLoadFile.Execute) and (dlgLoadFile.FileName <> '') then
+  if (dlgLoadFile.Execute) and (dlgLoadFile.FileName <> '') then begin
     LoadSubtitle(dlgLoadFile.FileName, GetInputFPS, dlgLoadFile.FilterIndex, True);
+    HighlightTags(False);
+  end;
 end;
 
 // -----------------------------------------------------------------------------
@@ -2902,9 +2660,11 @@ procedure TfrmMain.mnuSaveTranslatedClick(Sender: TObject);
 begin
   if TransFile <> '' then
   begin
+    SubtitleAPI.SetOutputSettingsEncoding(StrCharsetToInt(cmbTransCharset.Items[cmbTransCharset.ItemIndex]));
+
     UpdateArray(True);
     if SaveFile(TransFile, TransFormat, GetFPS) then // We save translated file in it's original format
-      TransModified := False;
+  		TransModified := False;
     SubtitleAPI.ClearSubtitles
   end else // If file doesn't exist then, save as...
     mnuSaveTranslatedAsClick(Sender);
@@ -2914,6 +2674,8 @@ end;
 
 procedure TfrmMain.mnuSaveFileAsClick(Sender: TObject);
 begin
+  SubtitleAPI.SetOutputSettingsEncoding(StrCharsetToInt(cmbOrgCharset.Items[cmbOrgCharset.ItemIndex]));
+
   frmSaveAs := TfrmSaveAs.Create(Application);
   frmSaveAs.SaveTranslation := False;
   frmSaveAs.ShowModal;
@@ -2924,6 +2686,8 @@ end;
 
 procedure TfrmMain.mnuSaveTranslatedAsClick(Sender: TObject);
 begin
+  SubtitleAPI.SetOutputSettingsEncoding(StrCharsetToInt(cmbTransCharset.Items[cmbTransCharset.ItemIndex]));
+
   frmSaveAs := TfrmSaveAs.Create(Application);
   frmSaveAs.SaveTranslation := True;
   frmSaveAs.ShowModal;
@@ -2935,7 +2699,7 @@ end;
 
 procedure TfrmMain.mmoSubtitleTextChange(Sender: TObject);
 var
-  OldString: String;
+  OldString: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 begin
   if (lstSubtitles.SelectedCount = 1) and (mmoSubtitleText.Text <> ReplaceString(GetSubText(lstSubtitles.FocusedNode), '|', #13#10)) and (GetFocus <> lstSubtitles.Handle) then
   begin
@@ -2944,15 +2708,17 @@ begin
     DetectChangesForUndo(OldString, GetSubText(lstSubtitles.FocusedNode), True);
     lstSubtitles.RepaintNode(lstSubtitles.FocusedNode);
     OrgModified := True;
+    HighlightTags(True);
   end;
   lblText.Caption := Format(TextOrTransLength, [LabelText, GetLengthForEachLine(mmoSubtitleText.Text)]);
+  RefreshTimes;
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.mmoTranslationChange(Sender: TObject);
 var
-  OldString: String;
+  OldString: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 begin
   if mnuTranslatorMode.Checked = True then
   begin
@@ -2962,17 +2728,19 @@ begin
       SetTranslation(lstSubtitles.FocusedNode, mmoTranslation.Text);
       DetectChangesForUndo(OldString, GetSubTranslation(lstSubtitles.FocusedNode), False);
       lstSubtitles.RepaintNode(lstSubtitles.FocusedNode);
-      TransModified := True;
+  	  TransModified := True;
+      HighlightTags(False);
     end;
   end;
   lblTranslation.Caption := Format(TextOrTransLength, [LabelTranslation, GetLengthForEachLine(mmoTranslation.Text)]);
+  RefreshTimes;
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.lstSubtitlesDblClick(Sender: TObject);
 begin
-  if (lstSubtitles.Enabled) and (mmoSubtitleText.Enabled) and (mmoTranslation.Enabled) then
+  if (lstSubtitles.Enabled) and (mmoSubtitleText.Enabled) {and (mmoTranslationX.Enabled) }then
   begin
     if (Player.Initialized) and (mnuVideoPreviewMode.Checked = True) then
     begin
@@ -3019,7 +2787,9 @@ procedure TfrmMain.mnuDisplayOriginalClick(Sender: TObject);
 begin
   mnuDisplayOriginal.Checked    := True;
   mnuDisplayTranslation.Checked := False;
+//{$IFNDEF UNIOFF}
   subSubtitle.Font.Charset      := OrgCharset;
+//{$ENDIF}
 end;
 
 // -----------------------------------------------------------------------------
@@ -3028,7 +2798,9 @@ procedure TfrmMain.mnuDisplayTranslationClick(Sender: TObject);
 begin
   mnuDisplayOriginal.Checked    := False;
   mnuDisplayTranslation.Checked := True;
+//{$IFNDEF UNIOFF}
   subSubtitle.Font.Charset      := TransCharset;
+//{$ENDIF}
 end;
 
 // -----------------------------------------------------------------------------
@@ -3039,7 +2811,7 @@ procedure TfrmMain.lstSubtitlesPaintText(Sender: TBaseVirtualTree;
 var
   Data     : PSubtitleItem;
   Color    : Integer;
-  ItemText : String;
+  ItemText : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 begin
   Data := Sender.GetNodeData(Node);
 
@@ -3064,11 +2836,11 @@ begin
     Color := GetSubColor(ItemText);
     if ApplyStyleInList then
     begin
-      if (Pos('<i>', ItemText) > 0) then
+      if (Pos(OPEN_I, ItemText) > 0) then
         TargetCanvas.Font.Style := TargetCanvas.Font.Style + [fsItalic];
-      if (Pos('<b>', ItemText) > 0) then
+      if (Pos(OPEN_B, ItemText) > 0) then
         TargetCanvas.Font.Style := TargetCanvas.Font.Style + [fsBold];
-      if (Pos('<u>', ItemText) > 0) then
+      if (Pos(OPEN_U, ItemText) > 0) then
         TargetCanvas.Font.Style := TargetCanvas.Font.Style + [fsUnderline];
       if (Color > -1) then
         TargetCanvas.Font.Color := Color;
@@ -3128,7 +2900,7 @@ begin
     SetStartTime(lstSubtitles.FocusedNode, GetCurrentPos);
     lstSubtitles.RepaintNode(lstSubtitles.FocusedNode);
     RefreshTimes;
-  end; 
+  end;
 end;
 
 // -----------------------------------------------------------------------------
@@ -3285,16 +3057,16 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.lstSubtitlesKeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmMain.lstSubtitlesKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   RefreshTimes;
+  HighlightTags(True);
+  HighlightTags(False);
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.lstSubtitlesMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TfrmMain.lstSubtitlesMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   RefreshTimes;
 end;
@@ -3320,7 +3092,7 @@ begin
   if GetFocus = mmoSubtitleText.Handle then
     mmoSubtitleText.CutToClipboard else
   if (mnuTranslatorMode.Checked) and (GetFocus = mmoTranslation.Handle) then
-    mmoTranslation.CutToClipboard;  
+    mmoTranslation.CutToClipboard;
 end;
 
 // -----------------------------------------------------------------------------
@@ -3587,11 +3359,12 @@ end;
 
 procedure TfrmMain.mnuCombineSubtitlesClick(Sender: TObject);
 var
+  Data       : PSubtitleItem;
   UpdNode    : PVirtualNode;
   Node       : PVirtualNode;
   FinalTime  : Integer;
-  NewText    : String;
-  NewTrans   : String;
+  NewText    : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  NewTrans   : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   UndoAction : PUndoAction;
 begin
   if lstSubtitles.SelectedCount > 1 then
@@ -3601,6 +3374,7 @@ begin
     NewText  := GetSubText(UpdNode);
     NewTrans := GetSubTranslation(UpdNode);
 
+{
     New(UndoAction);
     UndoAction^.UndoActionType := uaFullTextChange;
     UndoAction^.Node           := UpdNode;
@@ -3611,7 +3385,18 @@ begin
     PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := False;
     PFullTextChange(UndoAction^.Buffer)^.OldText := NewText;
     PFullTextChange(UndoAction^.Buffer)^.OldTrans := NewTrans;
-    UndoList.Add(UndoAction); 
+    UndoList.Add(UndoAction);
+}
+    Data := lstSubtitles.GetNodeData(UpdNode);
+    New(UndoAction);
+    UndoAction^.UndoActionType := uaFullSubChange;
+    UndoAction^.BufferSize     := SizeOf(TLineChange);
+    UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
+    UndoAction^.Node           := UpdNode;
+    UndoAction^.LineNumber     := UpdNode.Index;
+    UndoAction^.BindToNext     := True;
+    PLineChange(UndoAction^.Buffer).SubtitleItem := Data^;
+    UndoList.Add(UndoAction);
 
     Node := lstSubtitles.GetNextSelected(UpdNode);
     while Assigned(Node) do
@@ -3641,73 +3426,62 @@ end;
 
 procedure TfrmMain.mnuSmartLineAdjustClick(Sender: TObject);
 var
+  adj1, adj2, adj3 : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  a          : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  tmp        : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   Node       : PVirtualNode;
-  tmp        : String;
-  adj1       : String;
-  adj2       : String;
-  adj3       : String;
   UndoAction : PUndoAction;
+  IsOriginal : Boolean;
 begin
+  if mmoTranslation.Focused then
+    IsOriginal := False else
+    IsOriginal := True;
+
   ClearUndoList(RedoList);
   mnuRedo.Enabled := False;
 
   Node := lstSubtitles.GetFirstSelected;
   while Assigned(Node) do
   begin
-    tmp := GetSubText(Node);
-
     New(UndoAction);
     UndoAction^.UndoActionType := uaFullTextChange;
     UndoAction^.BufferSize     := SizeOf(TFullTextChange);
     UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
     UndoAction^.Node           := Node;
     UndoAction^.LineNumber     := Node.Index;
-    PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := True;
-    PFullTextChange(UndoAction^.Buffer)^.OldText := tmp;
+
+    if IsOriginal then
+    begin
+      tmp := GetSubText(Node);
+      PFullTextChange(UndoAction^.Buffer)^.OldText := tmp;
+      PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := True;
+    end else begin
+      tmp := GetSubTranslation(Node);
+      PFullTextChange(UndoAction^.Buffer)^.OldTrans := tmp;
+      PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := False;
+      PFullTextChange(UndoAction^.Buffer)^.OldText := GetSubText(Node);   // original must be stored too
+    end;
 
     adj1 := AdjustLines(tmp, True, True);
     adj2 := AdjustLines(tmp, True, False);
     adj3 := AdjustLines(tmp, False, False);
 
-    if ToggleBreakPoint then
+    if Vars.ToggleBreakPoint then
     begin
       if (tmp = adj2) or (tmp = adj3) then
       begin
       if tmp = adj2 then
-        SetText(Node, adj3) else
+        a := adj3 else
       if tmp = adj3 then
-        SetText(Node, adj2)
+        a := adj2
       end else
-        SetText(Node, adj1);
+        a := adj1;
     end else
-      SetText(Node, adj1);
+      a := adj1;
 
-    if mnuTranslatorMode.Checked then
-    begin
-      Tmp := GetSubTranslation(Node);
-      if Tmp <> UntranslatedSub then
-      begin
-        PFullTextChange(UndoAction^.Buffer)^.OldTrans := tmp;      
-        PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := False;
-
-        adj1 := AdjustLines(tmp, True, True);
-        adj2 := AdjustLines(tmp, True, False);
-        adj3 := AdjustLines(tmp, False, False);
-
-        if ToggleBreakPoint then
-        begin
-          if (tmp = adj2) or (tmp = adj3) then
-          begin
-          if tmp = adj2 then
-            SetTranslation(Node, adj3) else
-          if tmp = adj3 then
-            SetTranslation(Node, adj2)
-          end else
-            SetTranslation(Node, adj1);
-        end else
-          SetTranslation(Node, adj1);
-      end;
-    end;
+    if IsOriginal then
+      SetText(Node, a) else
+      SetTranslation(Node, a);
 
     if (GetSubText(Node) <> PFullTextChange(UndoAction^.Buffer)^.OldText) or
        ((mnuTranslatorMode.Checked) and (GetSubTranslation(Node) <> PFullTextChange(UndoAction^.Buffer)^.OldTrans)) then
@@ -3789,25 +3563,38 @@ var
   Ini                 : TIniFile;
   BreaksArray         : TOpenIntegerArray;
   AdjustAutomatically : Boolean;
-  Part1, Part2        : String;
+  Part1, Part2        : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   ExtraVar            : Integer;
   Data1, Data2        : PSubtitleItem;
   Time1               : Integer;
   DurPerChar          : Single;
   UndoAction          : PUndoAction;
+  IsOriginal          : Boolean;
+  tmp                 : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 begin
+  if mmoTranslation.Focused then
+    IsOriginal := False else
+    IsOriginal := True;
+
   ClearUndoList(RedoList);
   mnuRedo.Enabled := False;
 
+  // refactoring -> change to global variable
   Ini := TIniFile.Create(IniRoot);
   try
     AdjustAutomatically := Ini.ReadBool('Advanced', 'Smart line adjust automatically', True);
   finally
     Ini.Free;
   end;
-  Data1 := lstSubtitles.GetNodeData(lstSubtitles.FocusedNode);
-  ProcessStringToDivide(Data1.Text, BreaksArray, AdjustAutomatically, Part1, Part2, ExtraVar);
 
+  Data1 := lstSubtitles.GetNodeData(lstSubtitles.FocusedNode);
+
+  if IsOriginal then
+    ProcessStringToDivide(Data1.Text, BreaksArray, AdjustAutomatically, Part1, Part2, ExtraVar) else
+    ProcessStringToDivide(Data1.Translation, BreaksArray, AdjustAutomatically, Part1, Part2, ExtraVar);
+
+  if ((Part1<>'') and (Part2<>'')) then
+  begin
   lstSubtitles.InsertNode(lstSubtitles.FocusedNode, amInsertAfter);
   Data2 := lstSubtitles.GetNodeData(lstSubtitles.GetNextSibling(lstSubtitles.FocusedNode));
 
@@ -3818,8 +3605,14 @@ begin
   UndoAction^.BindToNext     := True;
   UndoAction^.BufferSize     := SizeOf(TFullTextChange);
   UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
-  PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := True;
   PFullTextChange(UndoAction^.Buffer)^.OldText := Data1.Text;
+  if IsOriginal then
+    PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := True
+  else
+  begin
+    PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := False;
+    PFullTextChange(UndoAction^.Buffer)^.OldTrans := Data1.Translation;
+  end;
   UndoList.Add(UndoAction);
 
   New(UndoAction);
@@ -3840,26 +3633,44 @@ begin
   UndoAction^.BindToNext     := False;
   UndoAction^.Buffer         := nil;
   UndoAction^.BufferSize     := 0;
-  UndoList.Add(UndoAction);  
+  UndoList.Add(UndoAction);
 
   TrimParts(Part1, Part2);
 
-  if Length(Data1.Text) <> 0 then
-    DurPerChar := (Data1.FinalTime - Data1.InitialTime) / Length(Data1.Text) else // Milliseconds
+  if IsOriginal then
+    tmp := RemoveSWTags(Data1.Text, True, True, True, True) else
+    tmp := RemoveSWTags(Data1.Translation, True, True, True, True);
+
+  if Length(tmp) <> 0 then
+    DurPerChar := (Data1.FinalTime - Data1.InitialTime) / Length(tmp) else // Milliseconds
     DurPerChar := 0;
   Time1 := Round(DurPerChar * Length(Part1));
 
-  Data1.Text      := Part1;
+  if IsOriginal then
+    Data1.Text        := Part1 else
+    Data1.Translation := Part1;
+
   ExtraVar        := Data1.FinalTime;
   Data1.FinalTime := Time1 + Data1.InitialTime;
 
-  Data2.Text        := Part2;
-  Data2.InitialTime := Data1.FinalTime + 1;
+  if IsOriginal then
+  begin
+    Data2.Text        := Part2;
+    Data2.Translation := UntranslatedSub;
+  end else
+  begin
+//    Data2.Text        := UntranslatedSub;
+    Data2.Translation := Part2;
+  end;
+
+  Data2.InitialTime := Data1.FinalTime + Vars.GapBetweenSubs;
   Data2.FinalTime   := ExtraVar;
 
   lstSubtitles.Selected[lstSubtitles.FocusedNode] := False;
   lstSubtitles.FocusedNode := lstSubtitles.FocusedNode.NextSibling;
   lstSubtitles.Selected[lstSubtitles.FocusedNode] := True;  
+
+  end;
 
   mnuUndo.Enabled := True;
   RefreshTimes;
@@ -3869,19 +3680,13 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.mnuSetMaxLineLengthClick(Sender: TObject);
-  function BreakInLines(Text: String; MaximumLineLength: Integer): String;
+  function BreakInLines(Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; MaximumLineLength: Integer): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   var
     i: Integer;
-    // Tags
-    Bold        : Boolean;
-    Italic      : Boolean;
-    Underline   : Boolean;
-    Color       : Integer;
+    StyleTag : TStyleTag;
   begin
-    Bold      := Pos('<b>', Text) > 0;
-    Italic    := Pos('<i>', Text) > 0;
-    Underline := Pos('<u>', Text) > 0;
-    Color     := GetSubColor(Text);
+    StyleTag := StoreTags(Text);
+
     // Remove tags
     Text := RemoveSWTags(Text, True, True, True, True);
     Text := WrapText(ReplaceEnters(Text, ' '), MaximumLineLength);
@@ -3895,22 +3700,17 @@ procedure TfrmMain.mnuSetMaxLineLengthClick(Sender: TObject);
 
     if SubtitleAPI.NoInteractionWithTags = False then
     begin
-      // Restore tags
-      if Underline = True then Text := '<u>' + Text;
-      if Bold      = True then Text := '<b>' + Text;
-      if Italic    = True then Text := '<i>' + Text;
-      if Color > -1 then
-        Text := SetColorTag(Text, Color);
+      Text := RestoreSWTags(Text, StyleTag);
     end;
 
     Result := Text;
   end;
 var
   Node       : PVirtualNode;
-  OldText    : String;
-  NewText    : String;
-  OldTrans   : String;
-  NewTrans   : String;
+  OldText    : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  NewText    : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  OldTrans   : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  NewTrans   : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   UndoAction : PUndoAction;
 begin
   Node := lstSubtitles.GetFirstSelected;
@@ -3925,7 +3725,7 @@ begin
     PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := True;
 
     OldText := GetSubText(Node);
-    NewText := BreakInLines(OldText, MaxLineLength);
+    NewText := BreakInLines(OldText, Vars.MaxLineLength);
 
     PFullTextChange(UndoAction^.Buffer)^.OldText := OldText;
 
@@ -3933,7 +3733,7 @@ begin
     if mnuTranslatorMode.Checked then
     begin
       OldTrans := GetSubTranslation(Node);
-      NewTrans := BreakInLines(OldTrans, MaxLineLength);
+      NewTrans := BreakInLines(OldTrans, Vars.MaxLineLength);
 
       PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := True;
       PFullTextChange(UndoAction^.Buffer)^.OldTrans := OldTrans;
@@ -3956,6 +3756,7 @@ end;
 
 procedure TfrmMain.cmbOrgCharsetSelect(Sender: TObject);
 begin
+//{$IFNDEF UNIOFF}
   if cmbOrgCharset.ItemIndex <> -1 then
   begin
     OrgCharset := StrCharsetToInt(cmbOrgCharset.Items[cmbOrgCharset.ItemIndex]);
@@ -3964,12 +3765,14 @@ begin
     if (Player.Initialized) and (mnuDisplayOriginal.Checked) then
       subSubtitle.Font.Charset := OrgCharset;
   end;
+//{$ENDIF}
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.cmbTransCharsetSelect(Sender: TObject);
 begin
+//{$IFNDEF UNIOFF}
   if cmbTransCharset.ItemIndex <> -1 then
   begin
     TransCharset := StrCharsetToInt(cmbTransCharset.Items[cmbTransCharset.ItemIndex]);
@@ -3978,6 +3781,7 @@ begin
     if (Player.Initialized) and (mnuDisplayTranslation.Checked) then
       subSubtitle.Font.Charset := TransCharset;
   end;
+//{$ENDIF}
 end;
 
 // -----------------------------------------------------------------------------
@@ -3987,6 +3791,7 @@ begin
   if CloseSub then
   begin
     SubtitleAPI.CreateNewSubtitle;
+    OldInputFPS := GetInputFPS;
     EnableCtrls(True);
     InsertNode;
     RefreshTimes;
@@ -4156,30 +3961,14 @@ end;
 procedure TfrmMain.mnuGoToLineNumberClick(Sender: TObject);
 var
   S    : String;
-  Line : Integer;
-  Node : PVirtualNode;
-  RootNodeCount: Integer;
 begin
   S := '';
   if QueryInput(GoToLineNum, EnterLineNum, S, frmMain) = mrOk then
   begin
     if (IsInteger(S) = False) or (Length(S) > 8) then
-      MsgBox(ErrorMsg[06], BTN_OK, '', '', MB_ICONERROR, frmMain) else
-    begin
-      Line := StrToInt(S) - 1;
-      RootNodeCount := lstSubtitles.RootNodeCount;
-
-      if Line < 0 then
-        Line := 0;
-      if Line > RootNodeCount then
-        Line := RootNodeCount-1;
-
-      Node := GetNodeWithIndex(lstSubtitles, Line);
-      UnSelectAll(lstSubtitles);
-      lstSubtitles.ScrollIntoView(Node, True);
-      lstSubtitles.Selected[Node] := True;
-      lstSubtitles.FocusedNode    := Node;
-    end;
+      MsgBox(ErrorMsg[06], BTN_OK, '', '', MB_ICONERROR, frmMain)
+    else
+      GoToLineNumber(StrToInt(S));
   end;
 end;
 
@@ -4224,7 +4013,7 @@ begin
     PTimeChange(UndoAction^.Buffer)^.FinalTime := FinalTime;
 
     if Node <> lstSubtitles.GetLast then
-      SetFinalTime(Node, GetStartTime(Node.NextSibling)-1);
+      SetFinalTime(Node, GetStartTime(Node.NextSibling)-Vars.GapBetweenSubs);
 
     if FinalTime <> GetFinalTime(Node) then
     begin
@@ -4271,9 +4060,13 @@ end;
 
 procedure TfrmMain.mnuInformationAndErrorsClick(Sender: TObject);
 begin
-  frmInfoErrors := TfrmInfoErrors.Create(Application);
-  frmInfoErrors.ShowModal;
-  frmInfoErrors.Free;
+  if InfoErrorsFormOpened = False then
+  begin
+    frmInfoErrors := TfrmInfoErrors.Create(Application);
+    frmInfoErrors.Show;
+    AdjustFormOpened := True;
+  end else
+    frmInfoErrors.BringToFront;
 end;
 
 // -----------------------------------------------------------------------------
@@ -4304,16 +4097,30 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.mnuItalicClick(Sender: TObject);
+procedure TfrmMain.ProcessTag(Tag : TTagClass; WholeSubtitle: Boolean; Color: TColor = clBlack);
+  function SetTag(Tag: TTagClass; Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; Color: TColor): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  begin
+    Result := Text;
+    case Tag of
+      tagBold:      if Pos(OPEN_B, Text) = 0 then AddBold(Result);
+      tagItalic:    if Pos(OPEN_I, Text) = 0 then AddItalic(Result);
+      tagUnderline: if Pos(OPEN_U, Text) = 0 then AddUnderline(Result);
+      tagBoldRemove:      Result := RemoveSWTags(Result, True  {B}, False {I}, False {U}, False {C}, True);
+      tagItalicRemove:    Result := RemoveSWTags(Result, False {B}, True  {I}, False {U}, False {C}, True);
+      tagUnderlineRemove: Result := RemoveSWTags(Result, False {B}, False {I}, True  {U}, False {C}, True);
+      tagColor:       Result := SetColorTag(Result, Color);
+      tagColorRemove: Result := RemoveSWTags(Result, False {B}, False {I}, False {U}, True {C}, True);
+    end;
+  end;
 var
-  Text         : String;
+  Text         : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   Node         : PVirtualNode;
   UndoAction   : PUndoAction;
   OriginalOnly : Boolean; // True for original, false for both (translation and original)
 begin
   ClearUndoList(RedoList);
   mnuRedo.Enabled := False;
-  
+
   Node := lstSubtitles.GetFirstSelected;
   while Assigned(Node) do
   begin
@@ -4327,14 +4134,7 @@ begin
 
     Text := GetSubText(Node);
     PFullTextChange(UndoAction^.Buffer)^.OldText := Text;
-
-    if mnuItalic.Checked = False then
-    begin
-      if Pos('<i>', Text) = 0 then
-        Text := '<i>' + Text;
-    end else
-      Text := RemoveSWTags(Text, False, True, False, False, True);
-    SetText(Node, Text);
+    SetText(Node, SetTag(Tag, Text, Color));
 
     if mnuTranslatorMode.Checked then
     begin
@@ -4342,14 +4142,7 @@ begin
 
       Text := GetSubTranslation(Node);
       PFullTextChange(UndoAction^.Buffer)^.OldTrans := Text;
-            
-      if mnuItalic.Checked = False then
-      begin
-        if Pos('<i>', Text) = 0 then
-          Text := '<i>' + Text;
-      end else
-        Text := RemoveSWTags(Text, False, True, False, False, True);
-      SetTranslation(Node, Text);
+      SetTranslation(Node, SetTag(Tag, Text, Color));
     end else
       OriginalOnly := True;
 
@@ -4361,289 +4154,179 @@ begin
 
     UndoList.Add(UndoAction);
   end;
-  
+
   mnuUndo.Enabled := True;
   lstSubtitles.Refresh;
   RefreshTimes;
+
+  HighlightTags(True);
+  HighLightTags(False);
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.mnuBoldClick(Sender: TObject);
-var
-  Text         : String;
-  Node         : PVirtualNode;
-  UndoAction   : PUndoAction;
-  OriginalOnly : Boolean; // True for original, false for both (translation and original)
 begin
-  ClearUndoList(RedoList);
-  mnuRedo.Enabled := False;
-
-  Node := lstSubtitles.GetFirstSelected;
-  while Assigned(Node) do
-  begin
-    New(UndoAction);
-    UndoAction^.UndoActionType := uaFullTextChange;
-    UndoAction^.BufferSize     := SizeOf(TFullTextChange);
-    UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
-    UndoAction^.Node           := Node;
-    UndoAction^.LineNumber     := UndoAction^.Node.Index;
-    UndoAction^.BindToNext     := lstSubtitles.SelectedCount > 1;
-    
-    Text := GetSubText(Node);
-    PFullTextChange(UndoAction^.Buffer)^.OldText := Text;
-
+  if mmoSubtitleText.Focused or mmoTranslation.Focused then
+    SetPartialTag(OPEN_B, CLOSE_B) else
     if mnuBold.Checked = False then
-    begin
-      if Pos('<b>', Text) = 0 then
-        Text := '<b>' + Text;
-    end else
-      Text := RemoveSWTags(Text, False, True, False, False, True);
-    SetText(Node, Text);
+      ProcessTag(tagBold, True) else
+      ProcessTag(tagBoldRemove, True);
+end;
 
-    if mnuTranslatorMode.Checked then
-    begin
-      OriginalOnly := False;
-      Text := GetSubTranslation(Node);
-      PFullTextChange(UndoAction^.Buffer)^.OldTrans := Text;
-      if mnuBold.Checked = False then
-      begin
-        if Pos('<b>', Text) = 0 then
-          Text := '<b>' + Text;
-      end else
-        Text := RemoveSWTags(Text, False, True, False, False, True);
-      SetTranslation(Node, Text);
-    end else
-      OriginalOnly := True;
+// -----------------------------------------------------------------------------
 
-    PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := OriginalOnly;
-
-    Node := lstSubtitles.GetNextSelected(Node);
-
-    if Assigned(Node) = False then UndoAction^.BindToNext := False;
-
-    UndoList.Add(UndoAction);
-  end;
-  mnuUndo.Enabled := True;
-  lstSubtitles.Refresh;
-  RefreshTimes;
+procedure TfrmMain.mnuItalicClick(Sender: TObject);
+begin
+  if mmoSubtitleText.Focused or mmoTranslation.Focused then
+    SetPartialTag(OPEN_I, CLOSE_I) else
+    if mnuItalic.Checked = False then
+      ProcessTag(tagItalic, True) else
+      ProcessTag(tagItalicRemove, True);
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.mnuUnderlineClick(Sender: TObject);
-var
-  Text         : String;
-  Node         : PVirtualNode;
-  UndoAction   : PUndoAction;
-  OriginalOnly : Boolean; // True for original, false for both (translation and original)
 begin
-  ClearUndoList(RedoList);
-  mnuRedo.Enabled := False;
-
-  Node := lstSubtitles.GetFirstSelected;
-  while Assigned(Node) do
-  begin
-    New(UndoAction);
-    UndoAction^.UndoActionType := uaFullTextChange;
-    UndoAction^.BufferSize     := SizeOf(TFullTextChange);
-    UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
-    UndoAction^.Node           := Node;
-    UndoAction^.LineNumber     := UndoAction^.Node.Index;
-    UndoAction^.BindToNext     := lstSubtitles.SelectedCount > 1;
-    
-    Text := GetSubText(Node);
-    PFullTextChange(UndoAction^.Buffer)^.OldText := Text;
-
+  if mmoSubtitleText.Focused or mmoTranslation.Focused then
+    SetPartialTag(OPEN_U, CLOSE_U) else
     if mnuUnderline.Checked = False then
-    begin
-      if Pos('<u>', Text) = 0 then
-        Text := '<u>' + Text;
-    end else
-      Text := RemoveSWTags(Text, False, True, False, False, True);
-    SetText(Node, Text);
-
-    if mnuTranslatorMode.Checked then
-    begin
-      OriginalOnly := False;
-      Text := GetSubTranslation(Node);
-      PFullTextChange(UndoAction^.Buffer)^.OldTrans := Text;
-      if mnuUnderline.Checked = False then
-      begin
-        if Pos('<u>', Text) = 0 then
-          Text := '<u>' + Text;
-      end else
-        Text := RemoveSWTags(Text, False, True, False, False, True);
-      SetTranslation(Node, Text);
-    end else
-      OriginalOnly := True;
-
-    PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := OriginalOnly;
-
-    Node := lstSubtitles.GetNextSelected(Node);
-
-    if Assigned(Node) = False then UndoAction^.BindToNext := False;
-
-    UndoList.Add(UndoAction);
-  end;
-
-  mnuUndo.Enabled := True;
-  lstSubtitles.Refresh;
-  RefreshTimes;
+      ProcessTag(tagUnderline, True) else
+      ProcessTag(tagUnderlineRemove, True);
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.mnuSetColorClick(Sender: TObject);
-var
-  Node         : PVirtualNode;
-  Text         : String;
-  UndoAction   : PUndoAction;
-  OriginalOnly : Boolean; // True for original, false for both (translation and original)
 begin
   if (dlgColor.Execute) then
-  begin
-    ClearUndoList(RedoList);
-    mnuRedo.Enabled := False;
-
-    Node := lstSubtitles.GetFirstSelected;
-    while Assigned(Node) do
-    begin
-      New(UndoAction);
-      UndoAction^.UndoActionType := uaFullTextChange;
-      UndoAction^.BufferSize     := SizeOf(TFullTextChange);
-      UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
-      UndoAction^.Node           := Node;
-      UndoAction^.LineNumber     := UndoAction^.Node.Index;
-      UndoAction^.BindToNext     := lstSubtitles.SelectedCount > 1;
-
-      Text := GetSubText(Node);
-      PFullTextChange(UndoAction^.Buffer)^.OldText := Text;
-
-      SetText(Node, SetColorTag(Text, dlgColor.Color));
-      if mnuTranslatorMode.Checked then
-      begin
-        OriginalOnly := False;
-        Text := GetSubTranslation(Node);
-        PFullTextChange(UndoAction^.Buffer)^.OldTrans := Text;
-        SetTranslation(Node, SetColorTag(Text, dlgColor.Color));
-      end else
-        OriginalOnly := True;
-
-      PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := OriginalOnly;
-
-      Node := lstSubtitles.GetNextSelected(Node);
-
-      if Assigned(Node) = False then UndoAction^.BindToNext := False;
-
-      UndoList.Add(UndoAction);
-    end;
-    
-    mnuUndo.Enabled := True;
-    lstSubtitles.Refresh;
-    RefreshTimes;
-  end;
+    if mmoSubtitleText.Focused or mmoTranslation.Focused then
+      SetPartialTag(OPEN_B, CLOSE_B) else
+      ProcessTag(tagColor, True, dlgColor.Color);
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.mnuRemoveColorTagsClick(Sender: TObject);
-var
-  Node         : PVirtualNode;
-  Text         : String;
-  UndoAction   : PUndoAction;
-  OriginalOnly : Boolean; // True for original, false for both (translation and original)
 begin
-  ClearUndoList(RedoList);
-  mnuRedo.Enabled := False;
-  
-  Node := lstSubtitles.GetFirstSelected;
-  while Assigned(Node) do
-  begin
-    New(UndoAction);
-    UndoAction^.UndoActionType := uaFullTextChange;
-    UndoAction^.BufferSize     := SizeOf(TFullTextChange);
-    UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
-    UndoAction^.Node           := Node;
-    UndoAction^.LineNumber     := UndoAction^.Node.Index;
-    UndoAction^.BindToNext     := lstSubtitles.SelectedCount > 1;
-
-    Text := GetSubText(Node);
-    PFullTextChange(UndoAction^.Buffer)^.OldText := Text;
-
-    SetText(Node, RemoveSWTags(Text, False, False, False, True));
-    if mnuTranslatorMode.Checked then
-    begin
-      OriginalOnly := False;
-      Text := GetSubTranslation(Node);
-      PFullTextChange(UndoAction^.Buffer)^.OldTrans := Text;
-      SetTranslation(Node, RemoveSWTags(Text, False, False, False, True, True));
-    end else
-      OriginalOnly := True;
-
-    PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := OriginalOnly;
-
-    Node := lstSubtitles.GetNextSelected(Node);
-
-    if Assigned(Node) = False then UndoAction^.BindToNext := False;
-
-    UndoList.Add(UndoAction);
-  end;
-  
-  mnuUndo.Enabled := True;
-  lstSubtitles.Refresh;
-  RefreshTimes;
+  ProcessTag(tagColorRemove, True);
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.mnuStylePopupPopup(Sender: TObject);
 begin
-  mnuBold.Checked      := Pos('<b>', GetSubText(lstSubtitles.FocusedNode)) > 0;
-  mnuItalic.Checked    := Pos('<i>', GetSubText(lstSubtitles.FocusedNode)) > 0;
-  mnuUnderline.Checked := Pos('<u>', GetSubText(lstSubtitles.FocusedNode)) > 0;
+  mnuBold.Checked      := Pos(OPEN_B, GetSubText(lstSubtitles.FocusedNode)) > 0;
+  mnuItalic.Checked    := Pos(OPEN_I, GetSubText(lstSubtitles.FocusedNode)) > 0;
+  mnuUnderline.Checked := Pos(OPEN_U, GetSubText(lstSubtitles.FocusedNode)) > 0;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.SetPartialTag(const OTag, CTag: String);
+var
+  re : TRichEdit;
+begin
+  re := nil;
+
+  if mmoSubtitleText.Focused then     re := mmoSubtitleText
+  else if mmoTranslation.Focused then re := mmoTranslation;
+
+  if re <> nil then begin
+    with re do begin
+      if SelLength = 0 then
+        Text := OTag + Text + CTag
+      else
+        Text := copy(Text, 1, SelStart) +
+                OTag +
+                copy(Text, SelStart+1, SelLength) +
+                CTag +
+                copy(Text, SelStart+SelLength+1, Length(Text)-(SelStart+SelLength));
+    end;
+  end;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.mnuSetTagBoldClick(Sender: TObject);
+begin
+  SetPartialTag(OPEN_B, CLOSE_B);
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.mnuSetTagItalicClick(Sender: TObject);
+begin
+  SetPartialTag(OPEN_I, CLOSE_I);
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.mnuSetTagUnderlineClick(Sender: TObject);
+begin
+  SetPartialTag(OPEN_U, CLOSE_U);
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.mnuSetTagColorClick(Sender: TObject);
+begin
+  if (dlgColor.Execute) then
+    SetPartialTag(GetColorOpen(dlgColor.Color), CLOSE_C);
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.tmrSaveWorkTimer(Sender: TObject);
 begin
-  if lstSubtitles.RootNodeCount > 0 then
+  if (lstSubtitles.RootNodeCount > 0) and (frmSaveAsExecuting = False) then
   begin
     // ------------------ //
     //    Save original   //
     // ------------------ //
-    if OrgFile <> '' then
+    if OrgModified then
     begin
-      UpdateArray;
-      if SaveAsBackup = False then
+      SubtitleAPI.SetOutputSettingsEncoding(StrCharsetToInt(cmbOrgCharset.Items[cmbOrgCharset.ItemIndex]));
+
+      if (OrgFile <> '') then
       begin
-        if SaveFile(OrgFile, OrgFormat, GetFPS) then // We save original file in it's original format
-          OrgModified := False;
+        UpdateArray;
+        if SaveAsBackup = False then
+        begin
+          if SaveFile(OrgFile, OrgFormat, GetFPS) then // We save original file in it's original format
+            OrgModified := False;
+        end else
+          SaveFile(OrgFile + '.bak', OrgFormat, GetFPS);
+        SubtitleAPI.ClearSubtitles;
       end else
-        SaveFile(OrgFile + '.bak', OrgFormat, GetFPS);
-      SubtitleAPI.ClearSubtitles;
-    end else
-      mnuSaveFileAsClick(Sender);
+        mnuSaveFileAsClick(Sender);
+    end;
 
     // -------------------- //
     //    Save translated   //
     // -------------------- //
-    if (mnuTranslatorMode.Checked) then
+    if TransModified then
     begin
-      if (TransFile <> '') then
+      SubtitleAPI.SetOutputSettingsEncoding(StrCharsetToInt(cmbTransCharset.Items[cmbTransCharset.ItemIndex]));
+
+      if (mnuTranslatorMode.Checked) then
       begin
-        if SaveAsBackup = False then
+        if (TransFile <> '') and (TransModified) then
         begin
-          UpdateArray(True);
-          if SaveFile(TransFile, TransFormat, GetFPS) then // We save translated file in it's original format
-            TransModified := False;
+          if SaveAsBackup = False then
+          begin
+            UpdateArray(True);
+            if SaveFile(TransFile, TransFormat, GetFPS) then // We save translated file in it's original format
+              TransModified := False;
+          end else
+            SaveFile(TransFile + '.bak', TransFormat, GetFPS);
+          SubtitleAPI.ClearSubtitles;
         end else
-          SaveFile(TransFile + '.bak', TransFormat, GetFPS);
-        SubtitleAPI.ClearSubtitles;
-      end else
-        mnuSaveTranslatedAsClick(Sender);
+          mnuSaveTranslatedAsClick(Sender);
+      end;
     end;
+    
   end;
 end;
 
@@ -4807,8 +4490,8 @@ begin
   PFPSChange(UndoAction^.Buffer)^.InputOrFPS := False;
   PFPSChange(UndoAction^.Buffer)^.OldValue   := OldFPS;
   UndoList.Add(UndoAction);
-  mnuUndo.Enabled := True;
-
+  mnuUndo.Enabled := True;  
+  
   OldFPS          := GetFPS;
   tmeShow.FPS     := OldFPS;
   tmeHide.FPS     := OldFPS;
@@ -4816,78 +4499,6 @@ begin
   lstSubtitles.Refresh;
   RefreshTimes;
 end;
-
-// -----------------------------------------------------------------------------
-
-  // removed by BDZL
-{
-  procedure TfrmMain.lstSubtitlesGetHint(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
-  var CellText: WideString);
-
-  function CountUnTranslated: Integer;
-  var
-    Node  : PVirtualNode;
-    Text  : String;
-    Trans : String;
-  begin
-    Result := 0;
-    Node := lstSubtitles.GetFirst;
-    while Assigned(Node) do
-    begin
-      Text  := GetSubText(Node);
-      Trans := GetSubTranslation(Node);
-      if (Text = Trans) or (Trans = '') or (Trans = UntranslatedSub) then
-        Inc(Result);
-      Node := Node.NextSibling;
-    end;
-  end;
-
-var
-  Data: PSubtitleItem;
-begin
-  Data     := lstSubtitles.GetNodeData(Node);
-  CellText := '';
-
-  if Data.ErrorType = [] then
-  begin
-    if Data.Marked = True then
-      CellText := ErrorReports[20] else
-      CellText := '';
-  end;
-
-  if etLinesWithoutLetters  in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[01];
-  if etEmptySubtitle        in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[02];
-  // ---
-  if etOverlapping          in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[03];
-  if etBadValues            in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[04];
-  if etTooLongDuration      in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[05];
-  if etTooShortDuration     in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[06];
-  if etTooLongLine          in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[07];
-  if etOverTwoLines         in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[08];
-  // ---
-  if etHearingImpaired      in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[09];
-  if etTextBeforeColon      in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[10];
-  if etUnnecessaryDots      in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[11];
-  if etProhibitedCharacter  in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[12];
-  if etRepeatedCharacter    in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[13];
-  if etRepeatedSubtitle     in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[14];
-  if etOCRErrors            in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[15];
-  // ---
-  if etOpnDlgSubsOneLine    in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[16];
-  if etSpaceAfterCustChars  in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[17];
-  if etSpaceBeforeCustChars in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[18];
-  if etUnnecessarySpaces    in Data.ErrorType then  CellText := CellText + #13#10 + ErrorReports[19];
-
-  if (Data.ErrorType = []) and (Data.Marked = False) then
-  begin
-    if mnuTranslatorMode.Checked then
-      CellText := Format(TransLeftLines, [CountUnTranslated]) else
-      lstSubtitles.Hint := '';
-  end;
-  CellText := StringToWideStringEx(Trim(CellText), CharsetToCodePage(frmMain.Font.Charset));
-end;
-}
 
 // -----------------------------------------------------------------------------
 
@@ -5162,20 +4773,13 @@ end;
 procedure TfrmMain.mnuDeleteUnnecessaryLinksClick(Sender: TObject);
 var
   Node       : PVirtualNode;
-  Text1      : String;
-  Text2      : String;
-  // Tags in first & second text
-  Bold1      : Boolean;
-  Italic1    : Boolean;
-  Underline1 : Boolean;
-  Color1     : Integer;
-  // --
-  Bold2       : Boolean;
-  Italic2     : Boolean;
-  Underline2  : Boolean;
-  Color2      : Integer;
+  Text1      : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  Text2      : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   UndoAction1 : PUndoAction;
-  UndoAction2 : PUndoAction;  
+  UndoAction2 : PUndoAction;
+  // Tags in first & second text
+  StyleTag1 : TStyleTag;
+  StyleTag2 : TStyleTag;
 begin
   ClearUndoList(RedoList);
   frmMain.mnuRedo.Enabled := False;
@@ -5206,16 +4810,10 @@ begin
     PFullTextChange(UndoAction2^.Buffer)^.OriginalOnly := True;
     PFullTextChange(UndoAction2^.Buffer)^.OldText := Text2;    
 
-    Bold1      := Pos('<b>', Text1) > 0;
-    Italic1    := Pos('<i>', Text1) > 0;
-    Underline1 := Pos('<u>', Text1) > 0;
-    Color1     := GetSubColor(Text1);
+    StyleTag1 := StoreTags(Text1);
     Text1      := RemoveSWTags(Text1, True, True, True, True);
 
-    Bold2      := Pos('<b>', Text2) > 0;
-    Italic2    := Pos('<i>', Text2) > 0;
-    Underline2 := Pos('<u>', Text2) > 0;
-    Color2     := GetSubColor(Text2);
+    StyleTag2 := StoreTags(Text2);
     Text2      := RemoveSWTags(Text2, True, True, True, True);
 
     if (Copy(Text1, Length(Text1)-2, 3) = '...') and
@@ -5235,19 +4833,8 @@ begin
 
       if SubtitleAPI.NoInteractionWithTags = False then
       begin
-        // Restore tags
-        if Underline1 = True then Text1 := '<u>' + Text1;
-        if Bold1      = True then Text1 := '<b>' + Text1;
-        if Italic1    = True then Text1 := '<i>' + Text1;
-        if Color1 > -1 then
-          Text1 := SetColorTag(Text1, Color);
-
-        // Restore tags
-        if Underline2 = True then Text2 := '<u>' + Text2;
-        if Bold2      = True then Text2 := '<b>' + Text2;
-        if Italic2    = True then Text2 := '<i>' + Text2;
-        if Color2 > -1 then
-          Text2 := SetColorTag(Text2, Color);
+        Text1 := RestoreSWTags(Text1, StyleTag1);
+        Text2 := RestoreSWTags(Text2, StyleTag2);
       end;
 
       if mnuTranslatorMode.Checked = False then
@@ -5268,16 +4855,10 @@ begin
       PFullTextChange(UndoAction2^.Buffer)^.OriginalOnly := False;
       PFullTextChange(UndoAction2^.Buffer)^.OldTrans     := Text2;      
 
-      Bold1      := Pos('<b>', Text1) > 0;
-      Italic1    := Pos('<i>', Text1) > 0;
-      Underline1 := Pos('<u>', Text1) > 0;
-      Color1     := GetSubColor(Text1);
+      StyleTag1 := StoreTags(Text1);
       Text1      := RemoveSWTags(Text1, True, True, True, True);
 
-      Bold2      := Pos('<b>', Text2) > 0;
-      Italic2    := Pos('<i>', Text2) > 0;
-      Underline2 := Pos('<u>', Text2) > 0;
-      Color2     := GetSubColor(Text2);
+      StyleTag2 := StoreTags(Text2);
       Text2      := RemoveSWTags(Text2, True, True, True, True);
 
       if (Copy(Text1, Length(Text1)-2, 3) = '...') and
@@ -5297,19 +4878,8 @@ begin
 
         if SubtitleAPI.NoInteractionWithTags = False then
         begin
-          // Restore tags
-          if Underline1 = True then Text1 := '<u>' + Text1;
-          if Bold1      = True then Text1 := '<b>' + Text1;
-          if Italic1    = True then Text1 := '<i>' + Text1;
-          if Color1 > -1 then
-            Text1 := SetColorTag(Text1, Color);
-
-          // Restore tags
-          if Underline2 = True then Text2 := '<u>' + Text2;
-          if Bold2      = True then Text2 := '<b>' + Text2;
-          if Italic2    = True then Text2 := '<i>' + Text2;
-          if Color2 > -1 then
-            Text2 := SetColorTag(Text2, Color);
+          Text1 := RestoreSWTags(Text1, StyleTag1);
+          Text2 := RestoreSWTags(Text2, StyleTag2);
         end;
 
         UndoList.Add(UndoAction1);
@@ -5354,18 +4924,22 @@ var
   URL      : String;
   Language : String;
   Ini      : TIniFile;
+  NewVer   : String;
 begin
   Language := ExtractFileName(frmMain.ActualLangFile);
   Language := Copy(Language, 1, LastDelimiter('.', Language)-1);
   Dir      := GetTempDir + Copy(ID_UPDATEINI, LastDelimiter('/', ID_UPDATEINI)+1, Length(ID_UPDATEINI));
     
+  // http://www.urusoft.net/inis/swupdate.ini
+  // http://sw.binhoster.com/sw_update.ini
   if DownloadFile(ID_UPDATEINI, Dir) Then
   begin
     Ini := TIniFile.Create(Dir);
     try
-      if Ini.ReadString('Update', 'CurrVer', ID_VERSION) <> ID_VERSION Then
+      NewVer := Ini.ReadString('Update', 'CurrVer', ID_VERSION);
+      if  NewVer > ID_VERSION Then
       begin // New version!
-        if MsgBox(QuestionMsg[08], BTN_YES, BTN_NO, '', MB_ICONQUESTION, frmMain) = 1 Then
+        if MsgBox(Format(QuestionMsg[08], [NewVer]), BTN_YES, BTN_NO, '', MB_ICONQUESTION, frmMain) = 1 Then
         begin
           if Ini.ValueExists('Update', Language) then
             URL := Ini.ReadString('Update', Language, ID_WEBPAGE) else
@@ -5384,8 +4958,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.sbSeekBarMouseDown(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TfrmMain.sbSeekBarMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   if (Player.Initialized) and (mnuVideoPreviewMode.Checked) then
     tmrVideo.Enabled := False;
@@ -5393,8 +4966,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.sbSeekBarMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+procedure TfrmMain.sbSeekBarMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
   if (Player.Initialized) and (mnuVideoPreviewMode.Checked) then
   begin
@@ -5406,8 +4978,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.sbSeekBarMouseMove(Sender: TObject; Shift: TShiftState;
-  X, Y: Integer);
+procedure TfrmMain.sbSeekBarMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
 begin
   if ssLeft in Shift then
     SetTimeCounter(sbSeekBar.Position);
@@ -5422,20 +4993,20 @@ begin
     if GetPlaybackRate = 1 then
     begin
       mnu100P.Checked := False;
-      SetPlaybackRate(DefAltPlayRate / 10);
       case DefAltPlayRate of
-        1: mnu10P.Checked := True;
-        2: mnu20P.Checked := True;
-        3: mnu30P.Checked := True;
-        4: mnu40P.Checked := True;
-        5: mnu50P.Checked := True;
-        6: mnu60P.Checked := True;
-        7: mnu70P.Checked := True;
-        8: mnu80P.Checked := True;
-        9: mnu90P.Checked := True;
-        10: mnu200P.Checked := True;
-        11: mnu300P.Checked := True;
-        12: mnu400P.Checked := True else
+        rate10: begin mnu10P.Checked := True; SetPlaybackRate(0.1); end;
+        rate20: begin mnu20P.Checked := True; SetPlaybackRate(0.2); end;
+        rate30: begin mnu30P.Checked := True; SetPlaybackRate(0.3); end;
+        rate40: begin mnu40P.Checked := True; SetPlaybackRate(0.4); end;
+        rate50: begin mnu50P.Checked := True; SetPlaybackRate(0.5); end;
+        rate60: begin mnu60P.Checked := True; SetPlaybackRate(0.6); end;
+        rate70: begin mnu70P.Checked := True; SetPlaybackRate(0.7); end;
+        rate80: begin mnu80P.Checked := True; SetPlaybackRate(0.8); end;
+        rate90: begin mnu90P.Checked := True; SetPlaybackRate(0.9); end;
+        rate150: begin mnu150P.Checked := True; SetPlaybackRate(1.5); end;
+        rate200: begin mnu200P.Checked := True; SetPlaybackRate(2.0); end;
+        rate300: begin mnu300P.Checked := True; SetPlaybackRate(3.0); end;
+        rate400: begin mnu400P.Checked := True; SetPlaybackRate(4.0); end; else
         mnu100P.Checked := True;
       end;
     end else
@@ -5475,7 +5046,7 @@ var
   StringToCheck : TStringList;
   TextStrList   : TStringList;
   i, c          : Integer;
-  Text          : String;
+  Text          : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   UndoAction    : PUndoAction;
 begin
   USSpellCheck.Connect;
@@ -5702,24 +5273,20 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.mnuShowTimeControlsClick(Sender: TObject);
-begin
-  if mnuShowTimeControls.Checked then
+  procedure TimeControlsShow(f : Boolean);
   begin
-    lblShow.Show;
-    tmeShow.Show;
-    lblHide.Show;
-    tmeHide.Show;
-    lblDuration.Show;
-    tmeDuration.Show;
-  end else
-  begin
-    lblShow.Hide;
-    tmeShow.Hide;
-    lblHide.Hide;
-    tmeHide.Hide;
-    lblDuration.Hide;
-    tmeDuration.Hide;
+    lblShow.Visible        := f;
+    tmeShow.Visible        := f;
+    lblHide.Visible        := f;
+    tmeHide.Visible        := f;
+    lblDuration.Visible    := f;
+    tmeDuration.Visible    := f;
+    lblCPS.Visible         := f;
+    mdtSubtitleCPS.Visible := f;
+    mdtTranslationCPS.Visible := f;
   end;
+begin
+  TimeControlsShow(mnuShowTimeControls.Checked);
   SetTranslationCtrlsPositions;
   frmMain.Refresh;
 end;
@@ -5763,7 +5330,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.mnuShiftPlusMSClick(Sender: TObject);
+procedure TfrmMain.ShiftTimes(ShowShift: Integer; HideShift: Integer);
 var
   Node       : PVirtualNode;
   UndoAction : PUndoAction;
@@ -5787,14 +5354,14 @@ begin
     FinalTime := GetFinalTime(Node);
     PTimeChange(UndoAction^.Buffer)^.StartTime := StartTime;
     PTimeChange(UndoAction^.Buffer)^.FinalTime := FinalTime;
-    SetStartTime(Node, StartTime + ShiftTime);
-    SetFinalTime(Node, FinalTime + ShiftTime);
+    SetStartTime(Node, StartTime + ShowShift);
+    SetFinalTime(Node, FinalTime + HideShift);
 
     Node := lstSubtitles.GetNextSelected(Node);
     UndoAction^.BindToNext := Assigned(Node);
     UndoList.Add(UndoAction);
   end;
-  
+
   mnuUndo.Enabled := True;
   lstSubtitles.Refresh;
   RefreshTimes;
@@ -5802,48 +5369,44 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.mnuShiftLessMSClick(Sender: TObject);
-var
-  Node       : PVirtualNode;
-  UndoAction : PUndoAction;
-  StartTime  : Integer;
-  FinalTime  : Integer;
+procedure TfrmMain.mnuShiftPlusMSClick(Sender: TObject);
 begin
-  ClearUndoList(RedoList);
-  mnuRedo.Enabled := False;
+  ShiftTimes(Vars.ShiftTime, Vars.ShiftTime);
+end;
 
-  Node := lstSubtitles.GetFirstSelected;
-  while Assigned(Node) do
-  begin
-    StartTime := GetStartTime(Node);
-    FinalTime := GetFinalTime(Node);
+// -----------------------------------------------------------------------------
 
-    New(UndoAction);
-    
-    if (StartTime - ShiftTime) >= 0 then
-    begin
-      UndoAction^.UndoActionType := uaTimeChange;
-      UndoAction^.BufferSize     := SizeOf(TTimeChange);
-      UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
-      UndoAction^.Node           := Node;
-      UndoAction^.LineNumber     := Node.Index;
+procedure TfrmMain.mnuShiftLessMSClick(Sender: TObject);
+begin
+  ShiftTimes(-Vars.ShiftTime, -Vars.ShiftTime);
+end;
 
-      PTimeChange(UndoAction^.Buffer)^.StartTime := StartTime;
-      PTimeChange(UndoAction^.Buffer)^.FinalTime := FinalTime;
+// -----------------------------------------------------------------------------
 
-      SetStartTime(Node, StartTime - ShiftTime);
-      SetFinalTime(Node, FinalTime - ShiftTime);
-    end;
-    
-    Node := lstSubtitles.GetNextSelected(Node);
-    UndoAction^.BindToNext := Assigned(Node);
-    if (StartTime - ShiftTime) >= 0 then
-      UndoList.Add(UndoAction);
-  end;
+procedure TfrmMain.mnuShiftMoreMSShowClick(Sender: TObject);
+begin
+  ShiftTimes(Vars.ShiftTime, 0);
+end;
 
-  mnuUndo.Enabled := True;
-  lstSubtitles.Refresh;
-  RefreshTimes;
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.mnuShiftLessMSShowClick(Sender: TObject);
+begin
+  ShiftTimes(-Vars.ShiftTime, 0);
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.mnuShiftMoreMSHideClick(Sender: TObject);
+begin
+  ShiftTimes(0, Vars.ShiftTime);
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.mnuShiftLessMSHideClick(Sender: TObject);
+begin
+  ShiftTimes(0, -Vars.ShiftTime);
 end;
 
 // -----------------------------------------------------------------------------
@@ -5931,16 +5494,14 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.lstSubtitlesCreateEditor(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
+procedure TfrmMain.lstSubtitlesCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
 begin
   EditLink := TTreeEditLink.Create;
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.lstSubtitlesEditing(Sender: TBaseVirtualTree;
-  Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+procedure TfrmMain.lstSubtitlesEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
 begin
   Allowed := (Column <> 0) and (toEditable in lstSubtitles.TreeOptions.MiscOptions);
 end;
@@ -6030,8 +5591,11 @@ end;
 
 procedure TfrmMain.mnuUndoClick(Sender: TObject);
 begin
-  if UndoList.Count > 0 then
+  if UndoList.Count > 0 then begin
     UndoActionSet(UndoList, RedoList);
+    HighlightTags(True);
+    HighLightTags(False);
+  end;
 end;
 
 // -----------------------------------------------------------------------------
@@ -6044,7 +5608,7 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.mnuPascalScriptClick(Sender: TObject);
-  procedure OutputMsg;
+  procedure OutputMsg(s : String);
   var
     l          : LongInt;
     ErrorsText : String;
@@ -6054,400 +5618,35 @@ procedure TfrmMain.mnuPascalScriptClick(Sender: TObject);
     begin
       ErrorsText := ErrorsText + #13#10 + psCompExec.CompilerErrorToStr(l);
     end;
-    MsgBox('Compiler errors:' + #13#10#13#10 + ErrorsText, BTN_OK, '', '', MB_ICONERROR, Self);
+    MsgBox(s + #13#10+#13#10+'Compiler errors:' + #13#10#13#10 + ErrorsText, BTN_OK, '', '', MB_ICONERROR, Self);
   end;
 begin
+//  psCompExecCompile(psCompExec);  // test script
+
   psCompExec.Script.LoadFromFile(ExtractFilePath(Application.ExeName) + 'PascalScripts\' + (Sender as TMenuItem).Caption + '.pas');
+
+//  sleep(100);
 
   if psCompExec.Compile then
   begin
     if not psCompExec.Execute then
-      OutputMsg else
+      OutputMsg('Can not execute script') else
     begin
       ClearUndoList(RedoList);
       mnuRedo.Enabled := False;
       mnuUndo.Enabled := True;
     end;
   end else
-    OutputMsg;
+    OutputMsg('Can not compile script');
 
   RefreshTimes;
   lstSubtitles.Refresh;
 end;
 
-// -----------------------------------------------------------------------------
-
-function MyGetSubCount: Integer;
-begin
-  Result := frmMain.lstSubtitles.RootNodeCount;
-end;
 
 // -----------------------------------------------------------------------------
 
-function MyIsSelSub(const Num: Integer): Boolean;
-begin
-  Result := frmMain.lstSubtitles.Selected[GetNodeWithIndex(frmMain.lstSubtitles, Num)]
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetSubText(const Num: Integer): String;
-begin
-  Result := GetSubText(GetNodeWithIndex(frmMain.lstSubtitles, Num));
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure MySetSubText(const Num: Integer; const Text: String);
-var
-  Node       : PVirtualNode;
-  UndoAction : PUndoAction;
-begin
-  Node := GetNodeWithIndex(frmMain.lstSubtitles, Num);
-  New(UndoAction);
-  UndoAction^.UndoActionType := uaFullTextChange;
-  UndoAction^.Node           := Node;
-  UndoAction^.LineNumber     := Node.Index;
-  UndoAction^.BindToNext     := True;
-  UndoAction^.BufferSize     := SizeOf(TFullTextChange);
-  UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
-  PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := True;
-  PFullTextChange(UndoAction^.Buffer)^.OldText      := GetSubText(Node);
-  PFullTextChange(UndoAction^.Buffer)^.OldTrans     := '';
-  UndoList.Add(UndoAction);
-  SetText(Node, Text);
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetSubTrans(const Num: Integer): String;
-begin
-  Result := GetSubTranslation(GetNodeWithIndex(frmMain.lstSubtitles, Num));
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure MySetSubTrans(const Num: Integer; const Text: String);
-var
-  Node       : PVirtualNode;
-  UndoAction : PUndoAction;
-begin
-  Node := GetNodeWithIndex(frmMain.lstSubtitles, Num);
-  New(UndoAction);
-  UndoAction^.UndoActionType := uaFullTextChange;
-  UndoAction^.Node           := Node;
-  UndoAction^.LineNumber     := Node.Index;
-  UndoAction^.BindToNext     := True;
-  UndoAction^.BufferSize     := SizeOf(TFullTextChange);
-  UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
-  PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := False;
-  PFullTextChange(UndoAction^.Buffer)^.OldText      := GetSubText(Node);
-  PFullTextChange(UndoAction^.Buffer)^.OldTrans     := GetSubTranslation(Node);
-  UndoList.Add(UndoAction);
-  SetTranslation(Node, Text);
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetSubInitialTime(const Num: Integer): Integer;
-begin
-  Result := GetStartTime(GetNodeWithIndex(frmMain.lstSubtitles, Num));
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure MySetSubInitialTime(const Num: Integer; const InitialTime: Integer);
-var
-  Node       : PVirtualNode;
-  UndoAction : PUndoAction;
-begin
-  Node := GetNodeWithIndex(frmMain.lstSubtitles, Num);
-  New(UndoAction);
-  UndoAction^.UndoActionType                 := uaTimeChange;
-  UndoAction^.BufferSize                     := SizeOf(TTimeChange);
-  UndoAction^.Buffer                         := AllocMem(UndoAction^.BufferSize);
-  UndoAction^.Node                           := Node;
-  UndoAction^.LineNumber                     := Node.Index;
-  UndoAction^.BindToNext                     := True;
-  PTimeChange(UndoAction^.Buffer)^.StartTime := GetStartTime(Node);
-  PTimeChange(UndoAction^.Buffer)^.FinalTime := -1;
-  UndoList.Add(UndoAction);
-  SetStartTime(Node, InitialTime);
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetSubFinalTime(const Num: Integer): Integer;
-begin
-  Result := GetFinalTime(GetNodeWithIndex(frmMain.lstSubtitles, Num));
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure MySetSubFinalTime(const Num: Integer; const FinalTime: Integer);
-var
-  Node       : PVirtualNode;
-  UndoAction : PUndoAction;
-begin
-  Node := GetNodeWithIndex(frmMain.lstSubtitles, Num);
-  New(UndoAction);
-  UndoAction^.UndoActionType                 := uaTimeChange;
-  UndoAction^.BufferSize                     := SizeOf(TTimeChange);
-  UndoAction^.Buffer                         := AllocMem(UndoAction^.BufferSize);
-  UndoAction^.Node                           := Node;
-  UndoAction^.LineNumber                     := Node.Index;
-  UndoAction^.BindToNext                     := True;
-  PTimeChange(UndoAction^.Buffer)^.StartTime := -1;
-  PTimeChange(UndoAction^.Buffer)^.FinalTime := GetFinalTime(Node);
-  UndoList.Add(UndoAction);  
-  SetFinalTime(Node, FinalTime);
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure MyInsSub(const Pos: Integer; const InitialTime, FinalTime: Integer; const Text, Translation: String);
-var
-  P          : Cardinal;
-  Data       : PSubtitleItem;
-  Node       : PVirtualNode;
-  Node2      : PVirtualNode;
-  UndoAction : PUndoAction;
-begin
-  if Pos > Integer(frmMain.lstSubtitles.RootNodeCount) then
-    P := frmMain.lstSubtitles.RootNodeCount-1 else
-  if Pos < 0 then P := 0 else
-    P := Pos;
-    
-  if (frmMain.lstSubtitles.RootNodeCount = 0) or (P = 0) then
-    Node2 := frmMain.lstSubtitles.InsertNode(frmMain.lstSubtitles.RootNode, amAddChildFirst) else
-  if (P = frmMain.lstSubtitles.RootNodeCount) then
-    Node2 := frmMain.lstSubtitles.InsertNode(frmMain.lstSubtitles.GetLast, amInsertAfter) else
-  begin
-    Node := frmMain.lstSubtitles.GetFirst;
-    while Node.Index < P do
-      Node := Node.NextSibling;
-    Node2 := frmMain.lstSubtitles.InsertNode(Node.PrevSibling, amInsertAfter);
-  end;
-
-  if not (vsInitialized in Node2.States) then Include(Node2.States, vsInitialized);
-
-  if Assigned(Node2) then
-  begin
-    with frmMain do
-    begin
-      New(UndoAction);
-      UndoAction^.UndoActionType := uaInsertLine;
-      UndoAction^.LineNumber     := Node2.Index;
-      UndoAction^.Node           := Node2;
-      UndoAction^.BindToNext     := True;
-      UndoAction^.Buffer         := nil;
-      UndoAction^.BufferSize     := 0;
-      UndoList.Add(UndoAction);
-      mnuUndo.Enabled := True;
-    end;
-
-    Data := frmMain.lstSubtitles.GetNodeData(Node2);
-    Data^.InitialTime := InitialTime;
-    Data^.FinalTime   := FinalTime;
-    Data^.Text        := Text;
-    Data^.Translation := Translation;
-    Data^.Marked      := False;
-    Data^.ErrorType   := [];
-  end;
-
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure MyDelSub(const Num: Integer);
-var
-  Node       : PVirtualNode;
-  Data       : PSubtitleItem;
-  UndoAction : PUndoAction;
-begin
-  Node := GetNodeWithIndex(frmMain.lstSubtitles, Num);
-  Data := frmMain.lstSubtitles.GetNodeData(Node);
-  New(UndoAction);
-  UndoAction^.BufferSize                        := SizeOf(TLineChange);
-  UndoAction^.Buffer                            := AllocMem(UndoAction^.BufferSize);
-  UndoAction^.UndoActionType                    := uaDeleteLine;
-  UndoAction^.BindToNext                        := True;
-  UndoAction^.LineNumber                        := Node.Index;
-  PLineChange(UndoAction^.Buffer)^.SubtitleItem := Data^;
-  UndoList.Add(UndoAction);  
-  frmMain.lstSubtitles.DeleteNode(Node);
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyMsgBox(const AMsg, BCap1, BCap2, BCap3: String; const IconInd: Integer): Integer;
-begin
-  Result := MsgBox(AMsg, BCap1, BCap2, BCap3, IconInd, frmMain, frmMain.Font.Charset);
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyIsOriginalLoaded: Boolean;
-begin
-  Result := (frmMain.OrgFile <> '') or (frmMain.lstSubtitles.RootNodeCount > 0);
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyIsTranslatedLoaded: Boolean;
-begin
-  Result := (frmMain.TransFile <> '') or (frmMain.lstSubtitles.RootNodeCount > 0);
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure MyEnableWorkArea;
-begin
-  with frmMain do
-  begin
-    ClearUndoList(UndoList);
-    ClearUndoList(RedoList);
-    mnuUndo.Enabled := False;
-    mnuRedo.Enabled := False;
-    SetFormCaption;
-    RefreshTimes;
-    EnableCtrls(True);
-  end;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure MyRandomize;
-begin
-  Randomize;
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyRandom(Range: Integer): Integer;
-begin
-  Result := Random(Range);
-end;
-
-// -----------------------------------------------------------------------------
-// Date and time functions
-// -----------------------------------------------------------------------------
-
-function MyGetYear: Integer;
-var
-  YY, MM, DD: Word;
-begin
-  DecodeDate(Now, YY, MM, DD);
-  Result := YY;
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetMonth: Integer;
-var
-  YY, MM, DD: Word;
-begin
-  DecodeDate(Now, YY, MM, DD);
-  Result := MM;
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetDay: Integer;
-var
-  YY, MM, DD: Word;
-begin
-  DecodeDate(Now, YY, MM, DD);
-  Result := DD;
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetHour: Integer;
-var
-  HH, MM, SS, MS: Word;
-begin
-  DecodeTime(Time, HH, MM, SS, MS);
-  Result := HH;
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetMinute: Integer;
-var
-  HH, MM, SS, MS: Word;
-begin
-  DecodeTime(Time, HH, MM, SS, MS);
-  Result := MM;
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetSecond: Integer;
-var
-  HH, MM, SS, MS: Word;
-begin
-  DecodeTime(Time, HH, MM, SS, MS);
-  Result := SS;
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetDate: String;
-begin
-  Result := FormatDateTime('YYYY-MM-DD', Now);
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetTime: String;
-begin
-  Result := FormatDateTime('HH:MM', Now);
-end;
-
-// -----------------------------------------------------------------------------
-
-function MyGetDateTime: String;
-begin
-  Result := FormatDateTime('YYYY-MM-DD HH:MM', Now);
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmMain.psCompExecCompile(Sender: TIFPS3CompExec);
-begin
-  Sender.AddFunction(@MyIsOriginalLoaded, 'function IsOriginalLoaded: Boolean;');
-  Sender.AddFunction(@MyIsTranslatedLoaded, 'function IsTranslatedLoaded: Boolean;');
-  Sender.AddFunction(@MyEnableWorkArea, 'function EnableWorkArea: Boolean;');
-  Sender.AddFunction(@MyGetSubCount, 'function GetSubtitleCount: Integer;');
-  Sender.AddFunction(@MyIsSelSub, 'function IsSubtitleSelected(const Num: Integer): Boolean;');
-  Sender.AddFunction(@MyGetSubText, 'function GetSubtitleText(const Num: Integer): String;');
-  Sender.AddFunction(@MySetSubText, 'procedure SetSubtitleText(const Num: Integer; const Text: String);');
-  Sender.AddFunction(@MyGetSubTrans, 'function GetSubtitleTrans(const Num: Integer): String;');
-  Sender.AddFunction(@MySetSubTrans, 'procedure SetSubtitleTrans(const Num: Integer; const Text: String);');
-  Sender.AddFunction(@MyGetSubInitialTime, 'function GetSubtitleInitialTime(const Num: Integer): Integer;');
-  Sender.AddFunction(@MySetSubInitialTime, 'procedure SetSubtitleInitialTime(const Num: Integer; const InitialTime: Integer);');
-  Sender.AddFunction(@MyGetSubFinalTime, 'function GetSubtitleFinalTime(const Num: Integer): Integer;');
-  Sender.AddFunction(@MySetSubFinalTime, 'procedure SetSubtitleFinalTime(const Num: Integer; const FinalTime: Integer);');
-  Sender.AddFunction(@MyInsSub, 'procedure InsertSubtitle(const Pos: Integer; const InitialTime, FinalTime: Integer; const Text, Translation: String);');
-  Sender.AddFunction(@MyDelSub, 'procedure DeleteSubtitle(const Num: Integer);');
-  Sender.AddFunction(@MyMsgBox, 'function MsgBox(const AMsg, BCap1, BCap2, BCap3: String; const IconInd: Integer): Integer;');
-  Sender.AddFunction(@MyRandomize, 'procedure Randomize;');
-  Sender.AddFunction(@MyRandom, 'function Random(Range: Integer): Integer;');
-  // Date and time functions
-  Sender.AddFunction(@MyGetYear, 'function GetYear: Integer;');
-  Sender.AddFunction(@MyGetMonth, 'function GetMonth: Integer;');
-  Sender.AddFunction(@MyGetDay, 'function GetDay: Integer;');
-  Sender.AddFunction(@MyGetHour, 'function GetHour: Integer;');
-  Sender.AddFunction(@MyGetMinute, 'function GetMinute: Integer;');
-  Sender.AddFunction(@MyGetSecond, 'function GetSecond: Integer;');
-  Sender.AddFunction(@MyGetDate, 'function GetDate: String;');
-  Sender.AddFunction(@MyGetTime, 'function GetTime: String;');
-  Sender.AddFunction(@MyGetDateTime, 'function GetDateTime: String;');
-  // ---
-  Sender.AddRegisteredVariable('Application', 'TApplication');
-  //Sender.AddRegisteredVariable('Self', 'TfrmMain');
-end;
+{$include Units/_PascalFuncs}
 
 // -----------------------------------------------------------------------------
 
@@ -6459,8 +5658,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.psCompExecCompImport(Sender: TObject;
-  x: TIFPSPascalCompiler);
+procedure TfrmMain.psCompExecCompImport(Sender: TObject; x: TIFPSPascalCompiler);
 begin
   SIRegister_Std(x);
   SIRegister_Classes(x, true);
@@ -6475,8 +5673,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmMain.psCompExecExecImport(Sender: TObject; se: TIFPSExec;
-  x: TIFPSRuntimeClassImporter);
+procedure TfrmMain.psCompExecExecImport(Sender: TObject; se: TIFPSExec; x: TIFPSRuntimeClassImporter);
 begin
   RIRegister_Std(x);
   RIRegister_Classes(x, true);
@@ -6526,17 +5723,15 @@ begin
   if MovieFile <> '' then
     FreeFile;
 end;
+
 // -----------------------------------------------------------------------------
 
 procedure TfrmMain.lstSubtitlesGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var LineBreakStyle: TVTTooltipLineBreakStyle; var HintText: WideString);
-
-//  procedure TfrmMain.lstSubtitlesGetHint(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: WideString);
-
   function CountUnTranslated: Integer;
   var
     Node  : PVirtualNode;
-    Text  : String;
-    Trans : String;
+    Text  : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+    Trans : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
   begin
     Result := 0;
     Node := lstSubtitles.GetFirst;
@@ -6585,6 +5780,9 @@ begin
   if etSpaceAfterCustChars  in Data.ErrorType then  HintText := HintText + #13#10 + ErrorReports[17];
   if etSpaceBeforeCustChars in Data.ErrorType then  HintText := HintText + #13#10 + ErrorReports[18];
   if etUnnecessarySpaces    in Data.ErrorType then  HintText := HintText + #13#10 + ErrorReports[19];
+  // ---
+  if etTooSmallCPS          in Data.ErrorType then  HintText := HintText + #13#10 + ErrorReports[21];
+  if etTooBigCPS            in Data.ErrorType then  HintText := HintText + #13#10 + ErrorReports[22];
 
   if (Data.ErrorType = []) and (Data.Marked = False) then
   begin
@@ -6592,7 +5790,360 @@ begin
       HintText := Format(TransLeftLines, [CountUnTranslated]) else
       lstSubtitles.Hint := '';
   end;
+//{$IFNDEF UNIOFF}
   HintText := StringToWideStringEx(Trim(HintText), CharsetToCodePage(frmMain.Font.Charset));
+//{$ENDIF}
+  HintText := Trim(HintText);
 end;
 
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.GoToLineNumber(Line: Integer);
+var
+  Node : PVirtualNode;
+  RootNodeCount: Integer;
+begin
+  dec(Line);
+  RootNodeCount := lstSubtitles.RootNodeCount;
+
+  if Line < 0 then
+    Line := 0;
+  if Line >= RootNodeCount then   // was Line > RootNodeCount
+    Line := RootNodeCount-1;
+
+  Node := GetNodeWithIndex(lstSubtitles, Line);
+  UnSelectAll(lstSubtitles);
+  lstSubtitles.ScrollIntoView(Node, True);
+  lstSubtitles.Selected[Node] := True;
+  lstSubtitles.FocusedNode    := Node;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.SetCurrentVolume;
+  procedure SetVolume(v: Byte);
+  begin
+    if Player.Initialized then
+      Player.BasicAudio.put_Volume((v + -100)*50);
+  end;
+begin
+  SetVolume(100-scrVolume.Position);
+  Vars.Volume := scrVolume.Position;
+end;
+
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.FormActivate(Sender: TObject);
+begin
+//  scrVolume.Position := 100 - GetVolume;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.scrVolumeChange(Sender: TObject);
+begin
+  SetCurrentVolume;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.mdtTranslationCPSKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  OldString: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  NewTime: Cardinal;
+begin
+  if (key = VK_RETURN) then
+    begin
+      if (lstSubtitles.SelectedCount = 1) then
+      begin
+        SetUndoTimeChange(False);
+        OldString := GetSubTranslation(lstSubtitles.FocusedNode);
+        NewTime := GetMSecPerChars(OldString, mdtTranslationCPS.Value);
+        SetFinalTime(lstSubtitles.FocusedNode, Cardinal(GetStartTime(lstSubtitles.FocusedNode)) + NewTime);
+        lstSubtitles.RepaintNode(lstSubtitles.FocusedNode);
+        RefreshTimes;
+      end;
+    end;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.mdtSubtitleCPSKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  OldString: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  NewTime: Cardinal;
+begin
+  if (key = VK_RETURN) then
+    begin
+      if (lstSubtitles.SelectedCount = 1) then
+      begin
+        SetUndoTimeChange(False);
+        OldString := GetSubText(lstSubtitles.FocusedNode);
+        NewTime := GetMSecPerChars(OldString, mdtSubtitleCPS.Value);
+        SetFinalTime(lstSubtitles.FocusedNode, Cardinal(GetStartTime(lstSubtitles.FocusedNode)) + NewTime);
+        lstSubtitles.RepaintNode(lstSubtitles.FocusedNode);
+        RefreshTimes;
+      end;
+    end;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmMain.mmoTranslationKeyPress(Sender: TObject; var Key: Char);
+var
+  State: TKeyboardState;
+begin
+  // subtitle list is on another panel, so TAB order doesn't work
+  if Key = Char(VK_TAB) then
+  begin
+    Key := #0;
+    GetKeyboardState(State);
+
+    if (State[VK_SHIFT] and 128) = 0 then  // Shift not pressed
+      lstSubtitles.SetFocus
+    else
+      mmoSubtitleText.SetFocus;
+  end;
+end;
+
+procedure TfrmMain.mmoSubtitleTextKeyPress(Sender: TObject; var Key: Char);
+var
+  State: TKeyboardState;
+begin
+  // subtitle list is on another panel, so TAB order doesn't work
+  if Key = Chr(VK_TAB) then
+  begin
+    Key := #0;
+    GetKeyboardState(State);
+
+    if mnuTranslatorMode.Checked then
+    begin
+      if (State[VK_SHIFT] and 128) = 0 then  // Shift not pressed
+        mmoTranslation.SetFocus
+      else
+      if mnuShowTimeControls.Checked = False then
+        lstSubtitles.SetFocus
+      else
+        mdtTranslationCPS.SetFocus;
+    end else begin
+      if (State[VK_SHIFT] and 128) = 0 then  // Shift not pressed
+        lstSubtitles.SetFocus
+      else
+        mdtSubtitleCPS.SetFocus;
+    end;
+  end;
+end;
+
+procedure TfrmMain.RepaintSubGraph;
+var
+  bmp: TBitmap;
+  x, w : Integer;
+  InitialTime : Integer;
+  Duration    : Integer;
+  Node        : PVirtualNode;
+  mult : real;
+begin
+  if Vars <> nil then
+  begin
+    imgSubsGraph.Visible := (mnuVideoPreviewMode.Checked and Vars.ShowColorBar);
+
+    if imgSubsGraph.Visible then
+    begin
+      try
+        bmp := TBitmap.Create;
+        bmp.Width := imgSubsGraph.Width;
+        bmp.Height := imgSubsGraph.Height;
+
+        imgSubsGraph.Picture.Graphic := bmp;
+
+        imgSubsGraph.Picture.Bitmap.Canvas.Brush.Color := Vars.SubtitleAbsent;
+        imgSubsGraph.Picture.Bitmap.Canvas.FillRect(Bounds(0, 0, bmp.Width-1, bmp.Height-1));
+
+        if Player.Initialized then
+        begin
+          mult := VideoDuration / bmp.Width;
+
+          with frmMain do
+          begin
+            Node := lstSubtitles.GetFirst;
+
+            while Assigned(Node) do
+            begin
+              InitialTime := GetStartTime(Node);
+              Duration    := GetFinalTime(Node) - InitialTime;
+
+              x := round(InitialTime / mult);
+              w := round(Duration / mult);
+
+              imgSubsGraph.Picture.Bitmap.Canvas.Brush.Color := Vars.SubtitleOK;
+              imgSubsGraph.Picture.Bitmap.Canvas.FillRect(Bounds(x, 0, w, bmp.Height-1));
+
+              Node := Node.NextSibling;
+            end;
+          end;
+        end;
+      finally
+        if bmp<>nil then FreeAndNil(bmp);
+      end;
+    end;
+  end;
+end;
+
+procedure TfrmMain.lstSubtitlesKeyPress(Sender: TObject; var Key: Char);
+var
+  State: TKeyboardState;
+begin
+{
+  // subtitle list is on another panel, so TAB order doesn't work
+  if Key = Chr(VK_TAB) then
+  begin
+    GetKeyboardState(State);
+
+    Key := #0;
+    if (State[VK_SHIFT] and 128) <> 0 then  // Shift pressed
+    begin
+
+      if mnuTranslatorMode.Checked then
+        mmoTranslation.SetFocus
+      else
+        mmoSubtitleText.SetFocus;
+    end
+    else
+    begin
+      if mnuShowTimeControls.Checked = False then
+        mmoSubtitleText.SetFocus
+      else
+      begin
+        tmeShow.SetFocus;
+        RefreshTimes;
+      end;
+    end;
+  end;
+}
+end;
+
+
+
+procedure TfrmMain.ProcessRE(re : TRichEdit; TextCol, TagCol: TColor);
+var
+  i    : Integer;
+  StoreStart  : Integer;
+  StoreLength : Integer;
+  TagStart : Integer;
+begin
+  if re.Visible and re.Enabled then begin
+    StoreStart  := re.SelStart;
+    StoreLength := re.SelLength;
+
+    re.SelStart := 0;
+    re.SelLength := Length(re.Text);
+    re.SelAttributes.Color := TextCol;
+
+    TagStart := -1;
+    for i := 1 to Length(re.Text) do begin
+      if re.Text[i] = '<' then
+        TagStart := i else
+      if re.Text[i] = '>' then begin
+        re.SelStart := TagStart-1;
+        re.SelLength := i - TagStart+1;
+        re.SelAttributes.Color := TagCol;
+        TagStart := -1;
+      end;
+    end;
+
+    re.SelStart  := StoreStart;
+    re.SelLength := StoreLength;
+  end;
+end;
+
+procedure TfrmMain.HighlightTags(IsSubtitleText: Boolean);
+begin
+  if IsSubtitleText then begin
+    SendMessage(mmoSubtitleText.Handle, WM_SETREDRAW, 0, 0);
+    ProcessRE(mmoSubtitleText, clBlack, clRed);
+    SendMessage(mmoSubtitleText.Handle, WM_SETREDRAW, 1, 0);
+    InvalidateRect(mmoSubtitleText.Handle, nil, True);
+  end else begin
+    if mnuTranslatorMode.Checked then begin
+      SendMessage(mmoTranslation.Handle, WM_SETREDRAW, 0, 0);
+      ProcessRE(mmoTranslation, clBlack, clRed);
+      SendMessage(mmoTranslation.Handle, WM_SETREDRAW, 1, 0);
+      InvalidateRect(mmoTranslation.Handle, nil, True);
+    end;
+  end;
+end;
+
+procedure TfrmMain.RichDblClick(Sender: TObject);
+begin
+  if ((Sender = mmoTranslation) or (Sender = mmoSubtitleText)) then
+  begin
+    case Vars.DblClickBox of
+    1: begin
+         TRichEdit(Sender).SelStart := 0;
+         TRichEdit(Sender).SelLength := 0;
+       end;
+    2: begin
+         TRichEdit(Sender).SelStart := Length(TRichEdit(Sender).Text);
+         TRichEdit(Sender).SelLength := 0;
+       end;
+    end;
+  end;
+end;
+
+procedure TfrmMain.SetOrgModified(const Value: Boolean);
+begin
+  OrgFileModified := Value;
+  SetFormCaption;
+end;
+
+procedure TfrmMain.SetTransModified(const Value: Boolean);
+begin
+  TransFileModified := Value;
+  SetFormCaption;   // asterisk if Orig/Transa changed
+end;
+
+function TfrmMain.GetOrgModified(): Boolean;
+begin
+  Result := OrgFileModified;
+end;
+
+function TfrmMain.GetTransModified(): Boolean;
+begin
+  Result := TransFileModified;
+end;
+
+procedure TfrmMain.CMDialogKey(var Msg: TCMDialogKey);
+var
+  State: TKeyboardState;
+begin
+  GetKeyboardState(State);
+
+  if Msg.CharCode = VK_TAB then
+  begin
+    if (ActiveControl is TVirtualStringTree) then
+    begin
+      if (State[VK_SHIFT] and 128) <> 0 then  // Shift pressed
+      begin
+        if mnuTranslatorMode.Checked then mmoTranslation.SetFocus
+        else mmoSubtitleText.SetFocus;
+      end else begin
+        if mnuShowTimeControls.Checked = False then mmoSubtitleText.SetFocus
+        else tmeShow.SetFocus;
+      end;
+    end else if ActiveControl.Name = 'tmeShow' then
+    begin
+      if (State[VK_SHIFT] and 128) <> 0 then lstSubtitles.SetFocus
+      else inherited;
+    end
+    else
+      inherited;
+  end
+  else
+    inherited;
+
+end;
+
+
 end.
+

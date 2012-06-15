@@ -5,7 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ComCtrls, CheckLst, ExtCtrls, IniFiles, General,
-  InfoErrorsFunctions, ShellAPI;
+  InfoErrorsFunctions, ShellAPI, RZNEdit;
 
 type
   TfrmInfoErrorsSettings = class(TForm)
@@ -47,7 +47,6 @@ type
     btnCancel: TButton;
     pgeGeneral: TTabSheet;
     chkMarkErrorsInList: TCheckBox;
-    btnSetColor: TButton;
     chkBold: TCheckBox;
     chkItalic: TCheckBox;
     chkUnderline: TCheckBox;
@@ -93,8 +92,15 @@ type
     bvlSep5: TBevel;
     chkCheckOpnDlgInSubsWithOneLine: TCheckBox;
     chkFixOpnDlgInSubsWithOneLine: TCheckBox;
+    pnlErrorColor: TPanel;
+    edtTooSmallCPS: TRealEdit;
+    edtTooBigCPS: TRealEdit;
+    lblTooSmallCPS: TLabel;
+    lblTooBigCPS: TLabel;
+    chkTooSmallCPS: TCheckBox;
+    chkTooBigCPS: TCheckBox;
     procedure btnOkClick(Sender: TObject);
-    procedure btnSetColorClick(Sender: TObject);
+    procedure SetColorClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkCheckTextBeforeColonClick(Sender: TObject);
     procedure chkFixTextBeforeColonClick(Sender: TObject);
@@ -136,7 +142,7 @@ begin
       // ---------------------- //
       chkShowConfInMainForm.Caption := ReadString('Information and errors Settings', '07', 'Show confirmations in main form on fix');
       chkMarkErrorsInList.Caption   := ReadString('Information and errors Settings', '08', 'Mark errors in main form''s list');
-      btnSetColor.Caption           := ReadString('Information and errors Settings', '09', 'Set color...');
+      pnlErrorColor.Hint            := ReadString('Information and errors Settings', '09', 'Set color...');
       chkBold.Caption               := ReadString('Information and errors Settings', '10', 'Bold');
       chkItalic.Caption             := ReadString('Information and errors Settings', '11', 'Italic');
       chkUnderline.Caption          := ReadString('Information and errors Settings', '12', 'Underline');
@@ -161,6 +167,9 @@ begin
       lblCharacters.Caption                      := ReadString('Information and errors Settings', '27', 'characters.');
       lblMilliseconds2.Caption                   := lblMilliseconds.Caption;
       lblMilliseconds3.Caption                   := lblMilliseconds.Caption;
+      lblTooSmallCPS.Caption                     := ReadString('Information and errors Settings', '57', 'CPS smaller than:');
+      lblTooBigCPS.Caption                       := ReadString('Information and errors Settings', '58', 'CPS bigger than:');
+
 
       // ---------------------- //
       //        Check for       //
@@ -188,6 +197,8 @@ begin
       chkCheckSpaceAfterCustomChars.Caption   := ReadString('Information and errors Settings', '45', 'Spaces after custom characters');
       chkCheckSpaceBeforeCustomChars.Caption  := ReadString('Information and errors Settings', '46', 'Spaces before custom characters');
       chkCheckUnnecessarySpaces.Caption       := ReadString('Information and errors Settings', '47', 'Unnecessary spaces');
+      chkTooSmallCPS.Caption                  := ReadString('Information and errors Settings', '59', 'Too small CPS');
+      chkTooBigCPS.Caption                    := ReadString('Information and errors Settings', '60', 'Too big CPS');
 
 
       // ---------------------- //
@@ -281,7 +292,7 @@ begin
     // ------------ //
     chkShowConfInMainForm.Checked := Ini.ReadBool('Information and Errors', 'Show confirmations in main form on fix', False);
     chkMarkErrorsInList.Checked   := Ini.ReadBool('Information and Errors', 'Mark errors in main form''s list', True);
-    dlgSetColor.Color             := Ini.ReadInteger('Information and Errors', 'Mark with color', clRed);
+    pnlErrorColor.Color           := Ini.ReadInteger('Information and Errors', 'Mark with color', clRed);
     chkBold.Checked               := Ini.ReadBool('Information and Errors', 'Bold', True);
     chkItalic.Checked             := Ini.ReadBool('Information and Errors', 'Italic', False);
     chkUnderline.Checked          := Ini.ReadBool('Information and Errors', 'Underline', False);
@@ -300,73 +311,84 @@ begin
     udTooLongDur.Position            := Ini.ReadInteger('Information and Errors', 'Too long duration', 6000);
     udTooShortDur.Position           := Ini.ReadInteger('Information and Errors', 'Too short duration', 700);
     udTooLongLine.Position           := Ini.ReadInteger('Information and Errors', 'Too long line', 45);
+    edtTooSmallCPS.Value             := Ini.ReadFloat('Information and Errors', 'Too small CPS', 8.0);
+    edtTooBigCPS.Value               := Ini.ReadFloat('Information and Errors', 'Too big CPS', 24.0);
 
-    // ------------------- //
-    // Errors to check for //
-    // ------------------- //
-    chkCheckLinesWithoutLetters.Checked     := Ini.ReadBool('Errors to check for', 'Lines without letters',              True);
-    chkCheckEmptySubtitles.Checked          := Ini.ReadBool('Errors to check for', 'Empty subtitles',                    True);
-    chkCheckOverlapping.Checked             := Ini.ReadBool('Errors to check for', 'Overlapping subtitles',              True);
-    chkCheckBadValues.Checked               := Ini.ReadBool('Errors to check for', 'Bad values',                         True);
-    chkCheckTooLongDur.Checked              := Ini.ReadBool('Errors to check for', 'Too long durations',                 True);
-    chkCheckTooShortDur.Checked             := Ini.ReadBool('Errors to check for', 'Too short durations',                True);
-    chkCheckTooLongLines.Checked            := Ini.ReadBool('Errors to check for', 'Too long lines',                     True);
-    chkCheckOverTwoLines.Checked            := Ini.ReadBool('Errors to check for', 'Subtitles over two lines',           True);
-    chkCheckHearingImpaired.Checked         := Ini.ReadBool('Errors to check for', 'Hearing impaired subtitles',         True);
-    chkCheckTextBeforeColon.Checked         := Ini.ReadBool('Errors to check for', 'Text before colon (":")',            True);
-    chkCheckOnlyIfCapitalLetters.Checked    := Ini.ReadBool('Errors to check for', 'Only if text is in capital letters', True);
-    chkCheckUnnecessaryDots.Checked         := Ini.ReadBool('Errors to check for', 'Unnecessary dots',                   True);
-    chkCheckProhibitedChars.Checked         := Ini.ReadBool('Errors to check for', 'Prohibited characters',              False);
-    chkCheckRepeatedChars.Checked           := Ini.ReadBool('Errors to check for', 'Repeated characters',                True);
-    chkCheckRepeatedSubs.Checked            := Ini.ReadBool('Errors to check for', 'Repeated subtitles',                 True);
-    chkCheckOCRErrors.Checked               := Ini.ReadBool('Errors to check for', 'OCR Errors',                         True);
-    chkCheckOpnDlgInSubsWithOneLine.Checked := Ini.ReadBool('Errors to check for', '"- " in subtitles with one line',    True);
-    chkCheckSpaceAfterCustomChars.Checked   := Ini.ReadBool('Errors to check for', 'Space after custom characters',      True);
-    chkCheckSpaceBeforeCustomChars.Checked  := Ini.ReadBool('Errors to check for', 'Space before custom characters',     False);
-    chkCheckUnnecessarySpaces.Checked       := Ini.ReadBool('Errors to check for', 'Unnecessary spaces',                 True);
+    with ErrorsToCheck do
+    begin
+      // ------------------- //
+      // Errors to check for //
+      // ------------------- //
+      chkCheckLinesWithoutLetters.Checked     := eLinesWithoutLetters;
+      chkCheckEmptySubtitles.Checked          := eEmptySubtitle;
+      chkCheckOverlapping.Checked             := eOverlapping;
+      chkCheckBadValues.Checked               := eBadValues;
+      chkCheckOverTwoLines.Checked            := eOverTwoLines;
+      chkCheckHearingImpaired.Checked         := eHearingImpaired;
+      chkCheckTextBeforeColon.Checked         := eTextBeforeColon;
+      chkCheckOnlyIfCapitalLetters.Checked    := eOnlyIfCapitalLetters;
+      chkCheckUnnecessaryDots.Checked         := eUnnecessaryDots;
+      chkCheckProhibitedChars.Checked         := eProhibitedCharacter;
+      chkCheckRepeatedChars.Checked           := eRepeatedCharacter;
+      chkCheckRepeatedSubs.Checked            := eRepeatedSubtitle;
+      chkCheckOCRErrors.Checked               := eOCRErrors;
+      chkCheckOpnDlgInSubsWithOneLine.Checked := eOpnDlgSubsOneLine;
+      chkCheckSpaceAfterCustomChars.Checked   := eSpaceAfterCustChars;
+      chkCheckSpaceBeforeCustomChars.Checked  := eSpaceBeforeCustChars;
+      chkCheckUnnecessarySpaces.Checked       := eUnnecessarySpaces;
 
-    // ------------- //
-    // Errors to fix //
-    // ------------- //
-    chkFixLinesWithoutLetters.Checked     := Ini.ReadBool('Errors to fix', 'Lines without letters',              True);
-    chkFixEmptySubtitles.Checked          := Ini.ReadBool('Errors to fix', 'Empty subtitles',                    True);
-    chkFixOverlapping.Checked             := Ini.ReadBool('Errors to fix', 'Overlapping subtitles',              True);
-    chkFixBadValues.Checked               := Ini.ReadBool('Errors to fix', 'Bad values',                         True);
-    chkFixOverTwoLines.Checked            := Ini.ReadBool('Errors to fix', 'Subtitles over two lines',           True);
-    chkFixHearingImpaired.Checked         := Ini.ReadBool('Errors to fix', 'Hearing impaired subtitles',         True);
-    chkFixTextBeforeColon.Checked         := Ini.ReadBool('Errors to fix', 'Text before colon (":")',            True);
-    chkFixOnlyIfCapitalLetters.Checked    := Ini.ReadBool('Errors to fix', 'Only if text is in capital letters', True);
-    chkFixUnnecessaryDots.Checked         := Ini.ReadBool('Errors to fix', 'Unnecessary dots',                   True);
-    chkFixProhibitedChars.Checked         := Ini.ReadBool('Errors to fix', 'Prohibited characters',              False);
-    chkFixRepeatedChars.Checked           := Ini.ReadBool('Errors to fix', 'Repeated characters',                True);
-    chkFixRepeatedSubs.Checked            := Ini.ReadBool('Errors to fix', 'Repeated subtitles',                 True);
-    chkFixOCRErrors.Checked               := Ini.ReadBool('Errors to fix', 'OCR Errors',                         True);
-    chkFixOpnDlgInSubsWithOneLine.Checked := Ini.ReadBool('Errors to fix', '"-" in subtitles with one line',     False);
-    chkFixSpaceAfterCustomChars.Checked   := Ini.ReadBool('Errors to fix', 'Space after custom characters',      True);
-    chkFixSpaceBeforeCustomChars.Checked  := Ini.ReadBool('Errors to fix', 'Space before custom characters',     False);
-    chkFixUnnecessarySpaces.Checked       := Ini.ReadBool('Errors to fix', 'Unnecessary spaces',                 True);
+      chkCheckTooLongDur.Checked              := eTooLongDurations;
+      chkCheckTooShortDur.Checked             := eTooShortDurations;
+      chkCheckTooLongLines.Checked            := eTooLongLines;
+      chkTooSmallCPS.Checked                  := eTooSmallCPS;
+      chkTooBigCPS.Checked                    := eTooBigCPS;
 
-    // --------------------------- //
-    // Unnecessary spaces to check //
-    // --------------------------- //
-    lstSpacesToCheck.Checked[0] := Ini.ReadBool('Unnecessary spaces to check for', 'Enters and spaces at the beginning and end', True);
-    lstSpacesToCheck.Checked[1] := Ini.ReadBool('Unnecessary spaces to check for', 'Spaces between enters (left and right)',     True);
-    lstSpacesToCheck.Checked[2] := Ini.ReadBool('Unnecessary spaces to check for', 'Double spaces and enters',                   True);
-    lstSpacesToCheck.Checked[3] := Ini.ReadBool('Unnecessary spaces to check for', 'Spaces in front of punctuation marks',       True);
-    lstSpacesToCheck.Checked[4] := Ini.ReadBool('Unnecessary spaces to check for', 'Spaces after "¿" and "¡"',                   True);
-    lstSpacesToCheck.Checked[5] := Ini.ReadBool('Unnecessary spaces to check for', 'Spaces before "?" and  "!"',                 True);
-    lstSpacesToCheck.Checked[6] := Ini.ReadBool('Unnecessary spaces to check for', 'Spaces between numbers',                     True);
+      // --------------------------- //
+      // Unnecessary spaces to check //
+      // --------------------------- //
+      lstSpacesToCheck.Checked[0] := EntersAndSpacesBeginningEnd in eWhatUnnecessarySpaces;
+      lstSpacesToCheck.Checked[1] := SpacesBetweenEnters in eWhatUnnecessarySpaces;
+      lstSpacesToCheck.Checked[2] := DoubleSpacesAndEnters in eWhatUnnecessarySpaces;
+      lstSpacesToCheck.Checked[3] := SpacesFrontPunctuation in eWhatUnnecessarySpaces;
+      lstSpacesToCheck.Checked[4] := SpacesAfterQuestionAndExclamation in eWhatUnnecessarySpaces;
+      lstSpacesToCheck.Checked[5] := SpacesBeforeQuestionAndExclamation in eWhatUnnecessarySpaces;
+      lstSpacesToCheck.Checked[6] := SpacesBetweenNumbers in eWhatUnnecessarySpaces;
+    end;
 
-    // ------------------------- //
-    // Unnecessary spaces to fix //
-    // ------------------------- //
-    lstSpacesToFix.Checked[0] := Ini.ReadBool('Unnecessary spaces to fix', 'Enters and spaces at the beginning and end', True);
-    lstSpacesToFix.Checked[1] := Ini.ReadBool('Unnecessary spaces to fix', 'Spaces between enters (left and right)',     True);
-    lstSpacesToFix.Checked[2] := Ini.ReadBool('Unnecessary spaces to fix', 'Double spaces and enters',                   True);
-    lstSpacesToFix.Checked[3] := Ini.ReadBool('Unnecessary spaces to fix', 'Spaces in front of punctuation marks',       True);
-    lstSpacesToFix.Checked[4] := Ini.ReadBool('Unnecessary spaces to fix', 'Spaces after "¿" and "¡"',                   True);
-    lstSpacesToFix.Checked[5] := Ini.ReadBool('Unnecessary spaces to fix', 'Spaces before "?" and  "!"',                 True);
-    lstSpacesToFix.Checked[6] := Ini.ReadBool('Unnecessary spaces to fix', 'Spaces between numbers',                     True);
+    with ErrorsToFix do
+    begin
+      // ------------- //
+      // Errors to fix //
+      // ------------- //
+      chkFixLinesWithoutLetters.Checked     := eLinesWithoutLetters;
+      chkFixEmptySubtitles.Checked          := eEmptySubtitle;
+      chkFixOverlapping.Checked             := eOverlapping;
+      chkFixBadValues.Checked               := eBadValues;
+      chkFixOverTwoLines.Checked            := eOverTwoLines;
+      chkFixHearingImpaired.Checked         := eHearingImpaired;
+      chkFixTextBeforeColon.Checked         := eTextBeforeColon;
+      chkFixOnlyIfCapitalLetters.Checked    := eOnlyIfCapitalLetters;
+      chkFixUnnecessaryDots.Checked         := eUnnecessaryDots;
+      chkFixProhibitedChars.Checked         := eProhibitedCharacter;
+      chkFixRepeatedChars.Checked           := eRepeatedCharacter;
+      chkFixRepeatedSubs.Checked            := eRepeatedSubtitle;
+      chkFixOCRErrors.Checked               := eOCRErrors;
+      chkFixOpnDlgInSubsWithOneLine.Checked := eOpnDlgSubsOneLine;
+      chkFixSpaceAfterCustomChars.Checked   := eSpaceAfterCustChars;
+      chkFixSpaceBeforeCustomChars.Checked  := eSpaceBeforeCustChars;
+      chkFixUnnecessarySpaces.Checked       := eUnnecessarySpaces;
+
+      // ------------------------- //
+      // Unnecessary spaces to fix //
+      // ------------------------- //
+      lstSpacesToFix.Checked[0] := EntersAndSpacesBeginningEnd in eWhatUnnecessarySpaces;
+      lstSpacesToFix.Checked[1] := SpacesBetweenEnters in eWhatUnnecessarySpaces;
+      lstSpacesToFix.Checked[2] := DoubleSpacesAndEnters in eWhatUnnecessarySpaces;
+      lstSpacesToFix.Checked[3] := SpacesFrontPunctuation in eWhatUnnecessarySpaces;
+      lstSpacesToFix.Checked[4] := SpacesAfterQuestionAndExclamation in eWhatUnnecessarySpaces;
+      lstSpacesToFix.Checked[5] := SpacesBeforeQuestionAndExclamation in eWhatUnnecessarySpaces;
+      lstSpacesToFix.Checked[6] := SpacesBetweenNumbers in eWhatUnnecessarySpaces;
+    end;
 
     chkCheckTextBeforeColonClick(Sender);
     chkFixTextBeforeColonClick(Sender);
@@ -388,7 +410,7 @@ begin
     // ------------ //
     Ini.WriteBool('Information and Errors', 'Show confirmations in main form on fix', chkShowConfInMainForm.Checked);
     Ini.WriteBool('Information and Errors', 'Mark errors in main form''s list', chkMarkErrorsInList.Checked);
-    Ini.WriteInteger('Information and Errors', 'Mark with color', dlgSetColor.Color);
+    Ini.WriteInteger('Information and Errors', 'Mark with color', pnlErrorColor.Color);
     Ini.WriteBool('Information and Errors', 'Bold', chkBold.Checked);
     Ini.WriteBool('Information and Errors', 'Italic', chkItalic.Checked);
     Ini.WriteBool('Information and Errors', 'Underline', chkUnderline.Checked);
@@ -397,7 +419,8 @@ begin
     Ini.WriteBool('Information and Errors', 'Fix one unit overlap at load', chkFixOneUnitOverlap.Checked);
     ShowConfMainForm  := chkShowConfInMainForm.Checked;
     MarkErrorsInList  := chkMarkErrorsInList.Checked;
-    MarkWithColor     := dlgSetColor.Color;
+//    MarkWithColor     := dlgSetColor.Color;
+    MarkWithColor     := pnlErrorColor.Color;
     MarkBold          := chkBold.Checked;
     MarkItalic        := chkItalic.Checked;
     MarkUnderline     := chkUnderline.Checked;
@@ -423,6 +446,8 @@ begin
     Ini.WriteInteger('Information and Errors', 'Too long duration', udTooLongDur.Position);
     Ini.WriteInteger('Information and Errors', 'Too short duration', udTooShortDur.Position);
     Ini.WriteInteger('Information and Errors', 'Too long line', udTooLongLine.Position);
+    Ini.WriteFloat('Information and Errors', 'Too small CPS', edtTooSmallCPS.Value);
+    Ini.WriteFloat('Information and Errors', 'Too big CPS', edtTooBigCPS.Value);
     RepeatableChars      := edtRepeatableChars.Text;
     ProhibitedChars      := edtProhibitedChars.Text;
     ToleranceForRepeated := udToleranceRepeatedSubs.Position;
@@ -431,143 +456,89 @@ begin
     TooLongDuration      := udTooLongDur.Position;
     TooShortDuration     := udTooShortDur.Position;
     TooLongLine          := udTooLongLine.Position;
+    TooSmallCPS          := edtTooSmallCPS.Value;
+    TooBigCPS            := edtTooBigCPS.Value;
 
-    // ------------------- //
-    // Errors to check for //
-    // ------------------- //
-    Ini.WriteBool('Errors to check for', 'Lines without letters',              chkCheckLinesWithoutLetters.Checked);
-    Ini.WriteBool('Errors to check for', 'Empty subtitles',                    chkCheckEmptySubtitles.Checked);
-    Ini.WriteBool('Errors to check for', 'Overlapping subtitles',              chkCheckOverlapping.Checked);
-    Ini.WriteBool('Errors to check for', 'Bad values',                         chkCheckBadValues.Checked);
-    Ini.WriteBool('Errors to check for', 'Too long durations',                 chkCheckTooLongDur.Checked);
-    Ini.WriteBool('Errors to check for', 'Too short durations',                chkCheckTooShortDur.Checked);
-    Ini.WriteBool('Errors to check for', 'Too long lines',                     chkCheckTooLongLines.Checked);
-    Ini.WriteBool('Errors to check for', 'Subtitles over two lines',           chkCheckOverTwoLines.Checked);
-    Ini.WriteBool('Errors to check for', 'Hearing impaired subtitles',         chkCheckHearingImpaired.Checked);
-    Ini.WriteBool('Errors to check for', 'Text before colon (":")',            chkCheckTextBeforeColon.Checked);
-    Ini.WriteBool('Errors to check for', 'Only if text is in capital letters', chkCheckOnlyIfCapitalLetters.Checked);
-    Ini.WriteBool('Errors to check for', 'Unnecessary dots',                   chkCheckUnnecessaryDots.Checked);
-    Ini.WriteBool('Errors to check for', 'Prohibited characters',              chkCheckProhibitedChars.Checked);
-    Ini.WriteBool('Errors to check for', 'Repeated characters',                chkCheckRepeatedChars.Checked);
-    Ini.WriteBool('Errors to check for', 'Repeated subtitles',                 chkCheckRepeatedSubs.Checked);
-    Ini.WriteBool('Errors to check for', 'OCR Errors',                         chkCheckOCRErrors.Checked);
-    Ini.WriteBool('Errors to check for', '"- " in subtitles with one line',    chkCheckOpnDlgInSubsWithOneLine.Checked);
-    Ini.WriteBool('Errors to check for', 'Space after custom characters',      chkCheckSpaceAfterCustomChars.Checked);
-    Ini.WriteBool('Errors to check for', 'Space before custom characters',     chkCheckSpaceBeforeCustomChars.Checked);
-    Ini.WriteBool('Errors to check for', 'Unnecessary spaces',                 chkCheckUnnecessarySpaces.Checked);
+    with ErrorsToCheck do
+    begin
+      // ------------------- //
+      // Errors to check for //
+      // ------------------- //
+      eLinesWithoutLetters  := chkCheckLinesWithoutLetters.Checked;
+      eEmptySubtitle        := chkCheckEmptySubtitles.Checked;
+      eOverlapping          := chkCheckOverlapping.Checked;
+      eBadValues            := chkCheckBadValues.Checked;
+      eOverTwoLines         := chkCheckOverTwoLines.Checked;
+      eHearingImpaired      := chkCheckHearingImpaired.Checked;
+      eTextBeforeColon      := chkCheckTextBeforeColon.Checked;
+      eOnlyIfCapitalLetters := chkCheckOnlyIfCapitalLetters.Checked;
+      eUnnecessaryDots      := chkCheckUnnecessaryDots.Checked;
+      eProhibitedCharacter  := chkCheckProhibitedChars.Checked;
+      eRepeatedCharacter    := chkCheckRepeatedChars.Checked;
+      eRepeatedSubtitle     := chkCheckRepeatedSubs.Checked;
+      eOCRErrors            := chkCheckOCRErrors.Checked;
+      eOpnDlgSubsOneLine    := chkCheckOpnDlgInSubsWithOneLine.Checked;
+      eSpaceAfterCustChars  := chkCheckSpaceAfterCustomChars.Checked;
+      eSpaceBeforeCustChars := chkCheckSpaceBeforeCustomChars.Checked;
+      eUnnecessarySpaces    := chkCheckUnnecessarySpaces.Checked;
 
-    ErrorsToCheck.eLinesWithoutLetters  := chkCheckLinesWithoutLetters.Checked;
-    ErrorsToCheck.eEmptySubtitle        := chkCheckEmptySubtitles.Checked;
-    ErrorsToCheck.eOverlapping          := chkCheckOverlapping.Checked;
-    ErrorsToCheck.eBadValues            := chkCheckBadValues.Checked;
-    ErrorsToCheck.eTooLongDurations     := chkCheckTooLongDur.Checked;
-    ErrorsToCheck.eTooShortDurations    := chkCheckTooShortDur.Checked;
-    ErrorsToCheck.eTooLongLines         := chkCheckTooLongLines.Checked;
-    ErrorsToCheck.eOverTwoLines         := chkCheckOverTwoLines.Checked;
-    ErrorsToCheck.eHearingImpaired      := chkCheckHearingImpaired.Checked;
-    ErrorsToCheck.eTextBeforeColon      := chkCheckTextBeforeColon.Checked;
-    ErrorsToCheck.eOnlyIfCapitalLetters := chkCheckOnlyIfCapitalLetters.Checked;
-    ErrorsToCheck.eUnnecessaryDots      := chkCheckUnnecessaryDots.Checked;
-    ErrorsToCheck.eProhibitedCharacter  := chkCheckProhibitedChars.Checked;
-    ErrorsToCheck.eRepeatedCharacter    := chkCheckRepeatedChars.Checked;
-    ErrorsToCheck.eRepeatedSubtitle     := chkCheckRepeatedSubs.Checked;
-    ErrorsToCheck.eOCRErrors            := chkCheckOCRErrors.Checked;
-    ErrorsToCheck.eOpnDlgSubsOneLine    := chkCheckOpnDlgInSubsWithOneLine.Checked;
-    ErrorsToCheck.eSpaceAfterCustChars  := chkCheckSpaceAfterCustomChars.Checked;
-    ErrorsToCheck.eSpaceBeforeCustChars := chkCheckSpaceBeforeCustomChars.Checked;
-    ErrorsToCheck.eUnnecessarySpaces    := chkCheckUnnecessarySpaces.Checked;
+      eTooLongDurations     := chkCheckTooLongDur.Checked;
+      eTooShortDurations    := chkCheckTooShortDur.Checked;
+      eTooLongLines         := chkCheckTooLongLines.Checked;
+      eTooSmallCPS          := chkTooSmallCPS.Checked;
+      eTooBigCPS            := chkTooBigCPS.Checked;
 
+      // --------------------------- //
+      // Unnecessary spaces to check //
+      // --------------------------- //
+      eWhatUnnecessarySpaces := [];
+      if lstSpacesToCheck.Checked[0] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [EntersAndSpacesBeginningEnd];
+      if lstSpacesToCheck.Checked[1] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesBetweenEnters];
+      if lstSpacesToCheck.Checked[2] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [DoubleSpacesAndEnters];
+      if lstSpacesToCheck.Checked[3] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesFrontPunctuation];
+      if lstSpacesToCheck.Checked[4] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesAfterQuestionAndExclamation];
+      if lstSpacesToCheck.Checked[5] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesBeforeQuestionAndExclamation];
+      if lstSpacesToCheck.Checked[6] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesBetweenNumbers];
+    end;
+    ErrorsToCheck.SaveVars;
 
-    // ------------- //
-    // Errors to fix //
-    // ------------- //
-    Ini.WriteBool('Errors to fix', 'Lines without letters',              chkFixLinesWithoutLetters.Checked);
-    Ini.WriteBool('Errors to fix', 'Empty subtitles',                    chkFixEmptySubtitles.Checked);
-    Ini.WriteBool('Errors to fix', 'Overlapping subtitles',              chkFixOverlapping.Checked);
-    Ini.WriteBool('Errors to fix', 'Bad values',                         chkFixBadValues.Checked);
-    Ini.WriteBool('Errors to fix', 'Subtitles over two lines',           chkFixOverTwoLines.Checked);
-    Ini.WriteBool('Errors to fix', 'Hearing impaired subtitles',         chkFixHearingImpaired.Checked);
-    Ini.WriteBool('Errors to fix', 'Text before colon (":")',            chkFixTextBeforeColon.Checked);
-    Ini.WriteBool('Errors to fix', 'Only if text is in capital letters', chkFixOnlyIfCapitalLetters.Checked);
-    Ini.WriteBool('Errors to fix', 'Unnecessary dots',                   chkFixUnnecessaryDots.Checked);
-    Ini.WriteBool('Errors to fix', 'Prohibited characters',              chkFixProhibitedChars.Checked);
-    Ini.WriteBool('Errors to fix', 'Repeated characters',                chkFixRepeatedChars.Checked);
-    Ini.WriteBool('Errors to fix', 'Repeated subtitles',                 chkFixRepeatedSubs.Checked);
-    Ini.WriteBool('Errors to fix', 'OCR Errors',                         chkFixOCRErrors.Checked);
-    Ini.WriteBool('Errors to fix', '"-" in subtitles with one line',     chkFixOpnDlgInSubsWithOneLine.Checked);
-    Ini.WriteBool('Errors to fix', 'Space after custom characters',      chkFixSpaceAfterCustomChars.Checked);
-    Ini.WriteBool('Errors to fix', 'Space before custom characters',     chkFixSpaceBeforeCustomChars.Checked);
-    Ini.WriteBool('Errors to fix', 'Unnecessary spaces',                 chkFixUnnecessarySpaces.Checked);
+    with ErrorsToFix do
+    begin
+      // ------------- //
+      // Errors to fix //
+      // ------------- //
+      eLinesWithoutLetters  := chkFixLinesWithoutLetters.Checked;
+      eEmptySubtitle        := chkFixEmptySubtitles.Checked;
+      eOverlapping          := chkFixOverlapping.Checked;
+      eBadValues            := chkFixBadValues.Checked;
+      eOverTwoLines         := chkFixOverTwoLines.Checked;
+      eHearingImpaired      := chkFixHearingImpaired.Checked;
+      eTextBeforeColon      := chkFixTextBeforeColon.Checked;
+      eOnlyIfCapitalLetters := chkFixOnlyIfCapitalLetters.Checked;
+      eUnnecessaryDots      := chkFixUnnecessaryDots.Checked;
+      eProhibitedCharacter  := chkFixProhibitedChars.Checked;
+      eRepeatedCharacter    := chkFixRepeatedChars.Checked;
+      eRepeatedSubtitle     := chkFixRepeatedSubs.Checked;
+      eOCRErrors            := chkFixOCRErrors.Checked;
+      eOpnDlgSubsOneLine    := chkFixOpnDlgInSubsWithOneLine.Checked;
+      eSpaceAfterCustChars  := chkFixSpaceAfterCustomChars.Checked;
+      eSpaceBeforeCustChars := chkFixSpaceBeforeCustomChars.Checked;
+      eUnnecessarySpaces    := chkFixUnnecessarySpaces.Checked;
 
-    ErrorsToFix.eLinesWithoutLetters  := chkFixLinesWithoutLetters.Checked;
-    ErrorsToFix.eEmptySubtitle        := chkFixEmptySubtitles.Checked;
-    ErrorsToFix.eOverlapping          := chkFixOverlapping.Checked;
-    ErrorsToFix.eBadValues            := chkFixBadValues.Checked;
-    ErrorsToFix.eOverTwoLines         := chkFixOverTwoLines.Checked;
-    ErrorsToFix.eHearingImpaired      := chkFixHearingImpaired.Checked;
-    ErrorsToFix.eTextBeforeColon      := chkFixTextBeforeColon.Checked;
-    ErrorsToFix.eOnlyIfCapitalLetters := chkFixOnlyIfCapitalLetters.Checked;
-    ErrorsToFix.eUnnecessaryDots      := chkFixUnnecessaryDots.Checked;
-    ErrorsToFix.eProhibitedCharacter  := chkFixProhibitedChars.Checked;
-    ErrorsToFix.eRepeatedCharacter    := chkFixRepeatedChars.Checked;
-    ErrorsToFix.eRepeatedSubtitle     := chkFixRepeatedSubs.Checked;
-    ErrorsToFix.eOCRErrors            := chkFixOCRErrors.Checked;
-    ErrorsToFix.eOpnDlgSubsOneLine    := chkFixOpnDlgInSubsWithOneLine.Checked;
-    ErrorsToFix.eSpaceAfterCustChars  := chkFixSpaceAfterCustomChars.Checked;
-    ErrorsToFix.eSpaceBeforeCustChars := chkFixSpaceBeforeCustomChars.Checked;
-    ErrorsToFix.eUnnecessarySpaces    := chkFixUnnecessarySpaces.Checked;
+      // ------------------------- //
+      // Unnecessary spaces to fix //
+      // ------------------------- //
+      eWhatUnnecessarySpaces := [];
+      if lstSpacesToFix.Checked[0] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [EntersAndSpacesBeginningEnd];
+      if lstSpacesToFix.Checked[1] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesBetweenEnters];
+      if lstSpacesToFix.Checked[2] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [DoubleSpacesAndEnters];
+      if lstSpacesToFix.Checked[3] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesFrontPunctuation];
+      if lstSpacesToFix.Checked[4] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesAfterQuestionAndExclamation];
+      if lstSpacesToFix.Checked[5] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesBeforeQuestionAndExclamation];
+      if lstSpacesToFix.Checked[6] then eWhatUnnecessarySpaces := eWhatUnnecessarySpaces + [SpacesBetweenNumbers];
+    end;
+    ErrorsToFix.SaveVars;
 
-    // --------------------------- //
-    // Unnecessary spaces to check //
-    // --------------------------- //
-    Ini.WriteBool('Unnecessary spaces to check for', 'Enters and spaces at the beginning and end', lstSpacesToCheck.Checked[0]);
-    Ini.WriteBool('Unnecessary spaces to check for', 'Spaces between enters (left and right)',     lstSpacesToCheck.Checked[1]);
-    Ini.WriteBool('Unnecessary spaces to check for', 'Double spaces and enters',                   lstSpacesToCheck.Checked[2]);
-    Ini.WriteBool('Unnecessary spaces to check for', 'Spaces in front of punctuation marks',       lstSpacesToCheck.Checked[3]);
-    Ini.WriteBool('Unnecessary spaces to check for', 'Spaces after "¿" and "¡"',                   lstSpacesToCheck.Checked[4]);
-    Ini.WriteBool('Unnecessary spaces to check for', 'Spaces before "?" and  "!"',                 lstSpacesToCheck.Checked[5]);
-    Ini.WriteBool('Unnecessary spaces to check for', 'Spaces between numbers',                     lstSpacesToCheck.Checked[6]);
-    ErrorsToCheck.eWhatUnnecessarySpaces := [];
-    if lstSpacesToCheck.Checked[0] then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [EntersAndSpacesBeginningEnd];
-    if lstSpacesToCheck.Checked[1] then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [SpacesBetweenEnters];
-    if lstSpacesToCheck.Checked[2] then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [DoubleSpacesAndEnters];
-    if lstSpacesToCheck.Checked[3] then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [SpacesFrontPunctuation];
-    if lstSpacesToCheck.Checked[4] then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [SpacesAfterQuestionAndExclamation];
-    if lstSpacesToCheck.Checked[5] then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [SpacesBeforeQuestionAndExclamation];
-    if lstSpacesToCheck.Checked[6] then
-      ErrorsToCheck.eWhatUnnecessarySpaces := ErrorsToCheck.eWhatUnnecessarySpaces + [SpacesBetweenNumbers];
-
-    // ------------------------- //
-    // Unnecessary spaces to fix //
-    // ------------------------- //
-    Ini.WriteBool('Unnecessary spaces to fix', 'Enters and spaces at the beginning and end', lstSpacesToFix.Checked[0]);
-    Ini.WriteBool('Unnecessary spaces to fix', 'Spaces between enters (left and right)',     lstSpacesToFix.Checked[1]);
-    Ini.WriteBool('Unnecessary spaces to fix', 'Double spaces and enters',                   lstSpacesToFix.Checked[2]);
-    Ini.WriteBool('Unnecessary spaces to fix', 'Spaces in front of punctuation marks',       lstSpacesToFix.Checked[3]);
-    Ini.WriteBool('Unnecessary spaces to fix', 'Spaces after "¿" and "¡"',                   lstSpacesToFix.Checked[4]);
-    Ini.WriteBool('Unnecessary spaces to fix', 'Spaces before "?" and  "!"',                 lstSpacesToFix.Checked[5]);
-    Ini.WriteBool('Unnecessary spaces to fix', 'Spaces between numbers',                     lstSpacesToFix.Checked[6]);
-    ErrorsToFix.eWhatUnnecessarySpaces := [];
-    if lstSpacesToFix.Checked[0] then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [EntersAndSpacesBeginningEnd];
-    if lstSpacesToFix.Checked[1] then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [SpacesBetweenEnters];
-    if lstSpacesToFix.Checked[2] then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [DoubleSpacesAndEnters];
-    if lstSpacesToFix.Checked[3] then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [SpacesFrontPunctuation];
-    if lstSpacesToFix.Checked[4] then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [SpacesAfterQuestionAndExclamation];
-    if lstSpacesToFix.Checked[5] then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [SpacesBeforeQuestionAndExclamation];
-    if lstSpacesToFix.Checked[6] then
-      ErrorsToFix.eWhatUnnecessarySpaces := ErrorsToFix.eWhatUnnecessarySpaces + [SpacesBetweenNumbers];
   finally
     Ini.Free;
   end;
@@ -575,23 +546,23 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmInfoErrorsSettings.btnSetColorClick(Sender: TObject);
+procedure TfrmInfoErrorsSettings.SetColorClick(Sender: TObject);
 begin
-  dlgSetColor.Execute;
+  dlgSetColor.Color := pnlErrorColor.Color;
+  if dlgSetColor.Execute then
+    pnlErrorColor.Color := dlgSetColor.Color;
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmInfoErrorsSettings.chkCheckTextBeforeColonClick(
-  Sender: TObject);
+procedure TfrmInfoErrorsSettings.chkCheckTextBeforeColonClick(Sender: TObject);
 begin
   chkCheckOnlyIfCapitalLetters.Enabled := chkCheckTextBeforeColon.Checked;
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmInfoErrorsSettings.chkFixTextBeforeColonClick(
-  Sender: TObject);
+procedure TfrmInfoErrorsSettings.chkFixTextBeforeColonClick(Sender: TObject);
 begin
   chkFixOnlyIfCapitalLetters.Enabled := chkFixTextBeforeColon.Checked;
 end;

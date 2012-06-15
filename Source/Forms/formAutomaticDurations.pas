@@ -113,8 +113,8 @@ begin
     if Node <> frmMain.lstSubtitles.GetLast then
     begin
       // Avoid overlapping
-      if (InitialTime + NewDuration) > GetStartTime(Node.NextSibling) then
-        NewDuration := GetStartTime(Node.NextSibling) - 1 - InitialTime;
+      if (InitialTime + NewDuration) > GetStartTime(Node.NextSibling) - frmMain.Vars.GapBetweenSubs then
+        NewDuration := GetStartTime(Node.NextSibling) - InitialTime - frmMain.Vars.GapBetweenSubs;
     end;
 
     if (rdoAllCases.Checked) or

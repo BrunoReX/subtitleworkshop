@@ -1,12 +1,14 @@
 object frmVariousInfo: TfrmVariousInfo
-  Left = 192
-  Top = 103
-  BorderIcons = []
-  BorderStyle = bsSingle
+  Left = 255
+  Top = 369
+  Width = 608
+  Height = 447
+  BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'frmVariousInfo'
-  ClientHeight = 302
-  ClientWidth = 600
   Color = clBtnFace
+  Constraints.MaxWidth = 608
+  Constraints.MinHeight = 329
+  Constraints.MinWidth = 400
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -15,25 +17,34 @@ object frmVariousInfo: TfrmVariousInfo
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
+  DesignSize = (
+    600
+    420)
   PixelsPerInch = 96
   TextHeight = 13
   object pgeCtrl: TPageControl
     Left = 8
     Top = 8
     Width = 585
-    Height = 255
+    Height = 361
     ActivePage = pgeInformation
+    Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
     object pgeInformation: TTabSheet
       Caption = 'pgeInformation'
+      DesignSize = (
+        577
+        333)
       object lstInfo: TVirtualStringTree
         Left = 8
         Top = 8
         Width = 561
-        Height = 209
+        Height = 315
+        Anchors = [akLeft, akTop, akRight, akBottom]
         DefaultPasteMode = amInsertAfter
         EditDelay = 100
         Header.AutoSizeIndex = 4
+        Header.DefaultHeight = 17
         Header.Font.Charset = ANSI_CHARSET
         Header.Font.Color = clWindowText
         Header.Font.Height = -11
@@ -112,7 +123,7 @@ object frmVariousInfo: TfrmVariousInfo
           Width = 225
           Height = 21
           Style = csDropDownList
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 2
         end
         object chkBold: TCheckBox
@@ -145,9 +156,10 @@ object frmVariousInfo: TfrmVariousInfo
   end
   object btnOk: TButton
     Left = 504
-    Top = 270
+    Top = 380
     Width = 89
     Height = 25
+    Anchors = [akRight, akBottom]
     Cancel = True
     Caption = '&Ok'
     Font.Charset = ANSI_CHARSET
