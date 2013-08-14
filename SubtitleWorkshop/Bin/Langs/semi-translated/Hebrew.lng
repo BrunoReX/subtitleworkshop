@@ -14,6 +14,7 @@ FPS=פריימים לשנייה
 PlainText=טקסט רגיל
 STP=פרוייקט תרגום כתוביות
 SRF=קובץ דו"ח על כתוביות
+AllTheFiles=All files
 
 [Standard buttons]
 01=&אישור
@@ -39,8 +40,13 @@ SRF=קובץ דו"ח על כתוביות
 12=תרגום
 13=שורות שלא תורגמו %d
 14=:אורך
-15=:(%S (%S תווים
+15=:%S (%S תווים)
 16=- כתובית שלא תורגמה עדיין -
+17=Lines:
+18=Notes:
+19=Pause
+20=%d subtitles selected / %d
+21=#%d / %d
 
 [Main menu header]
 01=קובץ
@@ -50,6 +56,7 @@ SRF=קובץ דו"ח על כתוביות
 05=סרט
 06=הגדרות
 07=עזרה
+08=View
 
 [Main menu/File]
 01=...קובץ כתוביות חדש
@@ -66,6 +73,7 @@ SRF=קובץ דו"ח על כתוביות
 12=...שמור בשם
 13=סגור
 14=יציאה
+15=Save marking
 
 [Main menu/Edit]
 01=בטל
@@ -77,6 +85,8 @@ SRF=קובץ דו"ח על כתוביות
 07=העתק
 08=הדבק
 09=בחר הכל
+10=Invert selection
+11=Insert symbol...
 
 [Main menu/Edit/Timings]
 01=תזמונים
@@ -90,6 +100,11 @@ SRF=קובץ דו"ח על כתוביות
 09=משכי זמן אוטומטיים
 10=קרא תזמונים מקובץ
 11=%S :הזז במילי-שניות
+12=Extend length to previous
+13=Set pauses...
+14=Shift to next
+15=Shift to previous
+16=Round time values...
 
 [Main menu/Edit/Texts]
 01=טקסטים
@@ -100,6 +115,8 @@ SRF=קובץ דו"ח על כתוביות
 06=חציית שורה מהירה
 07=קבע אורך שורה מירבי
 08=קרא טקסטים(ללא זמנים) מקובץ
+09=Fast smart line adjust
+10=Fast unbreak subtitles
 
 [Main menu/Edit/Subtitles]
 01=כתוביות
@@ -117,6 +134,10 @@ SRF=קובץ דו"ח על כתוביות
 13=מחק קישורים לא נחוצים
 14=סמן כתוביות נבחרות
 15=בטל סימון כתוביות נבחרות
+16=Auto combine subtitles...
+17=Delete dots at the beginning
+18=Jump to next marked
+19=Jump to previous marked
 
 [Main menu/Edit/Translation]
 01=תרגום
@@ -148,6 +169,8 @@ SRF=קובץ דו"ח על כתוביות
 16=תצוגה מקדימה חיצונית
 17=SAMI זיהוי שפת
 18=סקריפטי פסקל
+19=Jump to previous error
+20=Show CpS boxes
 
 [Main menu/Movie]
 01=...פתח
@@ -156,6 +179,11 @@ SRF=קובץ דו"ח על כתוביות
 04=מצב תצוגת וידיאו
 05=הצג כתוביות
 06=שמור קובץ אתחול לסרט
+07=Audio stream
+08=None
+09=Video renderer
+10=Default
+11=VMR9
 
 [Main menu/Movie/Playback]
 01=הצג
@@ -192,6 +220,9 @@ SRF=קובץ דו"ח על כתוביות
 03=הראה פאנל שמאלי
 04=הראה עריכת זמן
 05=הפעל עריכה-במקום
+06=Refresh language files
+07=Files refreshed
+08=keys
 
 [Main menu/Help]
 01=...%s אודות
@@ -203,6 +234,9 @@ SRF=קובץ דו"ח על כתוביות
 03=קו תחתון
 04=קבע צבע
 05=הסר תגי צבע
+06=Remove all tags
+07=Delete
+08=Style
 
 [Video preview hints]
 01=הפסק/נגן (%s)
@@ -221,6 +255,8 @@ SRF=קובץ דו"ח על כתוביות
 14=סמן כנקודת תזמון ראשונה (%s)
 15=סמן כנקודת תזמון אחרונה (%s)
 16=(%s) הוסף נקודת סנכרון ווידאו/כתובית
+17=Volume: %d%%
+18=Mute/Unmute
 
 [Save as]
 01=שמור בשם
@@ -247,7 +283,6 @@ SRF=קובץ דו"ח על כתוביות
 [Settings Form]
 01=הגדרות
 02=שנה את תצורת התוכנה
-; Sections
 03=כללי
 04=מתקדם
 05=שפות
@@ -261,9 +296,6 @@ SRF=קובץ דו"ח על כתוביות
 13=תוכנית
 14=רשימה
 15=תפריט
-;-----------------;
-; General section ;
-;-----------------;
 16=תמיד עליון
 17=אפשר לפתוח יותר מחלון אחד
 18=בקש אישור חוזר על מחיקת שורות
@@ -276,9 +308,6 @@ SRF=קובץ דו"ח על כתוביות
 25=בטל אינטרקציה עם תגי עיצוב
 26=עבודה עם תגי עיצוב
 27=:הגבלה על זכרון קבצים אחרונים
-;----------;
-; Advanced ;
-;----------;
 28=התאמת שורה אוטומטית
 29=:שתי שורות, אם יותר ארוך מ
 30=תוים
@@ -289,36 +318,21 @@ SRF=קובץ דו"ח על כתוביות
 35=:אורך שורה מקסימלי
 36=:זמן הזזה
 37=מילי-שניות
-;----------;
-; Charsets ;
-;----------;
 38=הראה בחלון הראשי
 39=:שפת המקור
 40=:שפת התרגום
-;-----------------;
-; Formats section ;
-;-----------------;
 41=:פורמט ברירת מחדל
 42="פורמטים שיש להראות בחלון "שמירה בשם
 43=הראה פורמטים שנוצרו ע"י המשתמש
 44=בחר &הכל
 45=בחר &כלום
-;--------------------;
-; File types section ;
-;--------------------;
 46=שייך סוגי הקבצים לתוכנה עם פתיחתה
 47=קשר עם רוב הסיומות הנתמכות
-;--------------;
-; Save section ;
-;--------------;
 48=שאל אם לשמור עם סגירת קובץ/יציאה מהתוכנה
 49=שמור את העבודה אוטומטית כל
 50=.דקות
 51=שמור כגיבוי
 52=...הגדרות פלט
-;---------------;
-; Video preview ;
-;---------------;
 53=:קליק כפול על שורה
 54=:שניות לקפוץ
 55=:קליק כפול על שורה+Shift לחיצה על
@@ -328,9 +342,6 @@ SRF=קובץ דו"ח על כתוביות
 59=:זמן העברת אחורה וקדימה
 60=.שניות
 61=ברירת מחדל לקצב ניגון אלטרנטיבי
-;-------------------------;
-; Video preview Subtitles ;
-;-------------------------;
 62=צייר גבול
 63=צייר צל
 64=נסה לצייר רקע שקוף
@@ -341,40 +352,83 @@ SRF=קובץ דו"ח על כתוביות
 69=עובי הגבול:
 70=עובי הצל:
 71=דוגמה
-;--------------------------;
-; External Preview General ;
-;--------------------------;
 72=:כתובת נגן הווידאו
 73=נסה למצוא תוכנת נגן
 74=בקש ווידאו שונה כל פעם
 75=בדוק כל פעם עם אותו הווידאו
-;---------------------------;
-; External Preview Advanced ;
-;---------------------------;
 76=:שמור קובץ זמני בפורמט
 77=פורמט המקור
 78=פורמט אחר
 79=:פרמטרים שיש לשלוח לנגן הווידאו
 80=VIDEO_FILE|מייצג קובץ של הסרט שעליו|.אתה עומד לנסות את הכתוביות|SUBT_FILE|מייצג את קובץ הכתוביות הזה. אתה יכול להוסיף פרמטרים נוספים בהתאם לנגן, למשל למסך מלא.
-;----------------;
-; Look / Program ;
-;----------------;
 81=:גופן לשימוש בתוכנה
 82=:גודל הגופן
 83=:"יישור שדות "טקסט" ו"תרגום
 84=שמאל|ימין|מרכז
-;-------------;
-; Look / List ;
-;-------------;
 85=הראה קווי רשת
 86=הראה עיצוב על הכתוביות
 87=:סמן כתוביות לא מתורגמות בצבע
 88=הראה סרגל גלילה אופקי
-;-------------;
-; Look / Menu ;
-;-------------;
 89=Office XP השתמש בתפריט בסגנון
 90=השתמש בצבעי מעבר בתפריט
+91=Tags mode:
+92=Multiple tags mode
+93=Single tags mode (the old mode)
+94=Auto delete tags
+95=Default subtitle duration:
+96=Default subtitle pause:
+97=Increase step (time):
+98=Increase step (frames):
+99=frames
+100=Keep min duration of:
+101=but don''t allow overlaps
+102=Automatically round time values to:
+103=Round time values on subtitle load
+104=Notes charset:
+105=Add "Open with Subtitle Workshop" to shell context menu
+106=Ask to save new subttiles
+107=Save empty subtitles
+108=Vertical video center align
+109=Enter full screen on double click
+110=Setting Show and Hide times
+111=Shift Show value:
+112=Shift Hide value:
+113=Align left when subtitles contain a new line starting with "-"
+114=Relative font size
+115=Keep subtitle on video
+116=Try antialiasing (Force using regions must be off)
+117=Smart main window and subtitle list resize
+118=Resize subtitle list columns when resizing form
+119=Mark untranslated subtitles with background:
+120=Right click selection
+121=Row height:
+122=Text margin:
+123=Selection
+124=Text:
+125=Color:
+126=Transparency:
+127=Columns
+128=Align:
+129=Display style:
+130=Full
+131=Compact
+132=Marking with color:
+133=Marking with background:
+134=Columns to mark:
+135=Mark column "%s"
+136=Marking priority:
+137=Low (before error marking)
+138=High (after error marking)
+139=Marked subtitle color in video preview:
+140=Marking file
+141=Do not save marking file
+142=Ask each time to save marking file
+143=Automatically save marking file on subtitle save
+144=Automatically load marking file
+145=Marking
+146=Play video on load
+147=Visual subtitle representation color:
+148=Hilight tags in "Text" and "Translation" fields:
 
 [Output settings]
 01=הגדרות פלט
@@ -435,11 +489,13 @@ SRF=קובץ דו"ח על כתוביות
 03=מילי-שניות
 04=קבע אורך מינימלי
 05=הגדלת הזמן לא תגרום לחפיפה*
+06=Increase at start if necessary
 
 [Set delay]
 01=קבע השהייה
 02=לכל הכתוביות
 03=לכתוביות שנבחרו
+04=From first selected until last subtitle
 
 [Adjust subtitles]
 01=התאם כתוביות
@@ -490,6 +546,12 @@ SRF=קובץ דו"ח על כתוביות
 08=רק אם משך הזמן החדש יותר קצר מהמקורי
 09=כלל הכתוביות
 10=כתוביות נבחרות בלבד
+11=Method
+12=Characters
+13=per second
+14=Increase at start if necessary
+15=Maximum increase at start (0 = no limit):
+16=milliseconds
 
 [Convert case]
 01=(המרת אותיות גדולות וקטנות (לועזי
@@ -540,7 +602,6 @@ SRF=קובץ דו"ח על כתוביות
 [Batch convert]
 01=המרה קבוצתית
 02=.המרת קבצים רבים לאותו פורמט בכמה צעדים פשוטים
-; Buttons
 03=&<חזור
 04=&הבא>
 05=ה&מר
@@ -548,7 +609,6 @@ SRF=קובץ דו"ח על כתוביות
 07=&סגור
 08=&הכל
 09=&כלום
-; Page 1
 10=:סיומות
 11=:כתובת לחיפוש
 12=כולל תת-תיקיות
@@ -556,19 +616,15 @@ SRF=קובץ דו"ח על כתוביות
 14=:תיקייה לפלט
 15=:פורמט הפלט
 16=:ברירת מחדל לקצב פריימים
-; List columns
 17=שם קובץ
 18=פורמט
 19=קצב פריימים
 20=גודל
-; Page 2
 21=ה&וסף
 22=ה&סר
 23=&נקה
-; Page 3
 24=:הושלם! לפרטים ראה קובץ מהלך פעולה
 25=...שמור
-; Searching
 26=%s בודק קובץ
 
 [Batch convert log]
@@ -640,21 +696,12 @@ SRF=קובץ דו"ח על כתוביות
 06=כתובית
 07=סוג
 08=תיאור
-;-------;
-; Types ;
-;-------;
 09=שגיאה
 10=אזהרה
 11=מידע
 13=תוקן
-;----------------------;
-; Information messages ;
-;----------------------;
 14=%d :מספר שגיאות כולל
 15=%d :מספר שגיאות שתוקנו
-;---------------;
-; Error reports ;
-;---------------;
 16=מכיל שורות ללא אותיות
 17=כתובית ריקה
 18=חפיפה עם כתובית קודמת
@@ -675,9 +722,6 @@ SRF=קובץ דו"ח על כתוביות
 33=אין רווח לפני תו מותאם אישית
 34=רווחים בלתי נחוצים
 35=כתובית מסומנת
-;-------------;
-; Fix reports ;
-;-------------;
 36=שורות ללא אותיות נמחקו
 37=כתובית ריקה נמחקה
 38=חפיפה תוקנה
@@ -695,8 +739,52 @@ SRF=קובץ דו"ח על כתוביות
 50=הוסף רווח אחרי תו מותאם אישית
 51=הוסף רווח לפני תו מותאם אישית
 52=רווחים בלתי נחוצים הוסרו
-;-----
 53=הקלק פעמיים כדי לעבור לשורה זו בחלון הראשי
+67=E
+68=W
+69=F
+70=CI
+71=Select
+72=+ Select
+73=- Select
+74=Select subtitles
+75=Add to selected subtitles
+76=Remove from selected subtitles
+77=All
+78=None
+79=Inverse
+80=Select all
+81=Select none
+82=Invert selection
+83=Error types sets
+84=Save error types set
+85=Delete error types set
+86=Error types
+87=Custom info
+88=Show/hide errors
+89=Show/hide warnings
+90=Show/hide fixed
+91=Show/hide custom info
+92=Show/hide Error types panel
+93=Show/hide Custom info panel
+65=Custom info
+66=Displayed: %d
+54=Unnecessary tags
+56=Dash on first line
+58=Too many CpS
+60=Too short pause
+62=Dialogue on one line
+55=Removed unnecessary tags
+57=Removed dash on first line
+59=Fixed too much CpS
+61=Fixed too short pause
+63=Fixed dialogue on one line
+94=Export to file
+95=Text file
+96=char
+97=sec
+98=fr
+99=cps
 
 [Information and errors Settings]
 01=הגדרות
@@ -726,7 +814,6 @@ SRF=קובץ דו"ח על כתוביות
 25=:משך זמן ארוך מדי
 26=:שורה ארוכה מדי
 27=.תווים
-;------
 28=שורות ללא אותיות
 29=כתוביות ריקות
 30=כתוביות חופפות
@@ -747,7 +834,6 @@ SRF=קובץ דו"ח על כתוביות
 45=רווחים אחרי תוים מיוחדים
 46=רווחים אחרי תוים מיוחדים
 47=רווחים מיותרים
-;------
 48=:חפש
 49=:תקן
 50=רווחים ואנטרים בהתחלה ובסוף
@@ -757,6 +843,51 @@ SRF=קובץ דו"ח על כתוביות
 54="¿" רווחים לפני "¡" ו
 55="¿" רווחים אחרי "¡" ו
 56=רווחים בין מספרים
+57=Too short pauses
+58="- " on first line
+59=Only if there is no "- " on second line
+60=Dialogue on one line
+61=Unnecessary tags
+62=Too many characters per second
+63=Mark too much CpS with CpS boxes
+64=Default errorr marking
+65=Set Default Styles
+66=Mark column "Num"
+67=Mark column "Pause"
+68=Mark column "Show"
+69=Mark column "Hide"
+70=Mark column "Duration"
+71=Mark column "Text"
+72=Mark as Bold
+73=Mark as Italic
+74=Mark as Underline
+75=Mark as Strikethrough
+76=Mark the text color
+77=Mark the background color
+78=Mark
+79=Automatically recheck errors
+80=Do not recheck on Pascal scripts
+81=Recheck all once after a Pascal script executes
+82=Recheck on each change made by a Pascal script (might be slow)
+83=Indicate too long lines in Text and Translation labels
+84=Indicate too short duration in Duration box
+85=Indicate too long duration in Duration box
+86=Indicate too short pause in Pause box
+87=Indicate overlapping subtitles in Pause box
+88=Indicate bad values in Show and Hide boxes
+89=Indicate subtitles over two lines in lines counter labels
+90=Text color
+91=Background color
+92=Too short pause under:
+93=Characters per second (CpS)
+94=Too many CpS over:
+95=characters per second
+96=Normal CpS box colors:
+97=Too many CpS box colors:
+98=Display percantage in CpS box
+99=Display current CpS in CpS box
+100=Display minimum time in CpS box
+101=Display maximum characters in CpS box
 
 [Various information]
 01=מידע מגוון
@@ -783,6 +914,18 @@ SRF=קובץ דו"ח על כתוביות
 22=מודגש
 23=נטוי
 24=חשב
+25=Shortest line:
+26=Longest pause:
+27=Shortest pause:
+28=In subtitle %d, %d,%.3d seconds
+29=In subtitle %d, %d milliseconds
+30=Most CpS:
+31=Least CpS:
+32=In subtitle %d, %d cps
+33=Average CpS:
+34=Longest duration:
+35=Shortest duration:
+36=Refresh info
 
 [SAMI Language Extractor]
 01=SAMI מחלץ שפת
@@ -809,12 +952,12 @@ SRF=קובץ דו"ח על כתוביות
 08=תוכנת על-ידי
 09=תכנות נוסף על-ידי
 10=על-ידי %s
-; Following line is "DirectShow programming"
 11=%sתכנות ב
 12=מתרגמים
 13=בודקי גרסת בטא
 14=אייקון ברירת מחדל ע"י
 15=:עבור עדכונים, בקרו ב
+16=License
 
 [Error messages]
 01=איתחול ספריית הפונקציות נכשל. נא להוריד את הקובץ|"%s"|מהאתר|%s|ולהעתיקו
@@ -837,6 +980,12 @@ SRF=קובץ דו"ח על כתוביות
 18=.בחר חלק מכתובית מתוך הרשימה
 19=.(אם בחרת בחלק מסרט עבור חלק אחד מהכתובית, עליך לבחור חלקים מסרט עבור כל החלקים (חוץ מהאחרון, כמובן
 20=.אתה צריך לסנכרן לפי שתי נקודות או יותר
+21=Incorrect regular expression in Custom info %s
+22=Custom Info %d was disabled.|Fix the regular expression to enable it.
+23=Subtitle duration too short!
+24=Error: can not execute script.
+25=Error: can not compile script.
+26=Save subtitles first
 
 [Question messages]
 01=.השתנה "%s" הקובץ||?האם ברצונך לשמור את השינויים
@@ -848,6 +997,7 @@ SRF=קובץ דו"ח על כתוביות
 07=.קובץ נגן הסרטים לא הוכנס או לא קיים||?האם ברצונך להגדיר נגן חיצוני
 08=!יש גרסה חדשה יותר||?האם ברצונך לצפות ברשימת עדכונים, חידושים, ותוספות
 09=.הקובץ שאתה מנסה לשמור לתוכו הוא לקריאה בלבד||?לנסות לשמור בכל מקרה
+10=Do you want to save the marking in a file?
 
 [Information messages]
 01=."%s" לא נמצאו עוד מקומות שבהם מופיע
@@ -861,6 +1011,7 @@ SRF=קובץ דו"ח על כתוביות
 09=%s :שם הקובץ|%s :גודל|%s :קצב פריימים|%s :אורך|%d :סה"כ פריימים|%dx%d :רזולוציה|%s :קוד של הקודק
 10=.חלה שגיאה בנסיון להקרין חלקים מהסרט. כנראה שכמה מהקודקים של אודיו/וידאו לא מותקנים נכון
 11=אתה לא צריך לקבוע חלק מסרט שמתייחס לחלק אחרון של הכתובית.
+12=A sudden error occured:|"%s"
 
 [Information and errors messages]
 01=.היא כתובית ריקה ותימחק %d הכתובית מספר||?האם ברצונך להמשיך
@@ -868,3 +1019,118 @@ SRF=קובץ דו"ח על כתוביות
 03=? עומדת להמחק. האם ברצונך להמשיך %d:||"%s" כתובית מספר
 04=:%D חלק כתובית מספר||:עומד להמחק, כך שהכתובית תיראה כך "%s"||"%s"||?האם ברצונך להמשיך
 05=:%D הכתובית מספר||.("-")היא כתובית בעלת שורה אחת שמתחילה עם מקף ,"%s"||?האם ברצונך למחוק את המקף בתחילתה
+
+[Main menu/View]
+01=Toolbar
+02=Text style bars
+03=Statusbar
+04=Columns
+05=Show notes in left panel
+06=Show time control buttons
+07=Show lines count
+08=Visual subtitle representation
+
+[Video Popup Menu]
+01=Enter full screen
+02=Exit full screen
+03=Zoom to %d%%
+04=Reset subtitle vertical position
+
+[Time control buttons hints]
+01=Shift to previous/Extend to previous
+02=Shift to next/Extend to next
+03=Set default pause/Set default pause, if pause is too short
+04=Set ato duration/Set min duration
+
+[Auto combine subtitles]
+01=Auto combine subtitles
+02=milliseconds
+03=Combine if duration is less than (0 = no limit):
+04=Combine if CpS is greater than (0 = no limit):
+05=characters per second
+06=Don't combine if pause is greater than (0 = no limit):
+07=Punctuation marks detection
+08=Combined subtitles maximum duration (0 = no limit):
+09=Decrease duration if necessary, with no more than:
+10=Combined subtitles maximum lines length (0 = no limit):
+11=characters
+12=For all the subtitles
+13=For the selected subtitles
+
+[Set pauses]
+01=Set pauses
+02=Pauses value:
+03=Shorten duration of:
+04=First subtitle only
+05=Second subtitle only
+06=Both subtitles equally
+07=The subtitle with less CpS
+08=For all the subtitles
+09=For the selected subtitles
+
+[Round time values]
+01=Round time values
+02=Round to:
+03=milliseconds
+04=For all the subtitles
+05=For the selected subtitles
+
+[Smart line adjust]
+01=Smart line adjust
+02=Two lines if longer than:
+03=characters
+04=Break method:
+05=Equal lines
+06=Break on punctuation marks
+07=Don''t unbreak subtitles that are not too long
+08=Adjust only long subs and subs with more than 2 lines
+09=For all the subtitles
+10=For the selected subtitles
+11=Always try to find a better breaking point
+
+[Unbreak subtitles]
+01=Unbreak subtitles
+02=Characters limit
+03=No limit
+04=Don''t unbreak if line length exceeds:
+05=characters
+06=Don''t unbreak subtitles with "—" on second line
+07=For all the subtitles
+08=For the selected subtitles
+
+[Custom info]
+01=Add custom info
+02=Composite custom info
+03=Subtitles duration information
+04=Subtitles line lenght information
+05=Subtitles lines count information
+06=Subtitles pause information
+07=Subtitles CpS information
+08=Subtitles text information
+09=Custom info sets
+10=Save custom info set
+11=Delete custom info set
+12=There is no custom info. Click the "+" button to add new custom info.
+13=Caption
+14=Duration
+15=Lines length
+16=Lines count
+17=Pause
+18=CpS
+19=Text
+20=Composite info
+21=ms
+22=chars
+23=lines
+24=cps
+25=AND
+26=OR
+27=Contains (Case sensitive)
+28=Contains (Case insensitive)
+29=Does not contain (Case sensitive)
+30=Does not contain (Case insensitive)
+31=Matches regular expression
+32=Matches regular expression (tags ignored)
+33=Delete
+34=Edit
+

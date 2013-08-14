@@ -1,7 +1,7 @@
 object frmSearchAndReplace: TfrmSearchAndReplace
-  Left = 192
-  Top = 103
-  BorderIcons = []
+  Left = 410
+  Top = 242
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'frmSearchAndReplace'
   ClientHeight = 409
@@ -171,7 +171,7 @@ object frmSearchAndReplace: TfrmSearchAndReplace
       Top = 96
       Width = 305
       Height = 17
-      Caption = 'From the selected item'
+      Caption = 'From the selected subtitle'
       Checked = True
       TabOrder = 3
       TabStop = True
@@ -181,7 +181,7 @@ object frmSearchAndReplace: TfrmSearchAndReplace
       Top = 80
       Width = 305
       Height = 17
-      Caption = 'All the subtitle'
+      Caption = 'All subtitles'
       TabOrder = 2
     end
     object chkCaseSensitive: TCheckBox

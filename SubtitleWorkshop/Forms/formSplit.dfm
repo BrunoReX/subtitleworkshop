@@ -1,7 +1,7 @@
 object frmSplit: TfrmSplit
   Left = 206
   Top = 113
-  BorderIcons = []
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'frmSplit'
   ClientHeight = 489
@@ -191,14 +191,17 @@ object frmSplit: TfrmSplit
       object tmeGivenTime: TTimeMaskEdit
         Left = 16
         Top = 96
-        Width = 89
+        Width = 95
         Height = 22
+        Alignment = taCenter
         ChangeTimeOnModify = True
         FPS = 25.000000000000000000
         MinTime = 0
         TabOrder = 10
         Time = 0
         TimeMode = tmTime
+        TimeStep = 100
+        FramesStep = 1
       end
     end
     object pgeAdvanced: TTabSheet
@@ -316,6 +319,7 @@ object frmSplit: TfrmSplit
         Width = 401
         Height = 145
         Header.AutoSizeIndex = 0
+        Header.DefaultHeight = 17
         Header.Font.Charset = ANSI_CHARSET
         Header.Font.Color = clWindowText
         Header.Font.Height = -11

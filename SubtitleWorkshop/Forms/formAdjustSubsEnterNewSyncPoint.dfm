@@ -1,8 +1,8 @@
 object frmEnterNewSyncPoint: TfrmEnterNewSyncPoint
   Left = 526
   Top = 197
-  Width = 191
-  Height = 178
+  Width = 193
+  Height = 187
   BorderIcons = []
   Caption = 'Enter new sync point'
   Color = clBtnFace
@@ -41,24 +41,30 @@ object frmEnterNewSyncPoint: TfrmEnterNewSyncPoint
       Top = 24
       Width = 105
       Height = 22
+      Alignment = taCenter
       ChangeTimeOnModify = True
       FPS = 25.000000000000000000
       MinTime = 0
       TabOrder = 0
       Time = 0
       TimeMode = tmTime
+      TimeStep = 100
+      FramesStep = 1
     end
     object tmeNewTime: TTimeMaskEdit
       Left = 8
       Top = 72
       Width = 105
       Height = 22
+      Alignment = taCenter
       ChangeTimeOnModify = True
       FPS = 25.000000000000000000
       MinTime = 0
       TabOrder = 1
       Time = 0
       TimeMode = tmTime
+      TimeStep = 100
+      FramesStep = 1
     end
   end
   object btnOk: TButton

@@ -1,14 +1,18 @@
-;   Subtitle Workshop 2.51
-;   English language file
+; Subtitle Workshop 6.0
+; English language file
 ;
-;   Translator : DeK
-;   E-mail     : deksoft@adinet.com.uy
-;   Web        : http://www.urusoft.net
+; Last updated  : 11.08.2013
+;
+; Translator(s) : DeK (deksoft@adinet.com.uy), Andrey Spiridonov (subtitleworkshop@gmail.com)
+;
+; Web           : http://subworkshop.sf.net
+; E-mail        : subtitleworkshop@gmail.com
 
 [General]
-Translator=DeK
+Translator=DeK, Andrey Spiridonov
 Font Charset=0
 AllFiles=All supported files
+AllTheFiles=All files
 Help=Manual.html
 FPS=FPS
 PlainText=Plain text
@@ -16,7 +20,7 @@ STP=Subtitle Translation Project
 SRF=Subtitle Report File
 
 [Standard buttons]
-01=&Ok
+01=&OK
 02=&Cancel
 03=&Browse
 04=&Apply
@@ -31,16 +35,21 @@ SRF=Subtitle Report File
 04=Input FPS:
 05=FPS:
 06=Work with:
-07=Duration|Final time|Both
+07=Duration|Hide time|Both
 08=Num
 09=Show
 10=Hide
 11=Text
 12=Translation
 13=%d untranslated lines
-14=Duration:
+14=Duration
 15=%s (%s characters):
 16=- Untranslated subtitle -
+17=Lines:
+18=Notes:
+19=Pause
+20=%d subtitles selected / %d
+21=#%d / %d
 
 [Main menu header]
 01=File
@@ -50,22 +59,24 @@ SRF=Subtitle Report File
 05=Movie
 06=Settings
 07=Help
+08=View
 
 [Main menu/File]
-01=New subtitle...
+01=New subtitle
 02=Load subtitle...
 03=Recent files
 04=Clear list
 05=Load
 06=Project...
-07=Original
-08=Translated
+07=Original...
+08=Translated...
 09=Save
 10=Original as...
 11=Translated as...
 12=Save as...
 13=Close
 14=Exit
+15=Save marking
 
 [Main menu/Edit]
 01=Undo
@@ -77,6 +88,8 @@ SRF=Subtitle Report File
 07=Copy
 08=Paste
 09=Select all
+10=Invert selection
+11=Insert symbol...
 
 [Main menu/Edit/Timings]
 01=Timings
@@ -84,22 +97,29 @@ SRF=Subtitle Report File
 03=Set delay...
 04=Adjust
 05=Adjust subtitles...
-06=Adjust to synchronized subtitles
-07=Time expander/reducer
-08=Extend length
-09=Automatic durations
+06=Adjust to synchronized subtitles...
+07=Duration expander/reducer...
+08=Extend length to next
+09=Automatic durations...
 10=Read timings from file
 11=Shift %s milliseconds
+12=Extend length to previous
+13=Set pauses...
+14=Shift to next
+15=Shift to previous
+16=Round time values...
 
 [Main menu/Edit/Texts]
 01=Texts
-02=Smart line adjust
+02=Smart line adjust...
 03=Convert case...
-04=Unbreak subtitles
+04=Unbreak subtitles...
 05=Divide lines...
 06=Fast divide lines
-07=Set maximum line length...
+07=Set maximum line length
 08=Read texts from file
+09=Fast smart line adjust
+10=Fast unbreak subtitles
 
 [Main menu/Edit/Subtitles]
 01=Subtitles
@@ -117,11 +137,25 @@ SRF=Subtitle Report File
 13=Delete unnecessary links
 14=Mark selected subtitles
 15=Unmark selected subtitles
+16=Auto combine subtitles...
+17=Delete dots at the beginning
+18=Jump to next marked
+19=Jump to previous marked
 
 [Main menu/Edit/Translation]
 01=Translation
 02=Translator mode
 03=Swap
+
+[Main menu/View]
+01=Toolbar
+02=Text style bars
+03=Statusbar
+04=Columns
+05=Show notes in left panel
+06=Show time control buttons
+07=Show lines count
+08=Visual subtitle representation
 
 [Main menu/Search]
 01=Search...
@@ -130,7 +164,7 @@ SRF=Subtitle Report File
 04=Go to line number...
 
 [Main menu/Tools]
-01=Spell check
+01=Spell check...
 02=Batch convert...
 03=Split subtitle...
 04=Join subtitles...
@@ -138,16 +172,18 @@ SRF=Subtitle Report File
 06=Information and errors...
 07=Various information...
 08=OCR Scripts
-09=Show in main form
+09=Show in Main Window
 10=Settings...
 11=Recheck errors
 12=Fix all errors
 13=Fix errors (selected subtitles)
 14=Jump to next error
-15=Add FPS from AVI
-16=External preview
-17=SAMI language extractor
+15=Add FPS from AVI...
+16=External preview...
+17=SAMI language extractor...
 18=Pascal scripts
+19=Jump to previous error
+20=Show CpS boxes
 
 [Main menu/Movie]
 01=Open...
@@ -156,22 +192,27 @@ SRF=Subtitle Report File
 04=Video preview mode
 05=Show subtitles
 06=Save media startup file
+07=Audio stream
+08=None
+09=Video renderer
+10=Default
+11=VMR9
 
 [Main menu/Movie/Playback]
 01=Playback
 02=Play/Pause
 03=Stop
-04=Rewind
+04=Backward
 05=Forward
-06=Back 5 seconds
+06=Backward 5 seconds
 07=Forward 5 seconds
 08=Playback rate
 
 [Main menu/Movie/Subtitles]
 01=Subtitles
 02=Move subtitle
-03=Set start time
-04=Set final time
+03=Set show time
+04=Set hide time
 05=Start subtitle
 06=End subtitle
 
@@ -192,6 +233,9 @@ SRF=Subtitle Report File
 03=Show left panel
 04=Show time controls
 05=Use in-place edition
+06=Refresh language files
+07=Files refreshed
+08=keys
 
 [Main menu/Help]
 01=About %s...
@@ -203,6 +247,17 @@ SRF=Subtitle Report File
 03=Underline
 04=Set color
 05=Remove color tags
+06=Remove all tags
+07=Delete
+08=Style
+
+[Video Popup Menu]
+01=Enter Full Screen
+02=Exit Full Screen
+03=Zoom to %d%%
+04=Reset subtitle vertical position
+05=Aspect ratio
+06=Original
 
 [Video preview hints]
 01=Play/Pause (%s)
@@ -210,17 +265,25 @@ SRF=Subtitle Report File
 03=Toggle scroll list
 04=Jump to previous subtitle
 05=Jump to next subtitle
-06=Rewind (%s)
+06=Backward (%s)
 07=Forward (%s)
 08=Alter playback rate
 09=Move subtitle (%s)
-10=Set start time (%s)
-11=Set final time (%s)
+10=Set show time (%s)
+11=Set hide time (%s)
 12=Start subtitle (%s)
 13=End subtitle (%s)
 14=Mark as first sync point (%s)
 15=Mark as last sync point (%s)
 16=Add subtitle/video synchronization point (%s)
+17=Volume: %d%%
+18=Mute/Unmute
+
+[Time control buttons hints]
+01=Shift to previous/Extend to previous
+02=Shift to next/Extend to next
+03=Set default pause/Set default pause, if pause is too short
+04=Set auto duration/Set min duration
 
 [Save as]
 01=Save as
@@ -268,7 +331,7 @@ SRF=Subtitle Report File
 17=Allow more than one instance running
 18=Confirm when deleting subtitles
 19=Interpret invalid files as plain text
-20=Autosearch for movie
+20=Auto-search for movie
 21=Force working in time mode
 22=Keep order of lines when reverse text
 23=Select text on jump to next line
@@ -279,7 +342,7 @@ SRF=Subtitle Report File
 ;----------;
 ; Advanced ;
 ;----------;
-28=Smart line adjust
+28=Fast Smart line adjust
 29=Two lines if longer than:
 30=characters
 31=Toggle breakpoint
@@ -292,14 +355,14 @@ SRF=Subtitle Report File
 ;----------;
 ; Charsets ;
 ;----------;
-38=Show in main form
+38=Show in Main Window
 39=Original charset:
 40=Translation charset:
 ;-----------------;
 ; Formats section ;
 ;-----------------;
 41=Default format:
-42=Formats to show when "Save as":
+42=Formats to show in the "Save as" window:
 43=Show custom formats
 44=Select &all
 45=Select &zero
@@ -307,7 +370,7 @@ SRF=Subtitle Report File
 ; File types section ;
 ;--------------------;
 46=Register extensions on start
-47=Associate with most supported subtitle extensions
+47=Associate subtitle extensions with Subtitle Workshop:
 ;--------------;
 ; Save section ;
 ;--------------;
@@ -325,22 +388,22 @@ SRF=Subtitle Report File
 56=Focus text box
 57=Go subtitle's time in video
 58=Go N second(s) before subtitle in video
-59=Rewind and foward time:
+59=Backward and forward time:
 60=seconds.
 61=Default altered playback rate:
 ;-------------------------;
 ; Video preview Subtitles ;
 ;-------------------------;
-62=Draw border
+62=Draw outline
 63=Draw shadow
 64=Try transparent background
 65=Force using regions (may be slow)
 66=Font...
 67=Color...
 68=Background...
-69=Border width:
+69=Outline width:
 70=Shadow width:
-71=SAMPLE
+71=Sample
 ;--------------------------;
 ; External Preview General ;
 ;--------------------------;
@@ -355,7 +418,7 @@ SRF=Subtitle Report File
 77=Original format
 78=Custom format:
 79=Parameter to send to the video player:
-80=VIDEO_FILE represents the video file in which you are going to test the subtitles. SUBT_FILE is the parameter in which the temporary subtitle file will be sent to the video player. You may add other parameters, for example full screen, etc.
+80=VIDEO_FILE represents the video file in which you are going to test the subtitles. SUBT_FILE is the parameter in which the temporary subtitle file will be sent to the video player. You may add other parameters, for example Full Screen, etc.
 ;----------------;
 ; Look / Program ;
 ;----------------;
@@ -375,6 +438,77 @@ SRF=Subtitle Report File
 ;-------------;
 89=Use Office XP style Menu
 90=Use gradient menu
+;-------------;
+91=Tags mode:
+92=Multiple tags mode
+93=Single tags mode (the old mode)
+94=Auto delete tags
+;-------------;
+95=Default subtitle duration:
+96=Default subtitle pause:
+97=Increase step (time):
+98=Increase step (frames):
+99=frames
+100=Keep min duration of:
+101=but don't allow overlaps
+102=Automatically round time values to:
+103=Round time values on subtitle load
+;-------------;
+104=Notes charset:
+;-------------;
+105=Add "Open with Subtitle Workshop" to shell context menu
+;-------------;
+106=Ask to save new subtitles
+107=Save empty subtitles
+;-------------;
+108=Vertical video center align
+109=Enter Full Screen on double click
+110=Setting Show and Hide times
+111=Shift Show value:
+112=Shift Hide value:
+;-------------;
+113=Align left when subtitles contain a new line starting with "-"
+114=Relative font size
+115=Keep subtitle on video
+116=Try anti-aliasing (Force using regions must be off)
+;-------------;
+117=Smart Main Window and Subtitles List resize
+118=Resize Subtitles List columns when resizing Main Window
+;-------------;
+119=Mark untranslated subtitles with background:
+120=Right click selection
+121=Row height:
+122=Text margin:
+123=Selection
+124=Text:
+125=Color:
+126=Transparency:
+127=Columns
+128=Align:
+129=Display style:
+130=Full
+131=Compact
+;----------------;
+; Look / Marking ;
+;----------------;
+132=Marking with color:
+133=Marking with background:
+134=Columns to mark:
+135=Mark column "%s"
+136=Marking priority:
+137=Low (before error marking)
+138=High (after error marking)
+139=Marked subtitle color in video preview:
+140=Marking file
+141=Do not save marking file
+142=Ask each time to save marking file
+143=Automatically save marking file on subtitle save
+144=Automatically load marking file
+145=Marking
+;----------------;
+146=Play video on load
+147=Visual subtitle representation color:
+148=Highlight tags in "Text" and "Translation" fields:
 
 [Output settings]
 01=Output settings
@@ -387,18 +521,18 @@ SRF=Subtitle Report File
 08=License:
 09=Subtitle:
 10=Background:
-11=SAMPLE
+11=Sample
 12=&Set font
-13=Align:
+13=Alignment:
 14=Left
 15=Center
 16=Right
-17=Framerate:
+17=Frame rate:
 18=Drop frame
 19=Color 0 (background):
 20=Color 1 (Font):
 21=Color 2 (outline):
-22=Color 3 (antialiasing):
+22=Color 3 (anti-aliasing):
 23=Palette color n°:
 24=Contrast
 25=Title:
@@ -411,7 +545,7 @@ SRF=Subtitle Report File
 32=Color
 33=Primary:
 34=Secondary:
-35=Tertiary:
+35=Outline:
 36=Shadow:
 37=Left margin:
 38=Right margin:
@@ -419,6 +553,20 @@ SRF=Subtitle Report File
 40=Outline:
 41=Alignment:
 42=Encoding:
+69=Play resolution X:
+70=Play resolution Y:
+71=Collisions:
+72=Normal
+73=Reverse
+74=Timer:
+75=Advanced
+76=Underline
+77=StrikeOut
+78=Scale X
+79=Scale Y
+80=Spacing
+81=Angle
+82=degrees
 43=Source:
 44=Program:
 45=Path:
@@ -428,6 +576,23 @@ SRF=Subtitle Report File
 49=TMPlayer Format
 50=TMPlayer+ Format
 51=TMPlayer Multiline Format
+52=Font
+53=Size:
+54=Text color:
+55=Transparency:
+56=(0 - transparent)
+57=Shadow:
+58=Position
+59=Width:
+60=Height:
+61=Alignment:
+62=Language
+63=Encoding:
+64=Language:
+65=Join
+66=Join short lines
+67=Wrap lines to:
+68=Always show Output Settings when saving
 
 [Duration limits]
 01=Duration limits
@@ -435,11 +600,28 @@ SRF=Subtitle Report File
 03=Milliseconds
 04=Set minimum duration
 05=* Increasing the time will not cause overlapping
+06=Increase at start if necessary
+
+[Auto combine subtitles]
+01=Auto combine subtitles
+02=milliseconds
+03=Combine if duration is less than (0 = no limit):
+04=Combine if CpS is greater than (0 = no limit):
+05=characters per second
+06=Don't combine if pause is greater than (0 = no limit):
+07=Punctuation marks detection
+08=Combined subtitles maximum duration (0 = no limit):
+09=Decrease duration if necessary, with no more than:
+10=Combined subtitles maximum lines length (0 = no limit):
+11=characters
+12=For all the subtitles
+13=For the selected subtitles
 
 [Set delay]
 01=Set delay
 02=For all the subtitles
-03=For selected subtitles
+03=For the selected subtitles
+04=From first selected until last subtitle
 
 [Adjust subtitles]
 01=Adjust subtitles
@@ -465,7 +647,7 @@ SRF=Subtitle Report File
 21=New time:
 
 [Time expander/reducer]
-01=Time expander/reducer
+01=Duration expander/reducer
 02=Expand duration
 03=Reduce duration
 04=Expand/reduce duration:
@@ -477,7 +659,7 @@ SRF=Subtitle Report File
 11=Only if duration is shorter than:
 12=Prevent overlapping
 13=For all the subtitles
-14=For selected subtitles
+14=For the selected subtitles
 
 [Automatic durations]
 01=Automatic durations
@@ -488,8 +670,32 @@ SRF=Subtitle Report File
 06=Apply new duration in all cases
 07=Only if new duration is greater than original
 08=Only if new duration is smaller than original
-09=All subtitles
-10=Selected subtitles only
+09=For all the subtitles
+10=For the selected subtitles
+11=Method
+12=Characters
+13=per second
+14=Increase at start if necessary
+15=Maximum increase at start (0 = no limit):
+16=milliseconds
+
+[Set pauses]
+01=Set pauses
+02=Pauses value:
+03=Shorten duration of:
+04=First subtitle only
+05=Second subtitle only
+06=Both subtitles equally
+07=The subtitle with less CpS
+08=For all the subtitles
+09=For the selected subtitles
+
+[Round time values]
+01=Round time values
+02=Round to:
+03=milliseconds
+04=For all the subtitles
+05=For the selected subtitles
 
 [Convert case]
 01=Convert case
@@ -500,8 +706,8 @@ SRF=Subtitle Report File
 06=UPPERCASE
 07=Title Type
 08=iNVERSE tYPE
-09=All subtitles
-10=Selected subtitles only
+09=For all the subtitles
+10=For the selected subtitles
 
 [Divide lines]
 01=Divide lines
@@ -512,7 +718,30 @@ SRF=Subtitle Report File
 06=Duration:
 07=Continue directly
 08=%s characters
-09=&Divide!
+09=&Divide
+
+[Smart line adjust]
+01=Smart line adjust
+02=Two lines if longer than:
+03=characters
+04=Break method:
+05=Equal lines
+06=Break on punctuation marks
+07=Don't unbreak subtitles that are not too long
+08=Adjust only long subs and subs with more than 2 lines
+09=For all the subtitles
+10=For the selected subtitles
+11=Always try to find a better breaking point
+
+[Unbreak subtitles]
+01=Unbreak subtitles
+02=Characters limit
+03=No limit
+04=Don't unbreak if line length exceeds:
+05=characters
+06=Don't unbreak subtitles with "—" on second line
+07=For all the subtitles
+08=For the selected subtitles
 
 [Search & Replace]
 01=Search and Replace
@@ -529,8 +758,8 @@ SRF=Subtitle Report File
 12=Match whole words
 13=Preserve case on replace
 14=Search for text in:
-15=All the subtitle
-16=From the selected item
+15=All subtitles
+16=From the selected subtitle
 17=Charset:
 
 [Go to line]
@@ -566,7 +795,7 @@ SRF=Subtitle Report File
 22=&Remove
 23=C&lear
 ; Page 3
-24=Done!. See log for details:
+24=Done! See log for details:
 25=Save...
 ; Searching
 26=Checking file %s
@@ -577,18 +806,18 @@ SRF=Subtitle Report File
 03=Output format: %s
 04=Total files to convert: %d
 05=Trying to load "%s"...
-06=File succesfully loaded!
+06=File successfully loaded!
 07=File "%s" already existed, replacing...
-08=File succesfully saved to "%s"'
+08=File successfully saved to "%s"'
 09=File "%s" already existed and you didn't enable the program to replace it
 10=Error while loading file, can't save!
 11=Total conversions done: %u
 12=Total time: %s
-13=All the files were converted succesfully
+13=All the files were converted successfully
 14=There were errors while converting some files, see below for details
 
 [Split]
-01=Split subtitle...
+01=Split subtitle
 02=Simple
 03=Advanced
 04=Selected item
@@ -598,7 +827,7 @@ SRF=Subtitle Report File
 08=End of video:
 09=Naming
 10=Part %d:
-11=FileName
+11=File Name
 12=Length
 13=Lines
 14=Parts equal in time
@@ -613,7 +842,7 @@ SRF=Subtitle Report File
 23=&Split!
 
 [Join]
-01=Join subtitles...
+01=Join subtitles
 02=Add the subtitle files you wish to join (in order):
 03=File name
 04=Format
@@ -633,10 +862,40 @@ SRF=Subtitle Report File
 
 [Information and errors]
 01=Information and errors
-02=Check!
-03=Fix errors!
+02=Check
+03=Fix errors
 04=&Settings
 05=Confirm each deletion
+67=E
+68=W
+69=F
+70=CI
+71=Select
+72=+ Select
+73=- Select
+74=Select subtitles
+75=Add to selected subtitles
+76=Remove from selected subtitles
+77=All
+78=None
+79=Inverse
+80=Select all
+81=Select none
+82=Invert selection
+83=Error types sets
+84=Save error types set
+85=Delete error types set
+86=Error types
+87=Custom info
+88=Show/hide errors
+89=Show/hide warnings
+90=Show/hide fixed
+91=Show/hide custom info
+92=Show/hide Error types panel
+93=Show/hide Custom info panel
+;---------;
+; Columns ;
+;---------;
 06=Subtitle
 07=Type
 08=Description
@@ -647,11 +906,13 @@ SRF=Subtitle Report File
 10=Warning
 11=Info
 13=Fixed
+65=Custom info
 ;----------------------;
 ; Information messages ;
 ;----------------------;
 14=Total errors: %d
 15=Fixed errors: %d
+66=Displayed: %d
 ;---------------;
 ; Error reports ;
 ;---------------;
@@ -696,7 +957,67 @@ SRF=Subtitle Report File
 51=Added space before custom character
 52=Removed unnecessary spaces
 ;-----
-53=Double-click to jump to line on main form
+53=Double-click to jump to subtitle in Main Window
+;-------------------;
+; New error reports ;
+;-------------------;
+54=Unnecessary tags
+56=Dash on first line
+58=Too many CpS
+60=Too short pause
+62=Dialogue on one line
+;-----------------;
+; New fix reports ;
+;-----------------;
+55=Removed unnecessary tags
+57=Removed dash on first line
+59=Fixed too much CpS
+61=Fixed too short pause
+63=Fixed dialogue on one line
+;-----------------;
+94=Export to file
+95=Text file
+;-----------------;
+96=char
+97=sec
+98=fr
+99=cps
+
+[Custom info]
+01=Add custom info
+02=Composite custom info
+03=Subtitles duration information
+04=Subtitles line length information
+05=Subtitles lines count information
+06=Subtitles pause information
+07=Subtitles CpS information
+08=Subtitles text information
+09=Custom info sets
+10=Save custom info set
+11=Delete custom info set
+12=There is no custom info. Click the "+" button to add new custom info.
+13=Caption
+14=Duration
+15=Lines length
+16=Lines count
+17=Pause
+18=CpS
+19=Text
+20=Composite info
+21=ms
+22=chars
+23=lines
+24=cps
+25=AND
+26=OR
+27=Contains (Case sensitive)
+28=Contains (Case insensitive)
+29=Does not contain (Case sensitive)
+30=Does not contain (Case insensitive)
+31=Matches regular expression
+32=Matches regular expression (tags ignored)
+33=Delete
+34=Edit
 
 [Information and errors Settings]
 01=Settings
@@ -705,8 +1026,8 @@ SRF=Subtitle Report File
 04=Check for
 05=Fix
 06=Unnecessary spaces
-07=Show confirmations in main form on fix
-08=Mark errors in main form's list
+07=Show confirmations in Main Window on fix
+08=Mark errors in Main Window's list
 09=Set color...
 10=Bold
 11=Italic
@@ -719,13 +1040,13 @@ SRF=Subtitle Report File
 18=Repeatable characters:
 19=Prohibited characters:
 20=Tolerance for repeated subtitles:
-21=milliseconds.
+21=milliseconds
 22=Space after characters:
 23=Space before characters:
-24=Too long duration:
-25=Too short duration:
+24=Too long duration over:
+25=Too short duration under:
 26=Too long line:
-27=characters.
+27=characters
 ;------
 28=Lines without letters
 29=Empty subtitles
@@ -744,9 +1065,18 @@ SRF=Subtitle Report File
 42=Repeated subtitles
 43=OCR Errors
 44="- " in subtitles with one line
-45=Spaces after custom characters
-46=Spaces before custom characters
+45=Missing spaces after custom characters
+46=Missing spaces before custom characters
 47=Unnecessary spaces
+;------
+57=Too short pauses
+58="- " on first line
+59=Only if there is no "- " on second line
+60=Dialogue on one line
+61=Unnecessary tags
+62=Too many characters per second
+63=Mark too much CpS with CpS boxes
+64=Default error marking
 ;------
 48=Check for:
 49=Fix:
@@ -757,6 +1087,45 @@ SRF=Subtitle Report File
 54=Spaces after "¿" and "¡"
 55=Spaces before "?" and "!"
 56=Spaces between numbers
+;------
+65=Set Default Styles
+66=Mark column "Num"
+67=Mark column "Pause"
+68=Mark column "Show"
+69=Mark column "Hide"
+70=Mark column "Duration"
+71=Mark column "Text"
+72=Mark as Bold
+73=Mark as Italic
+74=Mark as Underline
+75=Mark as Strikethrough
+76=Mark the text color
+77=Mark the background color
+78=Mark
+;------
+79=Automatically recheck errors
+80=Do not recheck on Pascal scripts
+81=Recheck all once after a Pascal script executes
+82=Recheck on each change made by a Pascal script (might be slow)
+83=Indicate too long lines in Text and Translation labels
+84=Indicate too short duration in Duration box
+85=Indicate too long duration in Duration box
+86=Indicate too short pause in Pause box
+87=Indicate overlapping subtitles in Pause box
+88=Indicate bad values in Show and Hide boxes
+89=Indicate subtitles over two lines in lines counter labels
+90=Text color
+91=Background color
+92=Too short pause under:
+93=Characters per second (CpS)
+94=Too many CpS over:
+95=characters per second
+96=Normal CpS box colors:
+97=Too many CpS box colors:
+98=Display percentage in CpS box
+99=Display current CpS in CpS box
+100=Display minimum time in CpS box
+101=Display maximum characters in CpS box
 
 [Various information]
 01=Various information
@@ -783,6 +1152,18 @@ SRF=Subtitle Report File
 22=Bold
 23=Italic
 24=Calculate
+25=Shortest line:
+26=Longest pause:
+27=Shortest pause:
+28=In subtitle %d, %d,%.3d seconds
+29=In subtitle %d, %d milliseconds
+30=Most CpS:
+31=Least CpS:
+32=In subtitle %d, %d cps
+33=Average CpS:
+34=Longest duration:
+35=Shortest duration:
+36=Refresh info
 
 [SAMI Language Extractor]
 01=SAMI Language Extractor
@@ -805,20 +1186,21 @@ SRF=Subtitle Report File
 04=Version: %s
 05=%s version: %s
 06=%d different supported formats
-07=If you like this software, we would really appreciate you could make a donation. Click here to do it.
+07=If you like this software, please consider making a donation. Click here to do it.
 08=Programmed by
 09=Additional programming
 10=%s by
 ; Following line is "DirectShow programming"
 11=%s programming
 12=Translators
-13=Beta testers
+13=Testers
 14=Default icon by
 15=For updates visit:
+16=License
 
 [Error messages]
-01=Could not initialize subtitle API. Please download the DLL "%s" from %s and copy it to the "%s" directory.
-02=The following error (%s) was derived from object %s (%s):||"%s"||Please write to %s informing what you were doing when this error occurred.||Press Ok to continue, and Cancel to exit the program.
+01=Could not initialize SubtitleAPI. Please download the DLL "%s" from %s and copy it to the "%s" directory.
+02=The following error (%s) was derived from object %s (%s):||"%s"||Please write to %s informing what you were doing when this error occurred.||Press OK to continue, and Cancel to exit the program.
 03=The file "%s" is a bad subtitle or an unsupported format.
 04=The file "%s" is not in %s format or is not a valid subtitle file.
 05="%s" is not a valid video file.
@@ -827,27 +1209,36 @@ SRF=Subtitle Report File
 08=The search path does not exist.
 09=Item number is not a valid item.
 10=Please add two subtitles or more.
-11=Failed to connect to server!.
+11=Failed to connect to server!
 12=Couldn't remove the read-only attribute from "%s".||Possibly on a write protected drive.
-13=Error trying to connect to Microsoft Word!.
-14=Select the video(s) for previous part(s) first!.
+13=Error trying to connect to Microsoft Word!
+14=Select the video(s) for previous part(s) first!
 15=Select a valid output directory.
 16=Select at least one language to extract.
 17="%s" is not a valid SAMI file.
 18=Select a subtitle part in the list.
 19=If you select a movie fragment for one part of the subtitle you need to select a movie fragment for all parts of the subtitle (except the last part of course).
 20=You need two or more points.
+21=Incorrect regular expression in Custom info %s.
+22=Custom Info %d was disabled.|Fix the regular expression to enable it.
+23=Subtitle duration too short!
+24=Error: can not execute script.
+25=Error: can not compile script.
+26=Save the subtitles first.
+27=The file:|%s|does not exist.
+28=The file:|%s|is a bad srf file.
 
 [Question messages]
-01=File "%s" has changed.||Do you want to save the changes?.
-02=File "%s" already exists.||Do you want to replace it?.
-03=Original file ("%s") has changed.||Do you want to save the changes?.
-04=Translated file  ("%s") has changed.||Do you want to save the changes?.
-05=The selected subtitles are about to be deleted.||Do you want to proceed?.
+01=File "%s" has changed.||Do you want to save the changes?
+02=File "%s" already exists.||Do you want to replace it?
+03=Original file ("%s") has changed.||Do you want to save the changes?
+04=Translated file  ("%s") has changed.||Do you want to save the changes?
+05=The selected subtitles are about to be deleted.||Do you want to proceed?
 06=Point 1 Subtitle: %s|Point 1 Movie: %s||Point 2 Subtitle: %s|Point 2 Movie: %s||Synchronize subtitle?
-07=The video player's exe hasn't been specified or doesn't exist.||Do you want to configure external player?.
-08=A new version was found!.||Do you want to see the change list?.
-09=The file you are trying to save is read-only.||Try to save anyway?.
+07=The video player's exe hasn't been specified or doesn't exist.||Do you want to configure external player?
+08=A new version %s was found!||Would you like to download it and see the list of changes?
+09=The file you are trying to save is read-only.||Try to save anyway?
+10=Do you want to save the marking in a file?
 
 [Information messages]
 01=Couldn't find more instances of "%s".
@@ -855,16 +1246,17 @@ SRF=Subtitle Report File
 03=Spell check finished.||%d change(s) made.
 04=Too many parts. Resetting...
 05=Only one language was found.||If the file contains more languages, add the ones you wish manually opening the file in a text editor and searching for the correct class name.
-06=Couldn't locate "STYLE" start and/or close tag!.||Probably because of that reason, this file doesn't contain more than one language.|If it does, try to add manually searching for the class name of the desired language(s).
+06=Couldn't locate "STYLE" start and/or close tag!||Probably because of that reason, this file doesn't contain more than one language.|If it does, try to add manually searching for the class name of the desired language(s).
 07=Fittest font size for playback is: %d
 08=Total replacements: %d
 09=File name: %s|Size: %s|FPS: %s|Duration: %s|Total frames: %d|Resolution: %dx%d|FourCC: %s
-10=Some of the streams of the movie could not be rendered correctly. Probably the audio or video codec is missing.
+10=Some of the streams of the movie could not be rendered correctly. Probably the audio or video codec is missing.|Error code: %s
 11=It is not necessary to set the movie fragment corresponding to the last subtitle.
+12=A sudden error occurred:|"%s"
 
 [Information and errors messages]
-01=Subtitle number %d is an empty subtitle and is about to be deleted.||Do you want to proceed?.
-02=Subtitle number %d:||"%s" has a prohibited character and is about to be deleted.||Do you want to proceed?.
-03=Subtitle number %d:||"%s" is about to be deleted.||Do you want to proceed?.
-04=Part of subtitle number %d:||"%s" is about to be deleted, so the subtitle will be:||"%s"||Do you want to proceed?.
-05=Subtitle number %d:||"%s" is a one-line subtitle and starts with "-".||Do you want to delete the "-" at the beginning?.
+01=Subtitle number %d is an empty subtitle and is about to be deleted.||Do you want to proceed?
+02=Subtitle number %d:||"%s" has a prohibited character and is about to be deleted.||Do you want to proceed?
+03=Subtitle number %d:||"%s" is about to be deleted.||Do you want to proceed?
+04=Part of subtitle number %d:||"%s" is about to be deleted, so the subtitle will be:||"%s"||Do you want to proceed?
+05=Subtitle number %d:||"%s" is a one-line subtitle and starts with "-".||Do you want to delete the "-" at the beginning?

@@ -1,20 +1,28 @@
 object frmVariousInfo: TfrmVariousInfo
-  Left = 192
-  Top = 103
-  BorderIcons = []
-  BorderStyle = bsSingle
+  Left = 370
+  Top = 558
+  Width = 608
+  Height = 336
+  BorderIcons = [biSystemMenu]
   Caption = 'frmVariousInfo'
-  ClientHeight = 302
-  ClientWidth = 600
   Color = clBtnFace
+  Constraints.MinHeight = 336
+  Constraints.MinWidth = 513
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  FormStyle = fsStayOnTop
   OldCreateOrder = False
-  Position = poScreenCenter
+  OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnResize = FormResize
+  OnShow = FormShow
+  DesignSize = (
+    600
+    302)
   PixelsPerInch = 96
   TextHeight = 13
   object pgeCtrl: TPageControl
@@ -23,17 +31,23 @@ object frmVariousInfo: TfrmVariousInfo
     Width = 585
     Height = 255
     ActivePage = pgeInformation
-    TabOrder = 0
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    TabOrder = 1
     object pgeInformation: TTabSheet
       Caption = 'pgeInformation'
+      DesignSize = (
+        577
+        227)
       object lstInfo: TVirtualStringTree
         Left = 8
         Top = 8
         Width = 561
         Height = 209
+        Anchors = [akLeft, akTop, akRight, akBottom]
         DefaultPasteMode = amInsertAfter
         EditDelay = 100
         Header.AutoSizeIndex = 4
+        Header.DefaultHeight = 17
         Header.Font.Charset = ANSI_CHARSET
         Header.Font.Color = clWindowText
         Header.Font.Height = -11
@@ -112,7 +126,7 @@ object frmVariousInfo: TfrmVariousInfo
           Width = 225
           Height = 21
           Style = csDropDownList
-          ItemHeight = 13
+          ItemHeight = 0
           TabOrder = 2
         end
         object chkBold: TCheckBox
@@ -148,8 +162,10 @@ object frmVariousInfo: TfrmVariousInfo
     Top = 270
     Width = 89
     Height = 25
+    Anchors = [akRight, akBottom]
     Cancel = True
     Caption = '&Ok'
+    Default = True
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -157,11 +173,22 @@ object frmVariousInfo: TfrmVariousInfo
     Font.Style = [fsBold]
     ModalResult = 1
     ParentFont = False
-    TabOrder = 1
+    TabOrder = 0
+    OnClick = btnOkClick
+  end
+  object btnRefreshInfo: TButton
+    Left = 8
+    Top = 270
+    Width = 129
+    Height = 25
+    Anchors = [akLeft, akBottom]
+    Caption = 'Refresh info'
+    TabOrder = 2
+    OnClick = btnRefreshInfoClick
   end
   object dlgOpenAVI: TOpenDialog
     Filter = 'AVI Files (*.avi)|*.avi'
-    Left = 8
+    Left = 144
     Top = 272
   end
 end

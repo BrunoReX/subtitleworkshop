@@ -1,15 +1,20 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Adjust Subtitles form
+
 unit formAdjustSubtitles;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Mask, ExtCtrls, USubtitlesFunctions, TreeViewHandle, Functions,
-  IniFiles, General, VirtualTrees, USubtitleAdjust, VideoPreview, Undo,
-  ComCtrls, TimeMaskEdit, FastStrings;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, Mask, ExtCtrls, IniFiles, ComCtrls,
+  VirtualTrees, TimeMaskEdit,
+  FastStrings,
+  CommonTypes;
 
 type
-  PSyncPoint = ^TSyncPoint;
   TfrmAdjustSubtitles = class(TForm)
     btnAdjust: TButton;
     btnCancel: TButton;
@@ -66,7 +71,9 @@ var
 
 implementation
 
-uses formMain, formAdjustSubsEnterNewSyncPoint;
+uses
+  General, USubtitlesFunctions, TreeViewHandle, Functions, USubtitleAdjust, VideoPreview, Undo,
+  formMain, formAdjustSubsEnterNewSyncPoint;
 
 {$R *.dfm}
 
@@ -188,7 +195,7 @@ begin
     Points.Point2Sub   := GetStartTime(frmMain.lstSubtitles.GetLast);
     Points.Point1Movie := tmeFirstSpokenLine.Time;
     Points.Point2Movie := tmeLastSpokenLine.Time;
-    AdjustSubtitles(Points);
+    AdjustSubtitles(Points, 1);
     frmAdjustSubtitles.Close;
   end else
   begin
@@ -205,9 +212,6 @@ begin
         Node := Node.NextSibling;
       end;
 
-      ClearUndoList(RedoList);
-      frmMain.mnuRedo.Enabled := False;
-
       Node := frmMain.lstSubtitles.GetFirst;
       while Assigned(Node) do
       begin
@@ -217,6 +221,7 @@ begin
 
           New(UndoAction);
           UndoAction^.UndoActionType := uaTimeChange;
+          UndoAction^.UndoActionName := uanAdjustSubs; //added by adenry
           UndoAction^.BufferSize     := SizeOf(TTimeChange);
           UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
           UndoAction^.Node           := Node;
@@ -224,7 +229,7 @@ begin
           UndoAction^.BindToNext     := True;
           PTimeChange(UndoAction^.Buffer)^.StartTime := Data2.InitialTime;
           PTimeChange(UndoAction^.Buffer)^.FinalTime := Data2.FinalTime;
-          UndoList.Add(UndoAction);
+          AddUndo(UndoAction);
 
           if rdoExtrapolate.Checked then
           begin
@@ -249,15 +254,14 @@ begin
       end;
 
       if UndoList.Count > 0 then
-        PUndoAction(UndoList.Last)^.BindToNext := False;    
-
-      frmMain.mnuUndo.Enabled := True;
+        PUndoAction(UndoList.Last)^.BindToNext := False;
       frmMain.OrgModified     := True;
       frmMain.TransModified   := True;
       SetLength(frmMain.SyncPointsArray, 0);
       ta.Free;
       frmAdjustSubtitles.Close;
       frmMain.RefreshTimes;
+      frmMain.AutoRecheckAllErrors(TimeErrors); //added by adenry
     end;
   end;
 end;
@@ -289,8 +293,7 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure TfrmAdjustSubtitles.lstPointsInitNode(Sender: TBaseVirtualTree;
-  ParentNode, Node: PVirtualNode;
-  var InitialStates: TVirtualNodeInitStates);
+  ParentNode, Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
 var
   Data: PSyncPoint;
 begin

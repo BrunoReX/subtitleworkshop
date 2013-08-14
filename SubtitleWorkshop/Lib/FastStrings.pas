@@ -249,10 +249,8 @@ function FastPos(const aSourceString, aFindString : string; const aSourceLen, aF
 function FastPosNoCase(const aSourceString, aFindString : string; const aSourceLen, aFindLen, StartPos : Integer) : Integer;
 function FastPosBack(const aSourceString, aFindString : string; const aSourceLen, aFindLen, StartPos : Integer) : Integer;
 function FastPosBackNoCase(const aSourceString, aFindString : string; const aSourceLen, aFindLen, StartPos : Integer) : Integer;
-function FastReplace(const aSourceString : string; const aFindString, aReplaceString : string;
-  CaseSensitive : Boolean = False) : string;
-function FastTagReplace(const SourceString, TagStart, TagEnd: string;
-  FastTagReplaceProc: TFastTagReplaceProc; const UserData: Integer): string;
+function FastReplace(const aSourceString : string; const aFindString, aReplaceString : string; CaseSensitive : Boolean = False) : string;
+function FastTagReplace(const SourceString, TagStart, TagEnd: string; FastTagReplaceProc: TFastTagReplaceProc; const UserData: Integer): string;
 function SmartPos(const SearchStr,SourceStr : string;
                   const CaseSensitive : Boolean = TRUE;
                   const StartPos : Integer = 1;

@@ -1,8 +1,8 @@
-// -------------------------------------------------------------------------- //
-//                  Skinned button for Subtitle Workshop 2.xx                 //
-//                         Copyright (c) 2003 DeKSoft                         //
-//                                                                            //
-// -------------------------------------------------------------------------- //
+// This file is part of SWComponents, the component package for Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: SWButton component - video player button
 
 unit SWButton;
 
@@ -311,7 +311,7 @@ end;
 
 procedure Register;
 begin
-  RegisterComponents('URUSoft Components', [TSWButton]);
+  RegisterComponents('Subtitle Workshop', [TSWButton]);
 end;
 
 // -----------------------------------------------------------------------------

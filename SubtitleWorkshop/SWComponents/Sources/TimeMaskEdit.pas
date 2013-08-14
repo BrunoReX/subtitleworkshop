@@ -1,3 +1,9 @@
+// This file is part of SWComponents, the component package for Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: TimeMaskEdit component - Time/frames display and edit
+
 unit TimeMaskEdit;
 
 // -----------------------------------------------------------------------------
@@ -8,13 +14,14 @@ interface
 
 uses
   Windows, Messages, Classes, SysUtils, Graphics, Controls, Mask, ComCtrls, dialogs,
-  CommCtrl, USTimeUtils;
+  CommCtrl,
+  USubtitlesFunctions {BDZL};
 
 // -----------------------------------------------------------------------------
 
 const TimeMask1 = '!90:00:00,000;1; ';
       TimeMask2 = '!90:00:00:00;1; ';
-      MaxTime   = 86399999;
+      MaxTime   = 86399999; //23:59:59,999
 
 type
   TTimeMode = (tmTime, tmFrames, tmHHMMSSFF);
@@ -24,6 +31,7 @@ type
   private
     { Private declarations }
     //FCurrentTimeMask    : String;
+    FAlignment          : TAlignment; //added by adenry
     FUpDown             : TUpDown;
     FTime               : Cardinal;
     FTimeMode           : TTimeMode;
@@ -33,6 +41,10 @@ type
     FChangeTimeOnModify : Boolean;
     FOnTimeChange             : TOnTimeEventChange;
     FOnTimeChangeFromEditOnly : TOnTimeEventChangeFromEditOnly;
+    FTimeStep           : Word; //added by adenry
+    FFramesStep         : Word; //added by adenry
+    FOnMouseEnter       : TNotifyEvent; //added by adenry
+    FOnMouseLeave       : TNotifyEvent; //added by adenry
     procedure UpdateText;
     procedure SetTime(const NewTime: Cardinal);
     procedure SetTimeMode(const NewTimeMode: TTimeMode);
@@ -45,6 +57,9 @@ type
     function GetMinHeight: Integer;
     procedure UDButton(const Up: Boolean);
     procedure UpDownChangingEx(Sender: TObject; var AllowChange: Boolean; NewValue: SmallInt; Direction: TUpDownDirection);
+    procedure SetTimeStep(const NewTimeStep: Word); //added by adenry
+    procedure SetFramesStep(const NewFramesStep: Word); //added by adenry
+    procedure SetAlignment(Value: TAlignment);  //added by adenry
   protected
     { Protected declarations }
     procedure DoEnter; override;
@@ -55,6 +70,8 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure KeyUp(var Key: Word; Shift: TShiftState); override;
     procedure SetEnabled(Value: Boolean); override;
+    procedure CMMouseEnter (var msg: TMessage); message CM_MOUSEENTER; //added by adenry
+    procedure CMMouseLeave (var msg: TMessage); message CM_MOUSELEAVE; //added by adenry
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -62,6 +79,7 @@ type
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
     { Published declarations }
+    property Alignment: TAlignment read FAlignment write SetAlignment; //added by adenry
     property Anchors;
     property AutoSelect;
     property AutoSize;
@@ -89,6 +107,8 @@ type
     property Time: Cardinal read FTime write SetTime; // Time (in milliseconds)
     property TimeMode: TTimeMode read FTimeMode write SetTimeMode; // Time or frames mode
     property Visible;
+    property TimeStep: Word read FTimeStep write SetTimeStep; //added by adenry
+    property FramesStep: Word read FFramesStep write SetFramesStep; //added by adenry
     property OnChange;
     property OnClick;
     property OnContextPopup;
@@ -105,10 +125,14 @@ type
     property OnMouseDown;
     property OnMouseMove;
     property OnMouseUp;
+    property OnMouseWheelDown; //added by adenry
+    property OnMouseWheelUp; //added by adenry
     property OnStartDock;
     property OnStartDrag;
     property OnTimeChange: TOnTimeEventChange read FOnTimeChange write FOnTimeChange;
     property OnTimeChangeFromEditOnly: TOnTimeEventChangeFromEditOnly read FOnTimeChangeFromEditOnly write FOnTimeChangeFromEditOnly;
+    property OnMouseEnter : TNotifyEvent read FOnMouseEnter write FOnMouseEnter; //added by adenry
+    property OnMouseLeave : TNotifyEvent read FOnMouseLeave write FOnMouseLeave; //added by adenry
   end;
 
 // -----------------------------------------------------------------------------
@@ -137,6 +161,9 @@ begin
   FMinTime            := 0;
   Time                := 0;
   FChangeTimeOnModify := False;
+  FTimeStep           := 100; //added by adenry
+  FFramesStep         := 1; //added by adenry
+  FAlignment          := taCenter; //added by adenry
 
   // Create up-down button
   FUpDown              := TUpDown.Create(Self);
@@ -215,9 +242,11 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure TTimeMaskEdit.CreateParams(var Params: TCreateParams);
+const Alignments : array[TAlignment] of LongWord = (ES_Left,ES_Right, ES_Center); //added by adenry
 begin
   inherited CreateParams(Params);
   Params.Style := Params.Style or ES_MULTILINE or WS_CLIPCHILDREN;
+  Params.Style := Params.Style or Alignments[FAlignment]; //added by adenry
 end;
 
 // -----------------------------------------------------------------------------
@@ -289,13 +318,14 @@ var
 begin
   inherited;
   MinHeight := GetMinHeight;
+  if (Constraints.MinHeight > 0) and (Constraints.MinHeight < MinHeight) then MinHeight := Constraints.MinHeight; //added by adenry
   if Height < MinHeight then
     Height := MinHeight else
   if FUpDown <> nil then
   begin
     if NewStyleControls and Ctl3D then
-      FUpDown.SetBounds(Width - FUpDown.Width - 5, 0, FUpDown.Width, Height - 5) else
-      FUpDown.SetBounds(Width - FUpDown.Width, 1, FUpDown.Width, Height - 3);
+      FUpDown.SetBounds(Width - FUpDown.Width - 4, 0, FUpDown.Width, Height - 4) else //-5 changed to -4 by adenry
+      FUpDown.SetBounds(Width - FUpDown.Width - 1, 1, FUpDown.Width, Height - 2); // -1 added by adenry, -3 changed to -2 by adenry
     SetEditRect;
   end;
 end;
@@ -366,7 +396,9 @@ end;
 procedure TTimeMaskEdit.KeyUp(var Key: Word; Shift: TShiftState);
 var
   t: Integer;
+  TheKey: Word; //added by adenry
 begin
+  TheKey := Key; //added by adenry
   if not (Key in [Ord('0')..Ord('9'), Ord(VK_RETURN)]) then Key := Ord(#0);
   t := -1;
 
@@ -405,7 +437,7 @@ begin
     Key := Ord(#0);
   end;
 
-  inherited KeyUp(Key, Shift);
+  inherited KeyUp(TheKey, Shift); //Key replaced with TheKey by added by adenry
 end;
 
 // -----------------------------------------------------------------------------
@@ -477,14 +509,17 @@ begin
         eHours        : TimeToChange := 1000 * 60 * 60;
         eMinutes      : TimeToChange := 1000 * 60;
         eSeconds      : TimeToChange := 1000;
-        eMilliseconds : TimeToChange := 100;
-        eFrames       : TimeToChange := FramesToTime(1, FFPS);
+        eMilliseconds : TimeToChange := FTimeStep; //100 replaced with FTimeStep by adenry
+        eFrames       : TimeToChange := FramesToTime(FFramesStep, FFPS); //1 replaced with FFramesStep by adenry
       end;
     end else
-      TimeToChange := FramesToTime(1, FFPS);
+      TimeToChange := FramesToTime(FFramesStep, FFPS); //1 replaced with FFramesStep by adenry
 
     if Up = False then
+    begin
+      if Time < Cardinal(TimeToChange) then Time := 0; //added by adenry
       TimeToChange := - TimeToChange;
+    end;
 
     // Only if new time is lower than 23:59:59,999
     if (Time + Cardinal(TimeToChange)) < MaxTime then
@@ -506,9 +541,56 @@ end;
 
 // -----------------------------------------------------------------------------
 
+//added by adenry: begin
+procedure TTimeMaskEdit.SetTimeStep(const NewTimeStep: Word);
+begin
+  FTimeStep := NewTimeStep;
+  //UpdateText;
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin
+procedure TTimeMaskEdit.SetFramesStep(const NewFramesStep: Word);
+begin
+  FFramesStep := NewFramesStep;
+  //UpdateText;
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin
+procedure TTimeMaskEdit.CMMouseEnter(var msg: TMessage);
+begin
+  if Assigned(FOnMouseEnter) then FOnMouseEnter(self);
+end;
+
+procedure TTimeMaskEdit.CMMouseLeave(var msg: TMessage);
+begin
+  if Assigned(FOnMouseLeave) then FOnMouseLeave(self);
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin
+procedure TTimeMaskEdit.SetAlignment(Value: TAlignment);
+begin
+  if FAlignment <> Value then
+  begin
+    FAlignment := Value;
+    RecreateWnd;
+  end;
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
 procedure Register;
 begin
-  RegisterComponents('URUSoft Components', [TTimeMaskEdit]);
+  RegisterComponents('Subtitle Workshop', [TTimeMaskEdit]);
 end;
 
 // -----------------------------------------------------------------------------

@@ -1,12 +1,13 @@
 object frmJoin: TfrmJoin
   Left = 192
   Top = 103
-  BorderIcons = []
-  BorderStyle = bsSingle
+  AutoScroll = False
+  BorderIcons = [biSystemMenu]
   Caption = 'frmJoin'
-  ClientHeight = 320
-  ClientWidth = 560
+  ClientHeight = 321
+  ClientWidth = 561
   Color = clBtnFace
+  Constraints.MinHeight = 355
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -16,6 +17,9 @@ object frmJoin: TfrmJoin
   Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  DesignSize = (
+    561
+    321)
   PixelsPerInch = 96
   TextHeight = 13
   object btnJoin: TButton
@@ -23,6 +27,7 @@ object frmJoin: TfrmJoin
     Top = 288
     Width = 97
     Height = 25
+    Anchors = [akLeft, akBottom]
     Caption = 'Join!'
     Default = True
     Font.Charset = ANSI_CHARSET
@@ -39,6 +44,7 @@ object frmJoin: TfrmJoin
     Top = 288
     Width = 97
     Height = 25
+    Anchors = [akLeft, akBottom]
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
@@ -49,12 +55,17 @@ object frmJoin: TfrmJoin
     Top = 8
     Width = 545
     Height = 273
+    Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 2
+    DesignSize = (
+      545
+      273)
     object lblOutputFormat: TLabel
       Left = 8
       Top = 184
       Width = 73
       Height = 13
+      Anchors = [akLeft, akBottom]
       Caption = 'Output format:'
     end
     object lblAddFiles: TLabel
@@ -69,6 +80,7 @@ object frmJoin: TfrmJoin
       Top = 184
       Width = 59
       Height = 13
+      Anchors = [akLeft, akBottom]
       Caption = 'Output FPS:'
     end
     object btnAdd: TButton
@@ -76,6 +88,7 @@ object frmJoin: TfrmJoin
       Top = 144
       Width = 81
       Height = 25
+      Anchors = [akLeft, akBottom]
       Caption = 'Add'
       TabOrder = 1
       OnClick = btnAddClick
@@ -85,6 +98,7 @@ object frmJoin: TfrmJoin
       Top = 144
       Width = 81
       Height = 25
+      Anchors = [akLeft, akBottom]
       Caption = 'Remove'
       TabOrder = 2
       OnClick = btnRemoveClick
@@ -94,6 +108,7 @@ object frmJoin: TfrmJoin
       Top = 232
       Width = 369
       Height = 17
+      Anchors = [akLeft, akBottom]
       Caption = 'Load file after joining and saving'
       TabOrder = 7
     end
@@ -103,6 +118,7 @@ object frmJoin: TfrmJoin
       Width = 209
       Height = 21
       Style = csDropDownList
+      Anchors = [akLeft, akBottom]
       ItemHeight = 13
       Sorted = True
       TabOrder = 5
@@ -113,6 +129,7 @@ object frmJoin: TfrmJoin
       Top = 248
       Width = 369
       Height = 17
+      Anchors = [akLeft, akBottom]
       Caption = 'Recalculate time values'
       TabOrder = 8
     end
@@ -121,6 +138,7 @@ object frmJoin: TfrmJoin
       Top = 24
       Width = 529
       Height = 113
+      Anchors = [akLeft, akTop, akRight, akBottom]
       Columns = <
         item
           Caption = 'File name'
@@ -159,6 +177,7 @@ object frmJoin: TfrmJoin
       Width = 145
       Height = 21
       Style = csDropDownList
+      Anchors = [akLeft, akBottom]
       ItemHeight = 13
       TabOrder = 6
       OnChange = cmbOutputFPSChange
@@ -168,6 +187,7 @@ object frmJoin: TfrmJoin
       Top = 144
       Width = 81
       Height = 25
+      Anchors = [akLeft, akBottom]
       Caption = 'Clear'
       TabOrder = 3
       OnClick = btnClearClick
@@ -178,6 +198,7 @@ object frmJoin: TfrmJoin
       Width = 105
       Height = 21
       Style = csDropDownList
+      Anchors = [akLeft, akBottom]
       ItemHeight = 13
       TabOrder = 4
       OnChange = cmbOutputFPSChange
@@ -187,6 +208,7 @@ object frmJoin: TfrmJoin
       Top = 144
       Width = 153
       Height = 25
+      Anchors = [akLeft, akBottom]
       Caption = '&Set movie fragment'
       TabOrder = 9
       OnClick = btnSetMovieFragClick
@@ -196,6 +218,7 @@ object frmJoin: TfrmJoin
       Top = 176
       Width = 153
       Height = 25
+      Anchors = [akLeft, akBottom]
       Caption = 'C&lear movie fragment'
       TabOrder = 10
       OnClick = btnClearMovieFragClick

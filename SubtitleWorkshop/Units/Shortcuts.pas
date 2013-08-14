@@ -1,8 +1,15 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Main Menu shortcuts functionality
+
 unit Shortcuts;
 
 interface
 
-uses Forms, Windows, SysUtils, Classes, Consts, Menus, VideoPreview;
+uses
+  Forms, Windows, SysUtils, Classes, Consts, Menus;
 
 // -----------------------------------------------------------------------------
 
@@ -29,7 +36,9 @@ var
 
 implementation
 
-uses formMain, General;
+uses
+  General, VideoPreview,
+  formMain;
 
 // -----------------------------------------------------------------------------
 
@@ -55,6 +64,23 @@ const
   aPascalScript3     = 'APASCALSCRIPT3';
   aPascalScript4     = 'APASCALSCRIPT4';
   aPascalScript5     = 'APASCALSCRIPT5';
+	//added by adenry: begin
+	aPascalScript6     = 'APASCALSCRIPT6';
+  aPascalScript7     = 'APASCALSCRIPT7';
+  aPascalScript8     = 'APASCALSCRIPT8';
+  aPascalScript9     = 'APASCALSCRIPT9';
+  aPascalScript10     = 'APASCALSCRIPT10';
+	aPascalScript11     = 'APASCALSCRIPT11';
+	aPascalScript12     = 'APASCALSCRIPT12';
+	aPascalScript13     = 'APASCALSCRIPT13';
+	aPascalScript14     = 'APASCALSCRIPT14';
+	aPascalScript15     = 'APASCALSCRIPT15';
+	aPascalScript16     = 'APASCALSCRIPT16';
+	aPascalScript17     = 'APASCALSCRIPT17';
+	aPascalScript18     = 'APASCALSCRIPT18';
+	aPascalScript19     = 'APASCALSCRIPT19';
+	aPascalScript20     = 'APASCALSCRIPT20';
+	//added by adenry: end
 
   // ------------------ //
   //      File menu     //
@@ -96,9 +122,9 @@ const
   aShiftMoreMS         = 'ASHIFTMOREMS';
   aShiftLessMS         = 'ASHIFTLESSMS';
   // Texts
-  aSmartLineAdjust     = 'ASMARTLINEADJUST';
+  aFastSmartLineAdjust = 'ASMARTLINEADJUST';
   aConvertCase         = 'ACONVERTCASE';
-  aUnbreakSubs         = 'AUNBREAKSUBS';
+  aFastUnbreakSubs     = 'AUNBREAKSUBS';
   aDivideLines         = 'ADIVIDELINES';
   aFastDivideLines     = 'AFASTDIVIDELINES';
   aSetMaxLineLength    = 'ASETMAXLINELENGTH';
@@ -312,20 +338,20 @@ begin
   if Action = aShiftLessMS         then Menu := frmMain.mnuShiftLessMS else
 
   // Edit/Texts
-  if Action = aSmartLineAdjust   then Menu := frmMain.mnuSmartLineAdjust else
-  if Action = aConvertCase       then Menu := frmMain.mnuConvertCase else
-  if Action = aUnbreakSubs       then Menu := frmMain.mnuUnbreakSubtitles else
-  if Action = aDivideLines       then Menu := frmMain.mnuDivideLines else
-  if Action = aFastDivideLines   then Menu := frmMain.mnuFastDivideLines else
-  if Action = aSetMaxLineLength  then Menu := frmMain.mnuSetMaxLineLength else
-  if Action = aReadTextsFromFile then Menu := frmMain.mnuReadTextsFromFile else
+  if Action = aFastSmartLineAdjust  then Menu := frmMain.mnuFastSmartLineAdjust else
+  if Action = aConvertCase          then Menu := frmMain.mnuConvertCase else
+  if Action = aFastUnbreakSubs      then Menu := frmMain.mnuFastUnbreakSubtitles else
+  if Action = aDivideLines          then Menu := frmMain.mnuDivideLines else
+  if Action = aFastDivideLines      then Menu := frmMain.mnuFastDivideLines else
+  if Action = aSetMaxLineLength     then Menu := frmMain.mnuSetMaxLineLength else
+  if Action = aReadTextsFromFile    then Menu := frmMain.mnuReadTextsFromFile else
   // Edit/Subtitles
   if Action = aCombineSubs then Menu := frmMain.mnuCombineSubtitles else
   // Effects
-  if Action = aTypeEffect then Menu := frmMain.mnuTypeEffect else
-  if Action = aFastFlash then Menu := frmMain.mnuFastFlash else
-  if Action = aMediumFlash then Menu := frmMain.mnuMediumFlash else
-  if Action = aSlowFlash then Menu := frmMain.mnuSlowFlash else
+  if Action = aTypeEffect   then Menu := frmMain.mnuTypeEffect else
+  if Action = aFastFlash    then Menu := frmMain.mnuFastFlash else
+  if Action = aMediumFlash  then Menu := frmMain.mnuMediumFlash else
+  if Action = aSlowFlash    then Menu := frmMain.mnuSlowFlash else
   // Right to left
   if Action = aReverseText    then Menu := frmMain.mnuReverseText else
   if Action = aFixPunctuation then Menu := frmMain.mnuFixPunctuation else
@@ -389,6 +415,83 @@ begin
     if frmMain.mnuPascalScripts.Count > 4 then
       Menu := frmMain.mnuPascalScripts[4];
   end else
+	//added by adenry: begin
+	if Action = aPascalScript6 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 5 then
+      Menu := frmMain.mnuPascalScripts[5];
+  end else
+	if Action = aPascalScript7 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 6 then
+      Menu := frmMain.mnuPascalScripts[6];
+  end else
+	if Action = aPascalScript8 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 7 then
+      Menu := frmMain.mnuPascalScripts[7];
+  end else
+	if Action = aPascalScript9 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 8 then
+      Menu := frmMain.mnuPascalScripts[8];
+  end else
+	if Action = aPascalScript10 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 9 then
+      Menu := frmMain.mnuPascalScripts[9];
+  end else
+	if Action = aPascalScript11 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 10 then
+      Menu := frmMain.mnuPascalScripts[10];
+  end else
+	if Action = aPascalScript12 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 11 then
+      Menu := frmMain.mnuPascalScripts[11];
+  end else
+	if Action = aPascalScript13 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 12 then
+      Menu := frmMain.mnuPascalScripts[12];
+  end else
+	if Action = aPascalScript14 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 13 then
+      Menu := frmMain.mnuPascalScripts[13];
+  end else
+	if Action = aPascalScript15 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 14 then
+      Menu := frmMain.mnuPascalScripts[14];
+  end else
+	if Action = aPascalScript16 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 15 then
+      Menu := frmMain.mnuPascalScripts[15];
+  end else
+	if Action = aPascalScript17 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 16 then
+      Menu := frmMain.mnuPascalScripts[16];
+  end else
+	if Action = aPascalScript18 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 17 then
+      Menu := frmMain.mnuPascalScripts[17];
+  end else
+	if Action = aPascalScript19 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 18 then
+      Menu := frmMain.mnuPascalScripts[18];
+  end else
+	if Action = aPascalScript20 then
+  begin
+    if frmMain.mnuPascalScripts.Count > 19 then
+      Menu := frmMain.mnuPascalScripts[19];
+  end else
+	//added by adenry: end
 
   // ------------------ //
   //      Movie menu    //
@@ -406,8 +509,8 @@ begin
   if Action = aFwd5Sec   then Menu := frmMain.mnuFwd5Sec else
   // Subtitles
   if Action = aMoveSubtitle  then Menu := frmMain.mnuMoveSubtitle else
-  if Action = aSetStartTime  then Menu := frmMain.mnuSetStartTime else
-  if Action = aSetFinalTime  then Menu := frmMain.mnuSetFinalTime else
+  if Action = aSetStartTime  then Menu := frmMain.mnuSetShowTime else
+  if Action = aSetFinalTime  then Menu := frmMain.mnuSetHideTime else
   if Action = aStartSubtitle then Menu := frmMain.mnuStartSubtitle else
   if Action = aEndSubtitle   then Menu := frmMain.mnuEndSubtitle else
   // Synchronization

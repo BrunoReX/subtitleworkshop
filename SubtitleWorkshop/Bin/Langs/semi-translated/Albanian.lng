@@ -14,6 +14,7 @@ FPS=FPS
 PlainText=Tekst i thjeshte
 STP=Projekt Perkthimi i Subtitrave
 SRF=Skedar Raporti per Subtitat
+AllTheFiles=All files
 
 [Standard buttons]
 01=&Ok
@@ -41,6 +42,11 @@ SRF=Skedar Raporti per Subtitat
 14=Kohezgjatja:
 15=%s (%s characters):
 16=- Subtiter i Paperkthyer -
+17=Lines:
+18=Notes:
+19=Pause
+20=%d subtitles selected / %d
+21=#%d / %d
 
 [Main menu header]
 01=Skedar
@@ -50,6 +56,7 @@ SRF=Skedar Raporti per Subtitat
 05=Film
 06=Parametrat
 07=Ndihme
+08=View
 
 [Main menu/File]
 01=Subtiter i ri...
@@ -66,6 +73,7 @@ SRF=Skedar Raporti per Subtitat
 12=Ruaj si...
 13=Mbyll
 14=Dil
+15=Save marking
 
 [Main menu/Edit]
 01=Zhbej
@@ -77,6 +85,8 @@ SRF=Skedar Raporti per Subtitat
 07=Kopjo
 08=Ngjit
 09=Perzgjidh te gjitha
+10=Invert selection
+11=Insert symbol...
 
 [Main menu/Edit/Timings]
 01=Kohet
@@ -90,6 +100,11 @@ SRF=Skedar Raporti per Subtitat
 09=Zgjatje automatike
 10=Lexo kohet nga Skedari
 11=Kaperce %s milisekonda
+12=Extend length to previous
+13=Set pauses...
+14=Shift to next
+15=Shift to previous
+16=Round time values...
 
 [Main menu/Edit/Texts]
 01=Tekste
@@ -100,6 +115,8 @@ SRF=Skedar Raporti per Subtitat
 06=Ndaj rreshtat shpejt
 07=Vendos gjatesine maksimale te rreshtit...
 08=Lexo tekstin nga dosja
+09=Fast smart line adjust
+10=Fast unbreak subtitles
 
 [Main menu/Edit/Subtitles]
 01=Subtitrat
@@ -117,6 +134,10 @@ SRF=Skedar Raporti per Subtitat
 13=Fshi lidhjet e panevojshme
 14=Sheno subtitrin e perzgjedhur
 15=Hiq shenimin tek subtitri i perzgjedhur
+16=Auto combine subtitles...
+17=Delete dots at the beginning
+18=Jump to next marked
+19=Jump to previous marked
 
 [Main menu/Edit/Translation]
 01=Perkthim
@@ -148,6 +169,8 @@ SRF=Skedar Raporti per Subtitat
 16=Shikim paraprak nga jashte
 17=SAMI nxjerres gjuhe
 18=Skripte Pascal
+19=Jump to previous error
+20=Show CpS boxes
 
 [Main menu/Movie]
 01=Hap...
@@ -156,6 +179,11 @@ SRF=Skedar Raporti per Subtitat
 04=Formati Video paraprak
 05=Shfaq subtitrat
 06=Ruaj skedarin startup te medias
+07=Audio stream
+08=None
+09=Video renderer
+10=Default
+11=VMR9
 
 [Main menu/Movie/Playback]
 01=Playback
@@ -192,6 +220,9 @@ SRF=Skedar Raporti per Subtitat
 03=Shfaq panelin e majte
 04=Shfaq kontrollet e kohes
 05=Perdor in-place edition
+06=Refresh language files
+07=Files refreshed
+08=keys
 
 [Main menu/Help]
 01=Mbi %s...
@@ -203,6 +234,9 @@ SRF=Skedar Raporti per Subtitat
 03=Nenvizo
 04=Vendos ngjyren
 05=Hiq etiketat e ngjyrave
+06=Remove all tags
+07=Delete
+08=Style
 
 [Video preview hints]
 01=Ekzekuto/Pause (%s)
@@ -221,6 +255,8 @@ SRF=Skedar Raporti per Subtitat
 14=Sheno si pika e pare e sinkronizimit (%s)
 15=Sheno si pika e fundit e sinkronizimit (%s)
 16=Shto pike sinkronizimi subtiter/video (%s)
+17=Volume: %d%%
+18=Mute/Unmute
 
 [Save as]
 01=Ruaj si
@@ -247,7 +283,6 @@ SRF=Skedar Raporti per Subtitat
 [Settings Form]
 01=Parametrat
 02=Modifiko  konfigurimin e programit
-; Sections
 03=I pergjithshem
 04=I avancuar
 05=Lloji i karaktereve
@@ -261,9 +296,6 @@ SRF=Skedar Raporti per Subtitat
 13=Programi
 14=Lista
 15=Menu
-;-----------------;
-; General section ;
-;-----------------;
 16=Gjithmone ne pamje tepare
 17=Lejo te ekzekutohet me shume se nje instance
 18=Konfirmo kur fshij subtitrat
@@ -276,9 +308,6 @@ SRF=Skedar Raporti per Subtitat
 25=Asnje nderveprim me etiketat
 26=Puno me stil etikete
 27=Kufiri dosjeve te sapoperdorura:
-;----------;
-; Advanced ;
-;----------;
 28=Rregullim Smart line
 29=Dy rrjeshta nese me i gjate se:
 30=Shkronja
@@ -289,36 +318,21 @@ SRF=Skedar Raporti per Subtitat
 35=Gjatesia maksimale e rrjeshtit:
 36=Kalo kohen:
 37=Milisekonda
-;----------;
-; Charsets ;
-;----------;
 38=Shfaq ne formatin kryesor
 39=Perzgjedhja origjinale karaktereve:
 40=Perzgjedhja karaktereve per perkthim:
-;-----------------;
-; Formats section ;
-;-----------------;
 41=Formati standart:
 42=Formatet per tu shfaqur kur "Ruaj si":
 43=Shfaq formatet personale
 44=Perzgjidhi &te gjitha
 45=perzgjidh &zero
-;--------------------;
-; File types section ;
-;--------------------;
 46=Rregjistro mbaresen gjate fillimit
 47=Bashkengjit me te shumtit e llojeve te subtitrave te suportuara
-;--------------;
-; Save section ;
-;--------------;
 48=Pyet per te ruajtur ne dalje/mbyllje programi
 49=Ruaj punen automatikisht cdo
 50=minutat.
 51=Ruaj si backup
 52=Parametrat ne dalje...
-;---------------;
-; Video preview ;
-;---------------;
 53=Dopio klik ne subtiter:
 54=Sekondat per tu kaluar:
 55=Shift-dopio klik ne subtiter:
@@ -328,9 +342,6 @@ SRF=Skedar Raporti per Subtitat
 59=Koha perpara mbrapa:
 60=sekonda.
 61=Shpejtesi standart e ndryshuar playback:
-;-------------------------;
-; Video preview Subtitles ;
-;-------------------------;
 62=Vizato kufijte
 63=Vizato hije
 64=Provo sfond transparent
@@ -341,40 +352,83 @@ SRF=Skedar Raporti per Subtitat
 69=Gjersia e kufirit:
 70=Gjersia e hijes:
 71=MOSTRA
-;--------------------------;
-; External Preview General ;
-;--------------------------;
 72=Exe i video playerit:
 73=Detekto programin e bashkelidhur
 74=Kerko per video te ndryshme cdo here
 75=Gjithmone testo me video:
-;---------------------------;
-; External Preview Advanced ;
-;---------------------------;
 76=Ruaj subtitrat e perkohshme ne formatin:
 77=Formati origjinal
 78=Formati i perzgjedhur:
 79=Parametrat per tu derguar video playerit:
 80=VIDEO_FILE paraqet dosjen video ne te cilen do te testoni subtitrat. SUBT_FILE eshte  parametri ne te cilin dosja me subtitra te perkohshme do te dergohet tek video playeri. mund te shtoni parametra te tjere, pershembull full screen, etj.
-;----------------;
-; Look / Program ;
-;----------------;
 81=Shkronja per perdorim ne program:
 82=Madhesia e shkronjave:
 83=Fushat "Tekst" dhe "Perkthim" barazvendosje:
 84=Majtas|Djathtas|Qender
-;-------------;
-; Look / List ;
-;-------------;
 85=Shfaq rrjeten
 86=Apliko stilin tek subtitrat
 87=Sheno subtitrat e paperkthyera me ngjyre:
 88=Shfaq scrollbarin horizontal
-;-------------;
-; Look / Menu ;
-;-------------;
 89=Perdor stilin Menu te Office XP
 90=Perdor menu me gradient
+91=Tags mode:
+92=Multiple tags mode
+93=Single tags mode (the old mode)
+94=Auto delete tags
+95=Default subtitle duration:
+96=Default subtitle pause:
+97=Increase step (time):
+98=Increase step (frames):
+99=frames
+100=Keep min duration of:
+101=but don''t allow overlaps
+102=Automatically round time values to:
+103=Round time values on subtitle load
+104=Notes charset:
+105=Add "Open with Subtitle Workshop" to shell context menu
+106=Ask to save new subttiles
+107=Save empty subtitles
+108=Vertical video center align
+109=Enter full screen on double click
+110=Setting Show and Hide times
+111=Shift Show value:
+112=Shift Hide value:
+113=Align left when subtitles contain a new line starting with "-"
+114=Relative font size
+115=Keep subtitle on video
+116=Try antialiasing (Force using regions must be off)
+117=Smart main window and subtitle list resize
+118=Resize subtitle list columns when resizing form
+119=Mark untranslated subtitles with background:
+120=Right click selection
+121=Row height:
+122=Text margin:
+123=Selection
+124=Text:
+125=Color:
+126=Transparency:
+127=Columns
+128=Align:
+129=Display style:
+130=Full
+131=Compact
+132=Marking with color:
+133=Marking with background:
+134=Columns to mark:
+135=Mark column "%s"
+136=Marking priority:
+137=Low (before error marking)
+138=High (after error marking)
+139=Marked subtitle color in video preview:
+140=Marking file
+141=Do not save marking file
+142=Ask each time to save marking file
+143=Automatically save marking file on subtitle save
+144=Automatically load marking file
+145=Marking
+146=Play video on load
+147=Visual subtitle representation color:
+148=Hilight tags in "Text" and "Translation" fields:
 
 [Output settings]
 01=Parametrat e daljes
@@ -435,11 +489,13 @@ SRF=Skedar Raporti per Subtitat
 03=Milisekonda
 04=Vendos Kohezgjatjen Minimale
 05=* Rritja e kohes nuk do te shkaktoje mbivendosje
+06=Increase at start if necessary
 
 [Set delay]
 01=Vendos Vonesen
 02=Per te gjithe subsubtitrat
 03=Per subsubtitrat e perzgjedhur
+04=From first selected until last subtitle
 
 [Adjust subtitles]
 01=Rregullo subtitrin
@@ -473,7 +529,7 @@ SRF=Skedar Raporti per Subtitat
 06=Fotograme
 07=Vetem nese subtitri eshte me i gjate se:
 09=karakteret
-10= Vetem nese kohezgjatja eshte me e gjate se:
+10=Vetem nese kohezgjatja eshte me e gjate se:
 11=Vetem nese kohezgjtja eshte me e shkurter se:
 12=Parandalo mbivendosjen
 13=Per te gjithe subsubtitrat
@@ -490,6 +546,12 @@ SRF=Skedar Raporti per Subtitat
 08=Vetem nese kohezgjtja e re eshte me e shkurter se origjinali
 09=Gjithe subsubtitrat
 10=Vetem subsubtitrat e perzgjedhur
+11=Method
+12=Characters
+13=per second
+14=Increase at start if necessary
+15=Maximum increase at start (0 = no limit):
+16=milliseconds
 
 [Convert case]
 01=Nrysho madhesine
@@ -540,7 +602,6 @@ SRF=Skedar Raporti per Subtitat
 [Batch convert]
 01=Konvertim Batch
 02=Konverto disa skedare ne nje format te vetem ne disa hapa.
-; Buttons
 03=< &Prapa
 04=&Tjetra >
 05=C&onvert
@@ -548,7 +609,6 @@ SRF=Skedar Raporti per Subtitat
 07=&Mbyll
 08=&Te gjitha
 09=&Asnje
-; Page 1
 10=Prapashtesa:
 11=Adresa Kerkimit:
 12=Perfshi Subdirektorite
@@ -556,19 +616,15 @@ SRF=Skedar Raporti per Subtitat
 14=Direktoria ne dalje:
 15=Formati ne dalje:
 16=FPS i paracaktuar:
-; List columns
 17=Emri i dosjes
 18=Formati
 19=FPS
 20=Madhesia
-; Page 2
 21=&Shto
 22=&Hiq
 23=&Pastro
-; Page 3
 24=U Krye!. Shih skedarin e shenimeve(log):
 25=Ruaj...
-; Searching
 26=Duke kontrolluar skedarin %s
 
 [Batch convert log]
@@ -640,21 +696,12 @@ SRF=Skedar Raporti per Subtitat
 06=Subtiter
 07=Tipi
 08=Pershkrimi
-;-------;
-; Types ;
-;-------;
 09=Gabim
 10=Paralajmerim
 11=Informacion
 13=I rregulluar
-;----------------------;
-; Information messages ;
-;----------------------;
 14=Gabimet totale: %d
 15=Gabimet e rregulluar: %d
-;---------------;
-; Error reports ;
-;---------------;
 16=Permban rrjesht pa shkronja
 17=Subtiter bosh
 18=Mbivendoset ne subtitrin tjeter
@@ -675,9 +722,6 @@ SRF=Skedar Raporti per Subtitat
 33=Nuk ka hapesire para karakterit personal
 34=Hapesira te panevojshme
 35=Subtiter i shenuar
-;-------------;
-; Fix reports ;
-;-------------;
 36=U fshine rrjeshtat pa shkronja
 37=Subtitri bosh u fshi
 38=Mbivendosja u rregullua
@@ -695,8 +739,52 @@ SRF=Skedar Raporti per Subtitat
 50=U shtua hapesira pas karakterit personal
 51=U shtua hapesira para karakterit personal
 52=Hapesirat e panevojshme u hoqen
-;-----
 53=Dopio-klik te kalosh ne rrjeshtin ne formen kryesore
+67=E
+68=W
+69=F
+70=CI
+71=Select
+72=+ Select
+73=- Select
+74=Select subtitles
+75=Add to selected subtitles
+76=Remove from selected subtitles
+77=All
+78=None
+79=Inverse
+80=Select all
+81=Select none
+82=Invert selection
+83=Error types sets
+84=Save error types set
+85=Delete error types set
+86=Error types
+87=Custom info
+88=Show/hide errors
+89=Show/hide warnings
+90=Show/hide fixed
+91=Show/hide custom info
+92=Show/hide Error types panel
+93=Show/hide Custom info panel
+65=Custom info
+66=Displayed: %d
+54=Unnecessary tags
+56=Dash on first line
+58=Too many CpS
+60=Too short pause
+62=Dialogue on one line
+55=Removed unnecessary tags
+57=Removed dash on first line
+59=Fixed too much CpS
+61=Fixed too short pause
+63=Fixed dialogue on one line
+94=Export to file
+95=Text file
+96=char
+97=sec
+98=fr
+99=cps
 
 [Information and errors Settings]
 01=Parametrat
@@ -726,7 +814,6 @@ SRF=Skedar Raporti per Subtitat
 25=Kohezgjatje shume e shkurter:
 26=Rrjesht shume i gjate:
 27=karaktere.
-;------
 28=Rrjesht pa shkronja
 29=Subsubtitra bosh
 30=Subsubtitra te mbivendosur
@@ -747,7 +834,6 @@ SRF=Skedar Raporti per Subtitat
 45=Hapesira pas karakterit personal
 46=Hapesira para karakterit personal
 47=Hapesira te panevojshme
-;------
 48=Kontrollo per:
 49=Rregullo:
 50=Entera dhe hapesira ne fillim dhe ne fund
@@ -757,6 +843,51 @@ SRF=Skedar Raporti per Subtitat
 54=Hapesira pas "¿" dhe "¡"
 55=Hapesira perpara "?" dhe "!"
 56=Hapesira ndermjet numrave
+57=Too short pauses
+58="- " on first line
+59=Only if there is no "- " on second line
+60=Dialogue on one line
+61=Unnecessary tags
+62=Too many characters per second
+63=Mark too much CpS with CpS boxes
+64=Default errorr marking
+65=Set Default Styles
+66=Mark column "Num"
+67=Mark column "Pause"
+68=Mark column "Show"
+69=Mark column "Hide"
+70=Mark column "Duration"
+71=Mark column "Text"
+72=Mark as Bold
+73=Mark as Italic
+74=Mark as Underline
+75=Mark as Strikethrough
+76=Mark the text color
+77=Mark the background color
+78=Mark
+79=Automatically recheck errors
+80=Do not recheck on Pascal scripts
+81=Recheck all once after a Pascal script executes
+82=Recheck on each change made by a Pascal script (might be slow)
+83=Indicate too long lines in Text and Translation labels
+84=Indicate too short duration in Duration box
+85=Indicate too long duration in Duration box
+86=Indicate too short pause in Pause box
+87=Indicate overlapping subtitles in Pause box
+88=Indicate bad values in Show and Hide boxes
+89=Indicate subtitles over two lines in lines counter labels
+90=Text color
+91=Background color
+92=Too short pause under:
+93=Characters per second (CpS)
+94=Too many CpS over:
+95=characters per second
+96=Normal CpS box colors:
+97=Too many CpS box colors:
+98=Display percantage in CpS box
+99=Display current CpS in CpS box
+100=Display minimum time in CpS box
+101=Display maximum characters in CpS box
 
 [Various information]
 01=Informacione te ndryshme
@@ -783,6 +914,18 @@ SRF=Skedar Raporti per Subtitat
 22=I gjere
 23=I pjerret
 24=Llogarit
+25=Shortest line:
+26=Longest pause:
+27=Shortest pause:
+28=In subtitle %d, %d,%.3d seconds
+29=In subtitle %d, %d milliseconds
+30=Most CpS:
+31=Least CpS:
+32=In subtitle %d, %d cps
+33=Average CpS:
+34=Longest duration:
+35=Shortest duration:
+36=Refresh info
 
 [SAMI Language Extractor]
 01=SAMI Language Extractor
@@ -809,12 +952,12 @@ SRF=Skedar Raporti per Subtitat
 08=Programuar nga
 09=Programimi shtese
 10=%s nga
-; Following line is "DirectShow programming"
 11=%s programues
 12=Perkthyes
 13=Testues Beta
 14=Ikonat standart nga
 15=Per azhornim vizitoni:
+16=License
 
 [Error messages]
 01=Nuk mund te nise subtitri API. Ju lutem shkarkoni DLL "%s" nga %s dhe kopjoje nedirektorine "%s".
@@ -837,6 +980,12 @@ SRF=Skedar Raporti per Subtitat
 18=Zgjidh nje pjese subtitri ne liste.
 19=Nese perzgjidhni nje fragment filmi per nje pjese te subtitrit duhet te perzgjidhni nje fragment filmi per te gjithe pjeset e subtitrit (pervec pjeses ne fjale).
 20=Duhen dy a me shume pika.
+21=Incorrect regular expression in Custom info %s
+22=Custom Info %d was disabled.|Fix the regular expression to enable it.
+23=Subtitle duration too short!
+24=Error: can not execute script.
+25=Error: can not compile script.
+26=Save subtitles first
 
 [Question messages]
 01=Skedari "%s" ka ndryshuar.||Doni ti ruani ndryshimet?.
@@ -848,6 +997,7 @@ SRF=Skedar Raporti per Subtitat
 07=Exe e video playerit  nuk eshte specifikuar ose nuk ekziston.||Doni te konfiguroni je player te jashtem?.
 08=Nje version i ri u gjet!.||Doni te shihni listen e ndryshimeve?.
 09=Skedari qe po perpiqeni te ruani eshte read-only.||Perpiqu ta ruash sidoqofte?.
+10=Do you want to save the marking in a file?
 
 [Information messages]
 01=Nuk u gjeten raste te tjera te "%s".
@@ -861,6 +1011,7 @@ SRF=Skedar Raporti per Subtitat
 09=Emri i skedarit: %s|Madhesia: %s|FPS: %s|Kohezgjatja: %s|Fotogramet total: %d|Risolucioni: %dx%d|FourCC: %s
 10=Disa nga pistat e filmit nuk u shfaqen ne menyre korrekte. Ndoshta codec audio ose video mungon.
 11=Nuk eshte e nevojshme te vendosni fragmentin e filmit qe i korrespondon subtitrit te fundit.
+12=A sudden error occured:|"%s"
 
 [Information and errors messages]
 01=Subtitri numer %d eshte subtiter bosh dhe do te fshihet.||Doni te procedoni?.
@@ -868,3 +1019,118 @@ SRF=Skedar Raporti per Subtitat
 03=Subtitri numer %d:||"%s" do te fshihet.||Doni te procedoni?.
 04=Pjese te  subtitrit numer %d:||"%s" do te fshihen, keshtu qe subtitri do te jete:||"%s"||Doni te procedoni?.
 05=Subtitri numer %d:||"%s" eshte subtiter njerrjeshtor dhe fillon me "-".||Doni ta fshini "-" ne fillim?.
+
+[Main menu/View]
+01=Toolbar
+02=Text style bars
+03=Statusbar
+04=Columns
+05=Show notes in left panel
+06=Show time control buttons
+07=Show lines count
+08=Visual subtitle representation
+
+[Video Popup Menu]
+01=Enter full screen
+02=Exit full screen
+03=Zoom to %d%%
+04=Reset subtitle vertical position
+
+[Time control buttons hints]
+01=Shift to previous/Extend to previous
+02=Shift to next/Extend to next
+03=Set default pause/Set default pause, if pause is too short
+04=Set ato duration/Set min duration
+
+[Auto combine subtitles]
+01=Auto combine subtitles
+02=milliseconds
+03=Combine if duration is less than (0 = no limit):
+04=Combine if CpS is greater than (0 = no limit):
+05=characters per second
+06=Don't combine if pause is greater than (0 = no limit):
+07=Punctuation marks detection
+08=Combined subtitles maximum duration (0 = no limit):
+09=Decrease duration if necessary, with no more than:
+10=Combined subtitles maximum lines length (0 = no limit):
+11=characters
+12=For all the subtitles
+13=For the selected subtitles
+
+[Set pauses]
+01=Set pauses
+02=Pauses value:
+03=Shorten duration of:
+04=First subtitle only
+05=Second subtitle only
+06=Both subtitles equally
+07=The subtitle with less CpS
+08=For all the subtitles
+09=For the selected subtitles
+
+[Round time values]
+01=Round time values
+02=Round to:
+03=milliseconds
+04=For all the subtitles
+05=For the selected subtitles
+
+[Smart line adjust]
+01=Smart line adjust
+02=Two lines if longer than:
+03=characters
+04=Break method:
+05=Equal lines
+06=Break on punctuation marks
+07=Don''t unbreak subtitles that are not too long
+08=Adjust only long subs and subs with more than 2 lines
+09=For all the subtitles
+10=For the selected subtitles
+11=Always try to find a better breaking point
+
+[Unbreak subtitles]
+01=Unbreak subtitles
+02=Characters limit
+03=No limit
+04=Don''t unbreak if line length exceeds:
+05=characters
+06=Don''t unbreak subtitles with "—" on second line
+07=For all the subtitles
+08=For the selected subtitles
+
+[Custom info]
+01=Add custom info
+02=Composite custom info
+03=Subtitles duration information
+04=Subtitles line lenght information
+05=Subtitles lines count information
+06=Subtitles pause information
+07=Subtitles CpS information
+08=Subtitles text information
+09=Custom info sets
+10=Save custom info set
+11=Delete custom info set
+12=There is no custom info. Click the "+" button to add new custom info.
+13=Caption
+14=Duration
+15=Lines length
+16=Lines count
+17=Pause
+18=CpS
+19=Text
+20=Composite info
+21=ms
+22=chars
+23=lines
+24=cps
+25=AND
+26=OR
+27=Contains (Case sensitive)
+28=Contains (Case insensitive)
+29=Does not contain (Case sensitive)
+30=Does not contain (Case insensitive)
+31=Matches regular expression
+32=Matches regular expression (tags ignored)
+33=Delete
+34=Edit
+

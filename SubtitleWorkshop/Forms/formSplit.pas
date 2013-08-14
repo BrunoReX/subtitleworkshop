@@ -1,3 +1,9 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Split Subtitle form
+
 unit formSplit;
 
 {$WARN UNIT_PLATFORM OFF}
@@ -5,10 +11,10 @@ unit formSplit;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, Mask, ComCtrls, VirtualTrees, General, Functions,
-  TreeViewHandle, USubtitlesFunctions, FileCtrl, IniFiles, Buttons, FastStrings,
-  VideoPreview, TimeMaskEdit;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls, Mask, ComCtrls, FileCtrl, IniFiles, Buttons,
+  VirtualTrees, TimeMaskEdit,
+  FastStrings,
+  CommonTypes;
 
 type
   TSubtitlePart = record
@@ -109,7 +115,9 @@ var
 
 implementation
 
-uses formMain;
+uses
+  General, Functions, TreeViewHandle, USubtitlesFunctions, VideoPreview,
+  formMain;
 
 {$R *.dfm}
 
@@ -363,7 +371,7 @@ begin
           OutPath := ExtractFilePath(frmMain.OrgFile);
 
         try
-          UpdateArray;
+          UpdateArray(SubFormat); //format index added by adenry
           // Save first file
           SubtitleAPI.SaveSubtitle(OutPath + edtNameFile1.Text + Extension, SubFormat, GetFPS, 0, SplitIn.Index);
           if chkRecalculate.Checked then
@@ -412,7 +420,7 @@ begin
     PartNode := lstSplitParts.GetFirst;
 
     try
-      UpdateArray;
+      UpdateArray(cmbOutputFormat.ItemIndex + 1); //format index added by adenry
 
       while Assigned(PartNode) do
       begin

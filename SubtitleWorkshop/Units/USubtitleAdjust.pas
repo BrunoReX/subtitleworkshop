@@ -1,5 +1,8 @@
-// URUSoft Subtitle Adjust
-// Copyright ® 2003 URUSoft.
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: "Adjust subtitles" functionality
 
 unit USubtitleAdjust;
 
@@ -39,7 +42,9 @@ type
   end;
 
 // -----------------------------------------------------------------------------
+              
 implementation
+
 // -----------------------------------------------------------------------------
 
 procedure TAdjust.Init();

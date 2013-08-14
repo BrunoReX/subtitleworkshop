@@ -13,6 +13,7 @@ FPS=FPS
 PlainText=Prostı text
 STP=Projekt prekladu titulkov
 SRF=Záznamovı súbor titulku
+AllTheFiles=All files
 
 [Standard buttons]
 01=&Ok
@@ -40,6 +41,11 @@ SRF=Záznamovı súbor titulku
 14=Dåka:
 15=%s (%s znakov):
 16=- Nepreloenı titulok -
+17=Lines:
+18=Notes:
+19=Pause
+20=%d subtitles selected / %d
+21=#%d / %d
 
 [Main menu header]
 01=Súbor
@@ -49,6 +55,7 @@ SRF=Záznamovı súbor titulku
 05=Film
 06=Nastavenia
 07=Nápoveda
+08=View
 
 [Main menu/File]
 01=Novı titulok...
@@ -65,6 +72,7 @@ SRF=Záznamovı súbor titulku
 12=Uloi ako...
 13=Zavrie
 14=Koniec
+15=Save marking
 
 [Main menu/Edit]
 01=Spä
@@ -76,6 +84,8 @@ SRF=Záznamovı súbor titulku
 07=Kopírova
 08=Vloi
 09=Vybra všetky
+10=Invert selection
+11=Insert symbol...
 
 [Main menu/Edit/Timings]
 01=Èasovanie
@@ -89,6 +99,11 @@ SRF=Záznamovı súbor titulku
 09=Automatické doby trvania
 10=Naèíta èasovanie zo súboru
 11=Posunú o %s milisekúnd
+12=Extend length to previous
+13=Set pauses...
+14=Shift to next
+15=Shift to previous
+16=Round time values...
 
 [Main menu/Edit/Texts]
 01=Texty
@@ -99,6 +114,8 @@ SRF=Záznamovı súbor titulku
 06=Rıchle rozdelenie riadkov
 07=Nastavi maximálnu dåku riadku...
 08=Naèíta texty zo súboru
+09=Fast smart line adjust
+10=Fast unbreak subtitles
 
 [Main menu/Edit/Subtitles]
 01=Titulky
@@ -116,6 +133,10 @@ SRF=Záznamovı súbor titulku
 13=Vymaza nepotrebné odkazy
 14=Oznaèi vybrané titulky
 15=Odznaèi vybrané titulky
+16=Auto combine subtitles...
+17=Delete dots at the beginning
+18=Jump to next marked
+19=Jump to previous marked
 
 [Main menu/Edit/Translation]
 01=Preklad
@@ -147,6 +168,8 @@ SRF=Záznamovı súbor titulku
 16=Externı náh¾ad
 17=SAMI jazykovı extraktor
 18=Pascal skripty
+19=Jump to previous error
+20=Show CpS boxes
 
 [Main menu/Movie]
 01=Otvori...
@@ -155,6 +178,11 @@ SRF=Záznamovı súbor titulku
 04=Mód náh¾adu videa
 05=Zobrazi titulky
 06=Uloi startovací súbor média
+07=Audio stream
+08=None
+09=Video renderer
+10=Default
+11=VMR9
 
 [Main menu/Movie/Playback]
 01=Prehrávanie
@@ -191,6 +219,9 @@ SRF=Záznamovı súbor titulku
 03=Zobrazi ¾avı panel
 04=Zobrazi ovládanie èasu
 05=Pouí editáciu priamo v texte
+06=Refresh language files
+07=Files refreshed
+08=keys
 
 [Main menu/Help]
 01=O programe %s...
@@ -202,6 +233,9 @@ SRF=Záznamovı súbor titulku
 03=Podèiarknuté
 04=Nastavi farbu
 05=Odstráni tagy farby
+06=Remove all tags
+07=Delete
+08=Style
 
 [Video preview hints]
 01=Prehra/Pauza (%s)
@@ -220,6 +254,8 @@ SRF=Záznamovı súbor titulku
 14=Oznaèi ako prvı synchronizaènı bod (%s)
 15=Oznaèi ako poslednı synchronizaènı bod (%s)
 16=Prida synchronizaènı bod titulku/filmu (%s)
+17=Volume: %d%%
+18=Mute/Unmute
 
 [Save as]
 01=Uloi ako
@@ -246,7 +282,6 @@ SRF=Záznamovı súbor titulku
 [Settings Form]
 01=Nastavenie
 02=Zmeni konfiguráciu programu
-; Sections
 03=Obecné
 04=Pokroèilé
 05=Znakové sady
@@ -260,9 +295,6 @@ SRF=Záznamovı súbor titulku
 13=Program
 14=Zoznam
 15=Menu
-;-----------------;
-; General section ;
-;-----------------;
 16=Vdy navrchu
 17=Povoli viac ne jednu kópiu beiaceho programu
 18=Potvrdzova vymazávanie titulkov
@@ -275,9 +307,6 @@ SRF=Záznamovı súbor titulku
 25=iadna interakcia s tagmi
 26=Pracova so štılovımi tagmi
 27=Max. poèet naposledy otvorenıch súborov:
-;----------;
-; Advanced ;
-;----------;
 28=Pohotové nastavenie riadku
 29=Dva riadky, keï je dlhší ako:
 30=znakov
@@ -288,36 +317,21 @@ SRF=Záznamovı súbor titulku
 35=Maximálna dåka riadku:
 36=Èas posunu:
 37=milisekúnd
-;----------;
-; Charsets ;
-;----------;
 38=Zobrazi v hlavnom okne
 39=Znaková sada originálu:
 40=Znaková sada prekladu:
-;-----------------;
-; Formats section ;
-;-----------------;
 41=Štandardnı formát:
 42=Formáty ktoré sa zobrazia pri "Uloi ako":
 43=Zobrazi uívate¾ské formáty
 44=Vybr&a všetky
 45=O&dznaèi všetky
-;--------------------;
-; File types section ;
-;--------------------;
 46=Zaregistrova prípony pri štarte
 47=Asociova s najviac podporovanımi príponami titulkov
-;--------------;
-; Save section ;
-;--------------;
 48=Spıta sa na uloenie pri ukonèení programu/zavretí titulkov
 49=Uklada prácu automaticky kadıch
 50=minút.
 51=Uloi ako zálohu
 52=Nastavenie vıstupu...
-;---------------;
-; Video preview ;
-;---------------;
 53=Dvojklik na titulok:
 54=Preskoèi sekúnd:
 55=Shift + dvojklik na titulok:
@@ -327,9 +341,6 @@ SRF=Záznamovı súbor titulku
 59=Èas vzad a vpred:
 60=sekúnd.
 61=Defaultne zmenená rıchlos prehrávania:
-;-------------------------;
-; Video preview Subtitles ;
-;-------------------------;
 62=Vykresli okraj
 63=Vykresli tieò
 64=Skúsi prieh¾adné pozadie
@@ -340,40 +351,83 @@ SRF=Záznamovı súbor titulku
 69=Šírka okraja:
 70=Šírka tieòa:
 71=UKÁKA
-;--------------------------;
-; External Preview General ;
-;--------------------------;
 72=Exe súbor videoprehrávaèa:
 73=Detekova priradenı program
 74=Spıta sa zakadım na iné video
 75=Vdy testova s video súborom:
-;---------------------------;
-; External Preview Advanced ;
-;---------------------------;
 76=Uloi doèasné titulky vo formáte:
 77=Originálny formát
 78=Uívate¾skı formát:
 79=Parameter odoslanı videoprehrávaèu:
 80=VIDEO_FILE predstavuje video súbor, v ktorom sa chystáte testova titulky. SUBT_FILE je parameter, v ktorom bude doèasnı súbor titulkov odoslanı videoprehrávaèu. Môete prida ïalšie parametre, napríklad Celá obrazovka, atï.
-;----------------;
-; Look / Program ;
-;----------------;
 81=Písmo pouité v programe:
 82=Ve¾kos písma:
 83=Zarovna pole "Text" a "Preklad":
 84=Do¾ava|Doprava|Vystredi
-;-------------;
-; Look / List ;
-;-------------;
 85=Ukáza rastrové èiary
 86=Poui štıl titulkov
 87=Oznaèi nepreloené titulky farbou:
 88=Ukazova horizontálnu posuvnú lištu
-;-------------;
-; Look / Menu ;
-;-------------;
 89=Pouíva štıl Office XP Menu
 90=Pouíva postupné menu
+91=Tags mode:
+92=Multiple tags mode
+93=Single tags mode (the old mode)
+94=Auto delete tags
+95=Default subtitle duration:
+96=Default subtitle pause:
+97=Increase step (time):
+98=Increase step (frames):
+99=frames
+100=Keep min duration of:
+101=but don''t allow overlaps
+102=Automatically round time values to:
+103=Round time values on subtitle load
+104=Notes charset:
+105=Add "Open with Subtitle Workshop" to shell context menu
+106=Ask to save new subttiles
+107=Save empty subtitles
+108=Vertical video center align
+109=Enter full screen on double click
+110=Setting Show and Hide times
+111=Shift Show value:
+112=Shift Hide value:
+113=Align left when subtitles contain a new line starting with "-"
+114=Relative font size
+115=Keep subtitle on video
+116=Try antialiasing (Force using regions must be off)
+117=Smart main window and subtitle list resize
+118=Resize subtitle list columns when resizing form
+119=Mark untranslated subtitles with background:
+120=Right click selection
+121=Row height:
+122=Text margin:
+123=Selection
+124=Text:
+125=Color:
+126=Transparency:
+127=Columns
+128=Align:
+129=Display style:
+130=Full
+131=Compact
+132=Marking with color:
+133=Marking with background:
+134=Columns to mark:
+135=Mark column "%s"
+136=Marking priority:
+137=Low (before error marking)
+138=High (after error marking)
+139=Marked subtitle color in video preview:
+140=Marking file
+141=Do not save marking file
+142=Ask each time to save marking file
+143=Automatically save marking file on subtitle save
+144=Automatically load marking file
+145=Marking
+146=Play video on load
+147=Visual subtitle representation color:
+148=Hilight tags in "Text" and "Translation" fields:
 
 [Output settings]
 01=Vıstupné nastavenie
@@ -434,11 +488,13 @@ SRF=Záznamovı súbor titulku
 03=milisekúnd
 04=Nastavi minimálnu dåku
 05=* Zvıšenie doby trvania nespôsobí prekrıvanie
+06=Increase at start if necessary
 
 [Set delay]
 01=Nastavi oneskorenie
 02=Pre všetky titulky
 03=Pre vybrané titulky
+04=From first selected until last subtitle
 
 [Adjust subtitles]
 01=Upravi titulky
@@ -489,6 +545,12 @@ SRF=Záznamovı súbor titulku
 08=Len keï je nová doba trvania menšia ako originál
 09=Všetky titulky
 10=Len vybrané titulky
+11=Method
+12=Characters
+13=per second
+14=Increase at start if necessary
+15=Maximum increase at start (0 = no limit):
+16=milliseconds
 
 [Convert case]
 01=Zmeni ve¾kos
@@ -539,7 +601,6 @@ SRF=Záznamovı súbor titulku
 [Batch convert]
 01=Hromadnı prevod
 02=Prevedie ve¾a súborov do rovnakého formátu v nieko¾kıch krokoch.
-; Buttons
 03=< Spä&
 04=&Ïalej >
 05=&Previes
@@ -547,7 +608,6 @@ SRF=Záznamovı súbor titulku
 07=&Zavrie
 08=&Všetko
 09=&Niè
-; Page 1
 10=Prípony:
 11=Cesta vyh¾adávania:
 12=Zahrnú podzloky
@@ -555,19 +615,15 @@ SRF=Záznamovı súbor titulku
 14=Vıstupnı adresár:
 15=Vıstupnı formát:
 16=Štandardné FPS:
-; List columns
 17=Názov súboru
 18=Formát
 19=FPS
 20=Ve¾kos
-; Page 2
 21=Pri&da
 22=&Odstráni
 23=&Vyèisti
-; Page 3
 24=Hotovo! Prezrite si podrobnosti v zázname:
 25=Uloi...
-; Searching
 26=Kontrolujem súbor %s
 
 [Batch convert log]
@@ -639,21 +695,12 @@ SRF=Záznamovı súbor titulku
 06=Titulok
 07=Typ
 08=Popis
-;-------;
-; Types ;
-;-------;
 09=Chyba
 10=Varovanie
 11=Informácie
 13=Opravené
-;----------------------;
-; Information messages ;
-;----------------------;
 14=Celkom chıb: %d
 15=Opravené chyby: %d
-;---------------;
-; Error reports ;
-;---------------;
 16=Obsahuje riadky bez písmen
 17=Prázdny titulok
 18=Prekrıvanie s predchádzajúcim titulkom
@@ -674,9 +721,6 @@ SRF=Záznamovı súbor titulku
 33=iadna medzera pred uívate¾skım znakom
 34=Nadbytoèné medzery
 35=Oznaèenı titulok
-;-------------;
-; Fix reports ;
-;-------------;
 36=Zmazané riadky bez písmen
 37=Prázdny titulok bol vymazanı
 38=Opravené prekrıvanie
@@ -694,8 +738,52 @@ SRF=Záznamovı súbor titulku
 50=Pridaná medzera po uívate¾skom znaku
 51=Pridaná medzera pred uívate¾skım znakom
 52=Odstránené nadbytoèné medzery
-;-----
 53=Dvojklikom skoèíte na riadok v hlavnom okne
+67=E
+68=W
+69=F
+70=CI
+71=Select
+72=+ Select
+73=- Select
+74=Select subtitles
+75=Add to selected subtitles
+76=Remove from selected subtitles
+77=All
+78=None
+79=Inverse
+80=Select all
+81=Select none
+82=Invert selection
+83=Error types sets
+84=Save error types set
+85=Delete error types set
+86=Error types
+87=Custom info
+88=Show/hide errors
+89=Show/hide warnings
+90=Show/hide fixed
+91=Show/hide custom info
+92=Show/hide Error types panel
+93=Show/hide Custom info panel
+65=Custom info
+66=Displayed: %d
+54=Unnecessary tags
+56=Dash on first line
+58=Too many CpS
+60=Too short pause
+62=Dialogue on one line
+55=Removed unnecessary tags
+57=Removed dash on first line
+59=Fixed too much CpS
+61=Fixed too short pause
+63=Fixed dialogue on one line
+94=Export to file
+95=Text file
+96=char
+97=sec
+98=fr
+99=cps
 
 [Information and errors Settings]
 01=Nastavenie
@@ -725,7 +813,6 @@ SRF=Záznamovı súbor titulku
 25=Príliš krátke trvanie:
 26=Príliš dlhı riadok:
 27=znakov.
-;------
 28=Riadky bez písmen
 29=Prázdne titulky
 30=Prekrıvajúce sa titulky
@@ -746,7 +833,6 @@ SRF=Záznamovı súbor titulku
 45=Medzery po vlastnıch znakoch
 46=Medzery pred vlastnımi znakmi
 47=Nadbytoèné medzery
-;------
 48=Kontrolova:
 49=Opravova:
 50=Entery a medzery na zaèiatku a konci
@@ -756,6 +842,51 @@ SRF=Záznamovı súbor titulku
 54=Medzery po "¿" a "¡"
 55=Medzery pred "?" a "!"
 56=Medzery medzi èíslami
+57=Too short pauses
+58="- " on first line
+59=Only if there is no "- " on second line
+60=Dialogue on one line
+61=Unnecessary tags
+62=Too many characters per second
+63=Mark too much CpS with CpS boxes
+64=Default errorr marking
+65=Set Default Styles
+66=Mark column "Num"
+67=Mark column "Pause"
+68=Mark column "Show"
+69=Mark column "Hide"
+70=Mark column "Duration"
+71=Mark column "Text"
+72=Mark as Bold
+73=Mark as Italic
+74=Mark as Underline
+75=Mark as Strikethrough
+76=Mark the text color
+77=Mark the background color
+78=Mark
+79=Automatically recheck errors
+80=Do not recheck on Pascal scripts
+81=Recheck all once after a Pascal script executes
+82=Recheck on each change made by a Pascal script (might be slow)
+83=Indicate too long lines in Text and Translation labels
+84=Indicate too short duration in Duration box
+85=Indicate too long duration in Duration box
+86=Indicate too short pause in Pause box
+87=Indicate overlapping subtitles in Pause box
+88=Indicate bad values in Show and Hide boxes
+89=Indicate subtitles over two lines in lines counter labels
+90=Text color
+91=Background color
+92=Too short pause under:
+93=Characters per second (CpS)
+94=Too many CpS over:
+95=characters per second
+96=Normal CpS box colors:
+97=Too many CpS box colors:
+98=Display percantage in CpS box
+99=Display current CpS in CpS box
+100=Display minimum time in CpS box
+101=Display maximum characters in CpS box
 
 [Various information]
 01=Rôzne informácie
@@ -782,6 +913,18 @@ SRF=Záznamovı súbor titulku
 22=Tuèné
 23=Kurzíva
 24=Vypoèíta
+25=Shortest line:
+26=Longest pause:
+27=Shortest pause:
+28=In subtitle %d, %d,%.3d seconds
+29=In subtitle %d, %d milliseconds
+30=Most CpS:
+31=Least CpS:
+32=In subtitle %d, %d cps
+33=Average CpS:
+34=Longest duration:
+35=Shortest duration:
+36=Refresh info
 
 [SAMI Language Extractor]
 01=SAMI jazykovı extraktor
@@ -808,12 +951,12 @@ SRF=Záznamovı súbor titulku
 08=Naprogramované
 09=Pomocné programovanie
 10=%s od
-; Following line is "DirectShow programming"
 11=%s programovanie
 12=Prekladatelia
 13=Beta testovaèi
 14=Defaultná ikona
 15=Pre aktualizácie navštívte:
+16=License
 
 [Error messages]
 01=Nemôem spusti API titulkov. Prosím stiahnite DLL "%s" z %s a nakopírujte ju do adresára "%s".
@@ -836,6 +979,12 @@ SRF=Záznamovı súbor titulku
 18=Vyberte èas titulku v zozname.
 19=Ak vyberiete fragment filmu pre jednu èas titulku musíte vybra fragment filmu pre všetky èasti titulku (okrem poslednej èasti, samozrejme).
 20=Potrebujete dva alebo viac bodov.
+21=Incorrect regular expression in Custom info %s
+22=Custom Info %d was disabled.|Fix the regular expression to enable it.
+23=Subtitle duration too short!
+24=Error: can not execute script.
+25=Error: can not compile script.
+26=Save subtitles first
 
 [Question messages]
 01=Súbor "%s" bol zmenenı.||Chcete zmeny uloi?.
@@ -847,6 +996,7 @@ SRF=Záznamovı súbor titulku
 07=Spustite¾nı súbor videoprehrávaèa nie je špecifikovanı alebo neexistuje.||Chcete nakonfigurova externı prehrávaè?.
 08=Nájdená nová verzia!||Chcete si pozrie zoznam zmien?.
 09=Súbor, ktorı sa pokúšate uloi, je len na èítanie.||Aj tak skúsi uloi?.
+10=Do you want to save the marking in a file?
 
 [Information messages]
 01=Nemôem nájs viac kópii "%s".
@@ -860,6 +1010,7 @@ SRF=Záznamovı súbor titulku
 09=Meno súboru: %s|Ve¾kos: %s|FPS: %s|Trvanie: %s|Celkom snímkov: %d|Rozlíšenie: %dx%d|FourCC: %s
 10=Niektoré zo streamov tohto filmu nemôu by správne renderované. Pravdepodobne chıba audio alebo video kodek.
 11=Nie je nutné nastavi fragment filmu, ktorı zodpovedá poslednému titulku.
+12=A sudden error occured:|"%s"
 
 [Information and errors messages]
 01=Titulok èíslo %d je prázdny titulok a má by práve vymazanı.||Chcete pokraèova?.
@@ -867,3 +1018,118 @@ SRF=Záznamovı súbor titulku
 03=Titulok èíslo %d:||"%s" má by práve vymazanı.||Chcete pokraèova?.
 04=Èas titulku èíslo %d:||"%s" má by práve vymazaná, take titulok bude:||"%s"||Chcete pokraèovat?.
 05=Titulok èíslo %d:||"%s" je jednoriadkovı titulok a zaèína znakom "-".||Chcete zmazat znak "-" na zaèiatku?.
+
+[Main menu/View]
+01=Toolbar
+02=Text style bars
+03=Statusbar
+04=Columns
+05=Show notes in left panel
+06=Show time control buttons
+07=Show lines count
+08=Visual subtitle representation
+
+[Video Popup Menu]
+01=Enter full screen
+02=Exit full screen
+03=Zoom to %d%%
+04=Reset subtitle vertical position
+
+[Time control buttons hints]
+01=Shift to previous/Extend to previous
+02=Shift to next/Extend to next
+03=Set default pause/Set default pause, if pause is too short
+04=Set ato duration/Set min duration
+
+[Auto combine subtitles]
+01=Auto combine subtitles
+02=milliseconds
+03=Combine if duration is less than (0 = no limit):
+04=Combine if CpS is greater than (0 = no limit):
+05=characters per second
+06=Don't combine if pause is greater than (0 = no limit):
+07=Punctuation marks detection
+08=Combined subtitles maximum duration (0 = no limit):
+09=Decrease duration if necessary, with no more than:
+10=Combined subtitles maximum lines length (0 = no limit):
+11=characters
+12=For all the subtitles
+13=For the selected subtitles
+
+[Set pauses]
+01=Set pauses
+02=Pauses value:
+03=Shorten duration of:
+04=First subtitle only
+05=Second subtitle only
+06=Both subtitles equally
+07=The subtitle with less CpS
+08=For all the subtitles
+09=For the selected subtitles
+
+[Round time values]
+01=Round time values
+02=Round to:
+03=milliseconds
+04=For all the subtitles
+05=For the selected subtitles
+
+[Smart line adjust]
+01=Smart line adjust
+02=Two lines if longer than:
+03=characters
+04=Break method:
+05=Equal lines
+06=Break on punctuation marks
+07=Don''t unbreak subtitles that are not too long
+08=Adjust only long subs and subs with more than 2 lines
+09=For all the subtitles
+10=For the selected subtitles
+11=Always try to find a better breaking point
+
+[Unbreak subtitles]
+01=Unbreak subtitles
+02=Characters limit
+03=No limit
+04=Don''t unbreak if line length exceeds:
+05=characters
+06=Don''t unbreak subtitles with "—" on second line
+07=For all the subtitles
+08=For the selected subtitles
+
+[Custom info]
+01=Add custom info
+02=Composite custom info
+03=Subtitles duration information
+04=Subtitles line lenght information
+05=Subtitles lines count information
+06=Subtitles pause information
+07=Subtitles CpS information
+08=Subtitles text information
+09=Custom info sets
+10=Save custom info set
+11=Delete custom info set
+12=There is no custom info. Click the "+" button to add new custom info.
+13=Caption
+14=Duration
+15=Lines length
+16=Lines count
+17=Pause
+18=CpS
+19=Text
+20=Composite info
+21=ms
+22=chars
+23=lines
+24=cps
+25=AND
+26=OR
+27=Contains (Case sensitive)
+28=Contains (Case insensitive)
+29=Does not contain (Case sensitive)
+30=Does not contain (Case insensitive)
+31=Matches regular expression
+32=Matches regular expression (tags ignored)
+33=Delete
+34=Edit
+

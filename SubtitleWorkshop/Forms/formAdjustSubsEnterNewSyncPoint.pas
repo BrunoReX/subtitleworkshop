@@ -1,10 +1,16 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Adjust Subtitles Enter New Sync Point form
+
 unit formAdjustSubsEnterNewSyncPoint;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Mask, TimeMaskEdit, ExtCtrls, IniFiles, General, Functions;
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, Mask, ExtCtrls, IniFiles,
+  TimeMaskEdit;
 
 type
   TfrmEnterNewSyncPoint = class(TForm)
@@ -28,7 +34,9 @@ var
 
 implementation
 
-uses formAdjustSubtitles, formMain;
+uses
+  General, Functions,
+  formMain, formAdjustSubtitles;
 
 {$R *.dfm}
 

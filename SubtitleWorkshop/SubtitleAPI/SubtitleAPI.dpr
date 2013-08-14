@@ -1,5 +1,18 @@
-// URUSoft Subtitle API v1.06
-// Copyright ® 2002-2005 URUSoft.
+// This file is part of Subtitle API, the subtitle file read/write library of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle API's copyright information
+// File Description: Subtitle API main project file
+
+{*
+ *  Subtitle API v1.15
+ *  
+ *  Description: Subtitle API is a reading and writing library for subtitle files
+ *
+ *  Copyright (C) 2001-2004, 2007 URUWorks
+ *                2005-2007, 2011 Bedazzle
+ *                2013 Andrey Spiridonov
+ *}
 
 {
 
@@ -12,22 +25,69 @@
  1.02     Added Support for Inscriber CG, OVR Script and Panimation.
           Fixed AQTitle, Captions DAT, Captions DAT Text, DVDSubtitle,
           FAB Subtitler, MacSub, MPSub, PowerPixel, Sasami Script, SBT,
-          SonicDVD, SpruceDVD, SubRip, SubViewer 1.0 and SubViewer 2.0
+          SonicDVD, SpruceDVD, SubRip, SubViewer 1.0, and SubViewer 2.0
           Access Violation!
           Added "No interaction with tags" option
  1.03     Fixed a bug when loading some SubViewer 2 files created by SubRip
  1.04     Added support for Adobe Encore DVD format (no unicode)
-          Fixed Sonic Scenarist, SonicDVD, Pinnacle Impression time formats
-          read and write.
+          Fixed Sonic Scenarist, SonicDVD, Pinnacle Impression time formats read and write.
  1.05     Fixed bug reading SAMI files
           Added support for "Ulead DVD Workshop 2.0" format
- 1.06     Fixed bug when reading and saving Softni format.
-
+ 1.06     (-) Fixed bug in reading/saving styles for *.stl files
+          (+) Added support for Scantitle (*.890) text-based format
+ 1.07     (+) Added support for Titlevision (*.txt) ANSI text with cues
+          (+) Added alternative Ulead format - "00:00:00.00" instead of "00;00;00;00"
+ 1.08     (+) Added support for Advanced subtitles (*.xas)
+ 1.08a    (+) Added support for Cavena subtitles (*.txt)
+ 1.08b    (+) Added support for Wincaps text timecoded subtitles (*.txt)
+ 1.08c    (-) Fixed loading Subrip files with bad timing (FinalTime < StartTime)
+ 1.09     (+) Added basic support for Timed Text subtitles (*.xml)
+ 1.10     (+) Added support for Youtube subtitles (*.sbv)
+ 1.11     (+) Save with right encoding in SubStation Alpha
+ 1.12     (-) Added work with closing tags </b>, </i>, </u>, </c>
+          (-) Removed re-tagging
+ 1.13     * Added two working modes: a new MultiTagsMode and a SingleTagsMode (the old mode)
+          * Modified reading and writing of SubRip, MicroDVD, SubStation Alpha, and Advanced Substation Alpha to work with the new modes!
+ 1.14     * Bug fixed: Ulead DVD Workshop 2.0 a incorrectly recognized as Ulead DVD Workshop 2.0
+          * Added support for Adobe Encore 2+ NTSC (*.txt) format
+          * Added support for Adobe Encore 2+ PAL (*.txt) format
+          * Bug fixed: Advanced Subtitles format not correctly detected
+          * SW Tags now removed when saving AQTitle
+          * Bug fixed: Captions Inc. incorrectly detected as Adobe Encore DVD (Old)
+          * SW Tags now removed when saving Cavena
+          * Bug fixed: CPC-600 incorrectly detected as TMPlayer
+          * Bug fixed: DVD Subtitle System incorrectly detected as Adobe Encore DVD (Old)
+          * Bug fixed: MAC DVD Studio Pro incorrectly detected as Adobe Encore DVD (Old)
+          * Bug fixed: OVR Script incorrectly detected
+          * Bug fixed: OVR Script reading causes an error
+          * Bug fixed: PowerPixel incorrectly detected as Adobe Encore DVD (Old)
+          * Modified reading and writing of RealTime to work with the new modes
+          * Color tags are now saved for SAMI Captioning
+          * Modified reading and writing of SAMI Captioning to work with the new modes
+          * SW Tags now removed when saving Scantitle
+          * Bug fixed: Spruce Subtitle File incorrectly detected as Adobe Encore DVD (Old)
+          * Bug fixed: Spruce Subtitle File tags incorrectly handled
+          * Modified reading and writing of Spruce Subtitle File to work with the new modes
+          * SW Tags now removed when saving Timed Text
+          * Bug fixed: incorrect Timed Text timing reading
+          * Bug fixed: incorrect Timed Text new lines reading 
+          * Timed Text reading and writing updated
+          * Titlevision removed - both Read and Save functions are empty...???
+          * Added tags convertion for ViPlay format saving
+          * SW Tags now removed when saving YouTube sbv
+          * Bug fixed: reading YouTube format is incorrect when the text contains commas
+          * Bug fixed: when reading SubRip, lines containing only numbers are omitted
+ 1.15     * Advanced Subtitles (*.xas) form removed, XASAttributes used instead
+          * Removed unnecessary function that sets SSA Encoding parameter
+          * Collisions, PlayResX, PlayResY, and Timer attributes added to SSAAttributes; Title and Script attributes added to ASSAttributes
+ 2.00     (+) Support of Unicode in Subrip
 }
 
 library SubtitleAPI;
 
 // -----------------------------------------------------------------------------
+
+{ $DEFINE UTF8}
 
 {$IFDEF VER150}
   {$WARN SYMBOL_DEPRECATED OFF}
@@ -39,12 +99,11 @@ library SubtitleAPI;
 uses
   SysUtils,
   Windows,
-  USubtitleFile in 'USubtitleFile.pas',
-  UCheckFormat in 'UCheckFormat.pas',
-  USubtitlesRead in 'USubtitlesRead.pas',
-  USubtitlesSave in 'USubtitlesSave.pas',
-  USubtitlesFunctions in 'USubtitlesFunctions.pas',
-  FastStrings in 'FastStrings.pas';
+  USubtitleFile in 'Source\USubtitleFile.pas',
+  UCheckFormat in 'Source\UCheckFormat.pas',
+  USubtitlesRead in 'Source\USubtitlesRead.pas',
+  USubtitlesSave in 'Source\USubtitlesSave.pas',
+  USubtitlesFunctions in 'Source\USubtitlesFunctions.pas';
 
 var
   Subtitles: TSubtitles = NIL;
@@ -59,14 +118,28 @@ var
 
 function GetModuleVersion: Integer; stdcall;
 begin
-  Result := $106; // 1.06
+//  Result := $105; // 1.05   // by URUWorks 2004
+//  Result := $106; // 1.06   // by Bedazzle 2005.11.16
+//  Result := $107; // 1.07   // by Bedazzle 2006.02.18
+//  Result := $108; // 1.08   // by Bedazzle 2007.01.26
+//  Result := $108; // 1.08a  // by Bedazzle 2007.05.13
+//  Result := $108; // 1.08b  // by Bedazzle 2007.07.04
+//  Result := $108; // 1.08c  // by Bedazzle 2007.10.02
+//  Result := $109; // 1.09   // by URUWorks 2007.12.22
+//  Result := $110; // 1.10   // by Bedazzle 2011.09.14
+//  Result := $111; // 1.11   // by Bedazzle 2011.09.20
+//  Result := $112; // 1.12   // by Bedazzle 2011.11.01
+//  Result := $113; // 1.13   // by adenry 2013.04.11
+//  Result := $114; // 1.14   // by adenry 2013.04.11 - 2013.04.13
+  Result := $115; // 1.15   // by adenry 2013.08.09
+//  Result := $200;  // 2.00  // by Bedazzle 2011.09.19
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure GetModuleDescription(Text: PChar; var BufferLen: Integer); stdcall;
 const
-  Description = 'URUSoft Subtitle API';
+  Description = 'Subtitle API';
 begin
   if BufferLen > 0 then
     StrLCopy(Text, PChar(Description), BufferLen)
@@ -95,12 +168,16 @@ begin
 
   case TSubtitleformats(Index) Of
     sfAdobeEncoreDVD          : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end;
+    sfAdobeEncoreDVDNTSC      : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end; //added by adenry 2013.04.11
+    sfAdobeEncoreDVDPAL       : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end; //added by adenry 2013.04.11
     sfAdvancedSubStationAlpha : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.ass'; end;
+    sfAdvancedSubtitlesXAS    : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.xas'; end;
     sfAQTitle                 : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.aqt'; end;
     sfCaptions32              : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end;
     sfCaptionsDat             : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.dat'; end;
     sfCaptionsDatText         : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.dat'; end;
     sfCaptionsInc             : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end;
+    sfCavena                  : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end;    // by Bedazzle 2007.05.13
     sfCheetah                 : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.asc'; end;
     sfCPC600                  : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end;
     sfDKS                     : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.dks'; end;
@@ -131,7 +208,8 @@ begin
     sfSAMI                    : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.smi;*.sami'; end;
     sfSasamiScript            : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.s2k'; end;
     sfSBT                     : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.sbt'; end;
-    sfSoftni                  : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.sub'; end;
+    sfScantitle               : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.890'; end;    // by Bedazzle 2005.11.18
+    sfSofni                   : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.sub'; end;
     sfSoftitlerRTF            : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.rtf'; end;
     sfSonicDVD                : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.sub'; end;
     sfSonicScenarist          : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.sst'; end;
@@ -141,14 +219,20 @@ begin
     sfSSTScript               : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.ssts'; end;
     sfSubCreator              : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end;
     sfSubRip                  : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.srt'; end;
+//    sfSubRipW                 : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.srt'; end;    // by Bedazzle 2011.09.19
     sfSubSonic                : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.sub'; end;
     sfSubStationAlpha         : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.ssa'; end;
     sfSubViewer1              : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.sub'; end;
     sfSubViewer2              : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.sub'; end;
+    sfTimedText               : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.xml'; end;    
+    //sfTitlevisionTXT          : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end;
     sfTMPlayer                : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt;*.sub'; end;
     sfTurboTitler             : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.tts'; end;
     sfUleadDVDWorkshop2       : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end;
+    sfUleadDVDWorkshop2a      : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end;
     sfViPlay                  : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.vsf'; end;
+    sfWincapsTextTimecoded    : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.txt'; end;    // by Bedazzle 2007.07.04
+    sfYoutube                 : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.sbv'; end;    // by Bedazzle 2011.09.14
     sfZeroG                   : begin Desc := TSubtitleFormatsName[Index]; Exts := '*.zeg'; end;
     else
     begin
@@ -201,6 +285,8 @@ begin
 
   case TSubtitleFormats(FormatIndex) of
     sfAdobeEncoreDVD,
+    sfAdobeEncoreDVDNTSC, //added by adenry 2013.04.11
+    sfAdobeEncoreDVDPAL, //added by adenry 2013.04.11
     sfAQTitle,
     sfFABSubtitler,
     sfMACDVDStudioPro,
@@ -210,7 +296,6 @@ begin
     sfPhoenixJS,
     sfSonicDVD,
     sfSonicScenarist,
-    sfSoftni,
     sfSpruceSubtitleFile: Result := True;
   end;
 end;
@@ -267,23 +352,23 @@ end;
 //                              Subtitle editing                              //
 // -------------------------------------------------------------------------- //
 
-function AddSubtitle(InitialTime, FinalTime: Integer; Text: PChar): Integer; stdcall;
+function AddSubtitle(InitialTime, FinalTime: Integer; Text: {$IFDEF UTF8}PWideChar{$ELSE}PChar{$ENDIF}): Integer; stdcall;
 begin
   Result := -1;
 
   if Assigned(Subtitles) then
-    Result := Subtitles.Add(InitialTime, FinalTime, String(Text));
+    Result := Subtitles.Add(InitialTime, FinalTime, {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}(Text));
 end;
 
 // -----------------------------------------------------------------------------
 
-function InsertSubtitle(Index, InitialTime, FinalTime: Integer; Text: PChar): LongBool; stdcall;
+function InsertSubtitle(Index, InitialTime, FinalTime: Integer; Text: {$IFDEF UTF8}PWideChar{$ELSE}PChar{$ENDIF}): LongBool; stdcall;
 begin
   Result := False;
 
   if Assigned(Subtitles) and (Subtitles.Count > 0) and ((Index >= 0) and (Index < Subtitles.Count)) then
   begin
-    Subtitles.Insert(Index, InitialTime, FinalTime, String(Text));
+    Subtitles.Insert(Index, InitialTime, FinalTime, {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}(Text));
     Result := True;
   end;
 end;
@@ -324,7 +409,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function SetSubtitle(Index: Integer; InitialTime, FinalTime: Integer; Text: PChar): LongBool; stdcall;
+function SetSubtitle(Index: Integer; InitialTime, FinalTime: Integer; Text: {$IFDEF UTF8}PWideChar{$ELSE}PChar{$ENDIF}): LongBool; stdcall;
 begin
   Result := False;
 
@@ -395,28 +480,38 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure GetSubtitleText(Time: Integer; Text: PChar; var BufferLen: Integer); stdcall;
+procedure GetSubtitleText(Time: Integer; Text: {$IFDEF UTF8}PWideChar{$ELSE}PChar{$ENDIF}; var BufferLen: Integer); stdcall;
 var
-  FText : String;
+  FText : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 begin
   FText := DisplaySubtitle(Subtitles, Time);
 
   if BufferLen > 0 then
+{$IFDEF UTF8}
+//    Text := Copy(FText, 1, BufferLen)
+    Text := StringToWideChar(FText, Text, BufferLen)
+{$ELSE}
     StrLCopy(Text, PChar(FText), BufferLen)
+{$ENDIF}
   else
     BufferLen := Length(FText);
 end;
 
 // -----------------------------------------------------------------------------
 
-function GetSubtitle(Index: Integer; var InitialTime, FinalTime: Integer; Text: PChar; var BufferLen: Integer): LongBool; stdcall;
+function GetSubtitle(Index: Integer; var InitialTime, FinalTime: Integer; Text: {$IFDEF UTF8}PWideChar{$ELSE}PChar{$ENDIF}; var BufferLen: Integer): LongBool; stdcall;
 begin
   Result := False;
 
   if Assigned(Subtitles) and (Subtitles.Count > 0) and ((Index >= 0) and (Index < Subtitles.Count)) then
   begin
     if BufferLen > 0 then
+{$IFDEF UTF8}
+//    Text := Copy(FText, 1, BufferLen)
+      Text := StringToWideChar(Subtitles[Index].Text, Text, BufferLen)
+{$ELSE}
       StrLCopy(Text, PChar(Subtitles[Index].Text), BufferLen)
+{$ENDIF}
     else
       BufferLen := Length(Subtitles[Index].Text);
 
@@ -488,7 +583,36 @@ end;
 
 procedure SetNoInteractionWithTags(Value: LongBool); stdcall;
 begin
+  // test magick
   NoInteractionWithTags := Boolean(Value);
+end;
+
+// -----------------------------------------------------------------------------
+//added by adenry: 2013.04.11
+function GetSingleTagsMode: LongBool; stdcall;
+begin
+  Result := LongBool(SingleTagsMode);
+end;
+
+// -----------------------------------------------------------------------------
+//added by adenry: 2013.04.11
+procedure SetSingleTagsMode(Value: LongBool); stdcall;
+begin
+  SingleTagsMode := Boolean(Value);
+end;
+
+// -----------------------------------------------------------------------------
+//added by adenry: 2013.04.11
+function GetMultiTagsMode: LongBool; stdcall;
+begin
+  Result := LongBool(MultiTagsMode);
+end;
+
+// -----------------------------------------------------------------------------
+//added by adenry: 2013.04.11
+procedure SetMultiTagsMode(Value: LongBool); stdcall;
+begin
+  MultiTagsMode := Boolean(Value);
 end;
 
 {$ENDIF}
@@ -510,41 +634,45 @@ end;
 //                              Output settings                               //
 // -------------------------------------------------------------------------- //
 
-procedure SetOutputSettingsAdvancedSubStationAlpha(Assigned: LongBool; Collisions: PChar;
+procedure SetOutputSettingsAdvancedSubStationAlpha(Assigned: LongBool; Title, Script, Collisions: PChar;
                                                    PlayResX, PlayResY: Integer; Timer, FontName: PChar;
-                                                   FontSize, PrimaryColor, SecondaryColor, OutlineColour,
-                                                   BackColour: Integer; Bold, Italic, Underline, StrikeOut: LongBool;
-                                                   ScaleX, ScaleY, Spacing: Integer; Angle: Single;
-                                                   BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR,
-                                                   MarginV, Encoding : Integer); stdcall;
+                                                   FontSize: Integer; Bold, Italic: LongBool; BorderStyle,
+                                                   PrimaryColor, SecondaryColor, OutlineColour, ShadowColor,
+                                                   Outline, Shadow, Alignment, MarginL, MarginR, MarginV,
+                                                   Encoding: Integer; Underline, StrikeOut: LongBool;
+                                                   ScaleX, ScaleY, Spacing: Integer; Angle: PChar); stdcall;
 begin
   ASSAttributes.Assigned       := Boolean(Assigned);
+  ASSAttributes.Title          := Title;      //added by adenry 11.08.2013
+  ASSAttributes.Script         := Script;     //added by adenry 11.08.2013
   ASSAttributes.Collisions     := Collisions;
   ASSAttributes.PlayResX       := PlayResX;
   ASSAttributes.PlayResY       := PlayResY;
   ASSAttributes.Timer          := Timer;
   ASSAttributes.FontName       := FontName;
   ASSAttributes.FontSize       := FontSize;
+  ASSAttributes.Bold           := Boolean(Bold);
+  ASSAttributes.Italic         := Boolean(Italic);
+  ASSAttributes.BorderStyle    := BorderStyle;
   ASSAttributes.PrimaryColor   := PrimaryColor;
   ASSAttributes.SecondaryColor := SecondaryColor;
   ASSAttributes.OutlineColour  := OutlineColour;
-  ASSAttributes.BackColour     := BackColour;
-  ASSAttributes.Bold           := Boolean(Bold);
-  ASSAttributes.Italic         := Boolean(Italic);
-  ASSAttributes.Underline      := Boolean(Underline);
-  ASSAttributes.StrikeOut      := Boolean(StrikeOut);
-  ASSAttributes.ScaleX         := ScaleX;
-  ASSAttributes.ScaleY         := ScaleY;
-  ASSAttributes.Spacing        := Spacing;
-  ASSAttributes.Angle          := Angle;
-  ASSAttributes.BorderStyle    := BorderStyle;
+  ASSAttributes.ShadowColor    := ShadowColor;
   ASSAttributes.Outline        := Outline;
   ASSAttributes.Shadow         := Shadow;
   ASSAttributes.Alignment      := Alignment;
+  // Margins
   ASSAttributes.MarginL        := MarginL;
   ASSAttributes.MarginR        := MarginR;
   ASSAttributes.MarginV        := MarginV;
   ASSAttributes.Encoding       := Encoding;
+  //ASS only
+  ASSAttributes.Underline      := Boolean(Underline);
+  ASSAttributes.StrikeOut      := Boolean(Underline);
+  ASSAttributes.ScaleX         := ScaleX;
+  ASSAttributes.ScaleY         := ScaleY;
+  ASSAttributes.Spacing        := Spacing;
+  ASSAttributes.Angle          := Angle;
 end;
 
 // -----------------------------------------------------------------------------
@@ -643,15 +771,20 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure SetOutputSettingsSubStationAlpha(Assigned: LongBool; Title, Script, FontName: PChar;
+procedure SetOutputSettingsSubStationAlpha(Assigned: LongBool; Title, Script, Collisions: PChar;
+                                           PlayResX, PlayResY: Integer; Timer, FontName: PChar;
                                            FontSize: Integer; Bold, Italic: LongBool; BorderStyle,
-                                           PrimaryColor, SecondaryColor, TertiaryColor, ShadowColor,
+                                           PrimaryColor, SecondaryColor, OutlineColour, ShadowColor,
                                            Outline, Shadow, Alignment, MarginL, MarginR, MarginV,
-                                           Encoding : Integer); stdcall;
+                                           Encoding: Integer); stdcall;
 begin
   SSAAttributes.Assigned       := Boolean(Assigned);
   SSAAttributes.Title          := Title;
   SSAAttributes.Script         := Script;
+  SSAAttributes.Collisions     := Collisions; //added by adenry 11.08.2013
+  SSAAttributes.PlayResX       := PlayResX;   //added by adenry 11.08.2013
+  SSAAttributes.PlayResY       := PlayResY;   //added by adenry 11.08.2013
+  SSAAttributes.Timer          := Timer;      //added by adenry 11.08.2013
   SSAAttributes.FontName       := FontName;
   SSAAttributes.FontSize       := FontSize;
   SSAAttributes.Bold           := Boolean(Bold);
@@ -659,7 +792,7 @@ begin
   SSAAttributes.BorderStyle    := BorderStyle;
   SSAAttributes.PrimaryColor   := PrimaryColor;
   SSAAttributes.SecondaryColor := SecondaryColor;
-  SSAAttributes.TertiaryColor  := TertiaryColor;
+  SSAAttributes.OutlineColour  := OutlineColour;
   SSAAttributes.ShadowColor    := ShadowColor;
   SSAAttributes.Outline        := Outline;
   SSAAttributes.Shadow         := Shadow;
@@ -677,6 +810,43 @@ begin
   TMPlayerAttributes.Assigned     := Boolean(Assigned);
   TMPlayerAttributes.TypeOfFormat := TypeOfFormat;
 end;
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin 2013.08.09
+//Note: the text parameters MUST be PChar, CAN'T be String!
+procedure SetOutputSettingsXAS(Assigned: LongBool; FontName: PChar; FontSize: Integer; FontSizeInPercent: LongBool; TextColor: Integer; Shadow: LongBool; ShadowColor: Integer; Transparency: Byte;
+                               X, Y, Width, Height: Integer; XInPercent, YInPercent, WidthInPercent, HeightInPercent: LongBool; Alignment: Byte;
+                               Encoding, Language: PChar; JoinShortLines, WrapLines: LongBool; WrapLinesValue: Byte); stdcall;
+begin
+  XASAttributes.Assigned          := Boolean(Assigned);
+  //Font
+  XASAttributes.FontName          := FontName;
+  XASAttributes.FontSize          := FontSize;
+  XASAttributes.FontSizeInPercent := Boolean(FontSizeInPercent);
+  XASAttributes.TextColor         := TextColor;
+  XASAttributes.Shadow            := Boolean(Shadow);
+  XASAttributes.ShadowColor       := ShadowColor;
+  XASAttributes.Transparency      := Transparency;
+  //Position
+  XASAttributes.X                 := X;
+  XASAttributes.Y                 := Y;
+  XASAttributes.Width             := Width;
+  XASAttributes.Height            := Height;
+  XASAttributes.XInPercent        := Boolean(XInPercent);
+  XASAttributes.YInPercent        := Boolean(YInPercent);
+  XASAttributes.WidthInPercent    := Boolean(WidthInPercent);
+  XASAttributes.HeightInPercent   := Boolean(HeightInPercent);
+  XASAttributes.Alignment         := Alignment;
+  //Language
+  XASAttributes.Encoding          := Encoding;
+  XASAttributes.Language          := Language;
+  //Join
+  XASAttributes.JoinShortLines    := Boolean(JoinShortLines);
+  XASAttributes.WrapLines         := Boolean(WrapLines);
+  XASAttributes.WrapLinesValue    := WrapLinesValue;
+end;
+//added by adenry: end 2013.08.09
 
 // -----------------------------------------------------------------------------
 
@@ -731,6 +901,10 @@ exports
   {$IFNDEF VIPLAY}
   GetNoInteractionWithTags,
   SetNoInteractionWithTags,
+  GetSingleTagsMode, //added by adenry 2013.04.11
+  SetSingleTagsMode, //added by adenry 2013.04.11
+  GetMultiTagsMode, //added by adenry 2013.04.11
+  SetMultiTagsMode, //added by adenry 2013.04.11
   {$ENDIF}
   GetSubtitleWorkWithTags,
   SetSubtitleWorkWithTags,
@@ -744,7 +918,8 @@ exports
   SetOutputSettingsSubViewer1,
   SetOutputSettingsSubViewer2,
   SetOutputSettingsSubStationAlpha,
-  SetOutputSettingsTMPlayer;
+  SetOutputSettingsTMPlayer,
+  SetOutputSettingsXAS; //added by adenry 2013.08.09
 
 // -----------------------------------------------------------------------------
 

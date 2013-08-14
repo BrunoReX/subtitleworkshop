@@ -1,3 +1,9 @@
+// This file is part of SWComponents, the component package for Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: USSpeller component - MS Word spell check
+
 unit USSpeller;
 
 interface
@@ -6,6 +12,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Variants,
+  //Dialogs, //added by adenry
   ComObj, ActiveX, Registry;
 
 // -----------------------------------------------------------------------------
@@ -21,6 +28,7 @@ type
     FOleOn        : Boolean;
     FSpellCaption : String;
     FWordVersion  : String;
+    FLanguage     : Integer; //added by adenry
     hMapObject    : Cardinal;
     pMem          : Pointer;
     // OLE Variants
@@ -68,6 +76,7 @@ type
   published
     property HookCaption: Boolean read FHookCaption write SetHookCaption;
     property SpellCaption: String read GetSpellCaption write SetSpellCaption;
+    property Language: Integer read FLanguage write FLanguage; //added by adenry
   end;
 
 // -----------------------------------------------------------------------------
@@ -113,6 +122,7 @@ begin
   inherited;
   FConnected   := False;
   FChangedText := '';
+  FLanguage    := 0; //added by adenry
   init         := CoInitialize(nil);
   FHookCaption := False;
   if (init = S_OK) or (init = S_FALSE) then
@@ -265,7 +275,11 @@ begin
   SetWindowPos(FHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE + SWP_HIDEWINDOW); 
   FADoc.TrackRevisions := True; // note if changes are made
   FNumChanges := 0;
+
+  if (FLanguage > 0) then FRange.LanguageID := FLanguage; //added by adenry
+
   OleCheck(FRange.CheckGrammar);
+
   FWordApp.Visible := False; // need to stop ActiveDocument appearing
   FNumChanges := FRange.Revisions.Count div 2; // seems revisions counts the old word and the new one separately
   Result := (FRange.Revisions.Count > 0);
@@ -281,6 +295,11 @@ begin
   SetWindowPos(FHandle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOACTIVATE + SWP_HIDEWINDOW);
   FADoc.TrackRevisions := True; // note if changes are made
   FNumChanges := 0;
+
+  //if not FRange.LanguageDetected then FRange.DetectLanguage; //test by adenry
+  //ShowMessage(FWordVersion); //test by adenry
+
+  if (FLanguage > 0) then FRange.LanguageID := FLanguage; //added by adenry //$00000809 is EnglishUK, $00000409 is EnglishUS
   
   if CheckGrammarWithSpelling then
     OleCheck(FADoc.CheckGrammar) else // Check spelling and grammar
@@ -519,7 +538,7 @@ end;
 
 procedure Register;
 begin
-  RegisterComponents('URUSoft Components', [TUSSpell]);
+  RegisterComponents('Subtitle Workshop', [TUSSpell]);
 end;
 
 // -----------------------------------------------------------------------------  .

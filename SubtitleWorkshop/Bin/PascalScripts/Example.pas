@@ -1,7 +1,8 @@
 // -------------------------------------------------------------------------- //
 //                  Subtitle Workshop - Pascal scripts sample                 //
 //                        Copyright © 2001-2004 URUSoft                       //
-//                           http://www.urusoft.net                           //
+//                     Copyright © 2013 Andrey Spiridonov                     //
+//                 http://sourceforge.net/projects/subworkshop/               //
 //                                                                            //
 // This sample will go through all the subtitles in the file and will delete  //
 // all the ones which's text length is longer than 20 characters. This is     //
@@ -10,7 +11,7 @@
 //                                                                            //
 // This code uses only few of the functions available. A list of all the      //
 // available functions/procedures and their explanation is below. Just note   //
-// that in every function that use the "Num" parameter, it refers to the      //
+// that in every function that uses the "Num" parameter, it refers to the     //
 // subtitle number.                                                           //
 //                                                                            //
 // Declaration : function IsOriginalLoaded: Boolean;                          //
@@ -76,6 +77,53 @@
 //               IconInd is the icon index used by the MessageBox() function, //
 //               the constants are defined in Delphi's Windows.pas            //
 //               (eg. MB_ICONERROR, MB_ICONQUESTION, etc).                    //
+//                                                                            //
+// Declaration : procedure Randomize;																					//
+// Use         : Initializes the random number generator with a random value. //
+//							 Do not combine the call to Randomize in a loop with calls to //
+//							 the Random function. Typically, Randomize is called only 		//
+//							 once, before all calls to Random.
+//                                                                            //
+// Declaration : function Random(Range: Integer): Integer;')									//
+// Use         : Generates random numbers within a specified range.           //
+//							 To initialize the random number generator, add a single call //
+//							 Randomize before making any calls to Random. 							  //
+//                                                                            //
+// Declaration : procedure GoToLineNumber(const Line: Integer);				        //
+// Use         : Select and scroll into view the specified subtitle		        //
+//                                                                            //
+// Declaration : function GetSWVersion(): String;											        //
+// Use         : Get Subtitle Workshop's current version and build numbers    //
+//                                                                            //
+// Declaration : function GetAPIVersion(): String;										        //
+// Use         : Get SubtitleAPI's current version number									    //
+//                                                                            //
+// Declaration : function GetOrgFilename(): String;										        //
+// Use         : Get the original file's name (including its extension).	    //
+//                                                                            //
+// Declaration : function GetOrgFilepath(): String;										        //
+// Use         : Get the original file's path (both drive and directory,			//
+//							 including the final backslash).	    												//
+//                                                                            //
+// Declaration : function GetTransFilename(): String;									        //
+// Use         : Get the translation file's name (including its extension).   //
+//                                                                            //
+// Declaration : function GetTransFilepath(): String;									        //
+// Use         : Get the translation file's path (both drive and directory,		//
+//							 including the final backslash).	    												//
+//                                                                            //
+// Declaration : function GetMovieFilename(): String;									        //
+// Use         : Get the movie file's name (including its extension).  				//
+//                                                                            //
+// Declaration : function GetMovieFilepath(): String;									        //
+// Use         : Get the movie file's path (both drive and directory,					//
+//							 including the final backslash).	    												//
+//                                                                            //
+// Declaration : function GetVideoPosTime(): String;									        //
+// Use         : Get the current position of the video (hh:mm:ss,zzz). 				//
+//                                                                            //
+// Declaration : function GetVideoPosFrames(): String;								        //
+// Use         : Get the current position of the video (in frames).		 				//
 //                                                                            //
 // Date and time functions available:                                         //
 //                                                                            //

@@ -1,11 +1,17 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Duration Limits form
+
 unit formDurationLimits;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ComCtrls, ExtCtrls, General, VirtualTrees, TreeViewHandle, IniFiles,
-  Undo;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ComCtrls, ExtCtrls, IniFiles,
+  VirtualTrees,
+  CommonTypes;
 
 type
   TfrmDurationLimits = class(TForm)
@@ -17,6 +23,7 @@ type
     lblNoOverlapping: TLabel;
     edtMinDur: TLabeledEdit;
     chkSetMinDur: TCheckBox;
+    chkIncreaseAtStart: TCheckBox;
     procedure edtMaxDurKeyPress(Sender: TObject; var Key: Char);
     procedure edtMinDurKeyPress(Sender: TObject; var Key: Char);
     procedure FormCreate(Sender: TObject);
@@ -33,7 +40,9 @@ var
 
 implementation
 
-uses formMain;
+uses
+  General, TreeViewHandle, Undo,
+  formMain;
 
 {$R *.dfm}
 
@@ -53,6 +62,7 @@ begin
       chkSetMinDur.Caption        := ReadString('Duration limits', '04', 'Set minimum duration');
       edtMinDur.EditLabel.Caption := edtMaxDur.EditLabel.Caption;
       lblNoOverlapping.Caption    := ReadString('Duration limits', '05', '* Increasing the time will not cause overlapping');
+      chkIncreaseAtStart.Caption  := ReadString('Duration limits', '06', 'Increase at start if necessary');
       btnApply.Caption            := BTN_APPLY;
       btnCancel.Caption           := BTN_CANCEL;
 
@@ -95,10 +105,11 @@ begin
   SetLanguage;
   Ini := TIniFile.Create(IniRoot);
   try
-    chkSetMaxDur.Checked   := Ini.ReadBool('Duration limits','Set maximum duration',True);
-    chkSetMinDur.Checked   := Ini.ReadBool('Duration limits','Set minimum duration',True);
-    edtMaxDur.Text         := IntToStr(Ini.ReadInteger('Duration limits', 'Maximum duration', 4000));
-    edtMinDur.Text         := IntToStr(Ini.ReadInteger('Duration limits', 'Minimum duration', 800));
+    chkSetMaxDur.Checked        := Ini.ReadBool('Duration limits','Set maximum duration',True);
+    chkSetMinDur.Checked        := Ini.ReadBool('Duration limits','Set minimum duration',True);
+    edtMaxDur.Text              := IntToStr(Ini.ReadInteger('Duration limits', 'Maximum duration', 4000));
+    edtMinDur.Text              := IntToStr(Ini.ReadInteger('Duration limits', 'Minimum duration', 800));
+    chkIncreaseAtStart.Checked  := Ini.ReadBool('Duration limits','Increase at start',True);
   finally
     Ini.Free;
   end;
@@ -112,10 +123,11 @@ var
 begin
   Ini := TIniFile.Create(IniRoot);
   try
-    Ini.WriteBool('Duration limits','Set maximum duration',chkSetMaxDur.Checked);
-    Ini.WriteBool('Duration limits','Set minimum duration',chkSetMinDur.Checked);
+    Ini.WriteBool('Duration limits', 'Set maximum duration', chkSetMaxDur.Checked);
+    Ini.WriteBool('Duration limits', 'Set minimum duration', chkSetMinDur.Checked);
     Ini.WriteInteger('Duration limits', 'Maximum duration', StrToInt(edtMaxDur.Text));
     Ini.WriteInteger('Duration limits', 'Minimum duration', StrToInt(edtMinDur.Text));
+    Ini.WriteBool('Duration limits', 'Increase at start', chkIncreaseAtStart.Checked);//added by adenry
   finally
     Ini.Free;
   end;
@@ -125,30 +137,33 @@ end;
 
 procedure TfrmDurationLimits.btnApplyClick(Sender: TObject);
 var
-  InitialTime : Integer;
-  FinalTime   : Integer;
-  Duration    : Integer;
-  Node        : PVirtualNode;
-  UndoAction  : PUndoAction;
+  StartTime     : Integer;
+  FinalTime     : Integer;
+  OldStartTime  : Integer;//added by adenry
+  OldFinalTime  : Integer;//added by adenry
+  Duration      : Integer;
+  Node          : PVirtualNode;
+  UndoAction    : PUndoAction;
 begin
   with frmMain do
   begin
-    ClearUndoList(RedoList);
-    mnuRedo.Enabled := False;
     Node := lstSubtitles.GetFirst;
 
     while Assigned(Node) do
     begin
-      InitialTime := GetStartTime(Node);
-      FinalTime   := GetFinalTime(Node);
-      Duration    := FinalTime - InitialTime;
+      StartTime     := GetStartTime(Node);
+      OldStartTime  := StartTime; //added by adenry
+      FinalTime     := GetFinalTime(Node);
+      OldFinalTime  := FinalTime; //added by adenry
+      Duration      := FinalTime - StartTime;
 
       // ---------------- //
       // Maximum duration //
       // ---------------- //
       if (chkSetMaxDur.Checked) and (Duration > StrToInt(edtMaxDur.Text)) and (StrToInt(edtMaxDur.Text) > 0) then
       begin
-        New(UndoAction);
+        //removed by adenry: begin
+        {New(UndoAction);
         UndoAction^.UndoActionType                 := uaTimeChange;
         UndoAction^.BufferSize                     := SizeOf(TTimeChange);
         UndoAction^.Buffer                         := AllocMem(UndoAction^.BufferSize);
@@ -157,11 +172,12 @@ begin
         UndoAction^.BindToNext                     := Assigned(Node.NextSibling);
         PTimeChange(UndoAction^.Buffer)^.StartTime := -1;
         PTimeChange(UndoAction^.Buffer)^.FinalTime := FinalTime;
-        UndoList.Add(UndoAction);
+        AddUndo(UndoAction);}
+        //removed by adenry: end
 
-        FinalTime := InitialTime + StrToInt(edtMaxDur.Text);
+        FinalTime := StartTime + StrToInt(edtMaxDur.Text);
         SetFinalTime(Node, FinalTime);
-        Duration := FinalTime - InitialTime;
+        Duration := FinalTime - StartTime;
       end;
 
       // ---------------- //
@@ -169,7 +185,8 @@ begin
       // ---------------- //
       if (chkSetMinDur.Checked) and (Duration < StrToInt(edtMinDur.Text)) then
       begin
-        New(UndoAction);
+        //removed by adenry: begin
+        {New(UndoAction);
         UndoAction^.UndoActionType                 := uaTimeChange;
         UndoAction^.BufferSize                     := SizeOf(TTimeChange);
         UndoAction^.Buffer                         := AllocMem(UndoAction^.BufferSize);
@@ -178,21 +195,61 @@ begin
         UndoAction^.BindToNext                     := Assigned(Node.NextSibling);
         PTimeChange(UndoAction^.Buffer)^.StartTime := -1;
         PTimeChange(UndoAction^.Buffer)^.FinalTime := FinalTime;
-        UndoList.Add(UndoAction);
+        AddUndo(UndoAction);}
+        //removed by adenry: end
 
-        FinalTime := InitialTime + StrToInt(edtMinDur.Text);
-        if (Node <> lstSubtitles.GetLast) and (FinalTime > GetStartTime(Node.NextSibling)) then
-          FinalTime := GetStartTime(Node.NextSibling) - 1;
-        SetFinalTime(Node, FinalTime);
+        FinalTime := StartTime + StrToInt(edtMinDur.Text);
+        if (Node <> lstSubtitles.GetLast) and (FinalTime > GetStartTime(Node.NextSibling)-frmMain.DefaultSubPause) then //-frmMain.DefaultSubPause added by adenry
+          FinalTime := GetStartTime(Node.NextSibling) - frmMain.DefaultSubPause; // - 1 replaced with DefaultSubPause by adenry
+        if FinalTime > OldFinalTime then //prevent decreasing duration due to too short pauses
+          SetFinalTime(Node, FinalTime) else
+          FinalTime := OldFinalTime;
+
+        //added by adenry: begin
+        //extend duration by decreasing start time if necessary:
+        if (FinalTime - StartTime < StrToInt(edtMinDur.Text)) and (chkIncreaseAtStart.Checked) then
+        begin
+          StartTime := FinalTime - StrToInt(edtMinDur.Text);
+          if StartTime < 0 then
+            StartTime := 0;
+          if (Node <> lstSubtitles.GetFirst) and (StartTime < GetFinalTime(Node.PrevSibling)+frmMain.DefaultSubPause) then
+            StartTime := GetFinalTime(Node.PrevSibling) + frmMain.DefaultSubPause;
+          if StartTime < OldStartTime then //prevent decreasing duration due to too short pauses
+            SetStartTime(Node, StartTime) else
+            StartTime := OldStartTime;
+        end;
+        //added by adenry: end
+      end;
+
+      if (StartTime <> OldStartTime) or (FinalTime <> OldFinalTime) then
+      begin
+        New(UndoAction);
+        UndoAction^.UndoActionType                 := uaTimeChange;
+        UndoAction^.UndoActionName                 := uanSetDurLimits; //added by adenry
+        UndoAction^.BufferSize                     := SizeOf(TTimeChange);
+        UndoAction^.Buffer                         := AllocMem(UndoAction^.BufferSize);
+        UndoAction^.Node                           := Node;
+        UndoAction^.LineNumber                     := Node.Index;
+        UndoAction^.BindToNext                     := Assigned(Node.NextSibling);
+        if StartTime <> OldStartTime then
+          PTimeChange(UndoAction^.Buffer)^.StartTime := OldStartTime else
+          PTimeChange(UndoAction^.Buffer)^.StartTime := -1;
+        if FinalTime <> OldFinalTime then
+          PTimeChange(UndoAction^.Buffer)^.FinalTime := OldFinalTime else
+          PTimeChange(UndoAction^.Buffer)^.FinalTime := -1;
+        AddUndo(UndoAction);
       end;
 
       Node := Node.NextSibling;
     end;
-    
-    mnuUndo.Enabled := True;
-    OrgModified   := True;
-    TransModified := True;
+
+    if UndoList.Count > 0 then //added by adenry later
+      PUndoAction(UndoList.Last)^.BindToNext := False; //added by adenry later
+
+    //OrgModified   := True; //removed by adenry - MODIFIED bug fix - SetText/SetTranslation/SetStartTime/SetFinalTime handle the MODIFIED flags
+    //TransModified := True; //removed by adenry - MODIFIED bug fix - SetText/SetTranslation/SetStartTime/SetFinalTime handle the MODIFIED flags
     RefreshTimes;
+    AutoRecheckAllErrors(TimeErrors); //added by adenry
   end;
   Close;
 end;

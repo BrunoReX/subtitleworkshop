@@ -1,11 +1,17 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Time Expander Reducer form
+
 unit formTimeExpanderReducer;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Mask, ExtCtrls, ComCtrls, General, IniFiles, VirtualTrees,
-  Functions, USubtitlesFunctions, TreeViewHandle, Undo;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, Mask, ExtCtrls, ComCtrls, IniFiles,
+  VirtualTrees,
+  CommonTypes;
 
 type
   TfrmTimeExpanderReducer = class(TForm)
@@ -17,18 +23,19 @@ type
     edtChars: TEdit;
     udChars: TUpDown;
     lblChars: TLabel;
-    rdoSelSubs: TRadioButton;
     bvlSeparator: TBevel;
     btnApply: TButton;
     btnCancel: TButton;
     chkOnlyIfDuration: TCheckBox;
     lblSecOrFrames2: TLabel;
     edtMinMaxDuration: TMaskEdit;
-    rdoAllSubs: TRadioButton;
     chkPreventOverlapping: TCheckBox;
-    Panel1: TPanel;
+    pnlExpandOrReduce: TPanel;
     rdoExpandDuration: TRadioButton;
     rdoReduceDuration: TRadioButton;
+    pnlFor: TPanel;
+    rdoAllSubs: TRadioButton;
+    rdoSelSubs: TRadioButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure chkOnlyIfLongerThanClick(Sender: TObject);
@@ -48,9 +55,13 @@ var
   ShorterThan : String;
   LongerThan  : String;
 
+// -----------------------------------------------------------------------------
+
 implementation
 
-uses formMain;
+uses
+  General, Functions, USubtitlesFunctions, TreeViewHandle, Undo,
+  formMain;
 
 {$R *.dfm}
 
@@ -224,11 +235,9 @@ begin
     MinMaxDur      := FramesToTime(StrToIntDef(edtMinMaxDuration.Text, 0), GetFPS);
   end;
 
+  if ExpandOrReduce <> 0 then //added by adenry
   with frmMain do
   begin
-    ClearUndoList(RedoList);
-    mnuRedo.Enabled := False;
-
     if rdoSelSubs.Checked then
       Node := lstSubtitles.GetFirstSelected else
       Node := lstSubtitles.GetFirst;
@@ -259,22 +268,23 @@ begin
         begin
           New(UndoAction);
           UndoAction^.UndoActionType                 := uaTimeChange;
+          UndoAction^.UndoActionName                 := uanTimeExpRed; //added by adenry
           UndoAction^.BufferSize                     := SizeOf(TTimeChange);
           UndoAction^.Buffer                         := AllocMem(UndoAction^.BufferSize);
           UndoAction^.Node                           := Node;
           UndoAction^.LineNumber                     := Node.Index;
-          UndoAction^.BindToNext                     := ((rdoSelSubs.Checked) and (Assigned(lstSubtitles.GetNextSelected(Node)))) or ((rdoSelSubs.Checked = False) and (Assigned(Node.NextSibling)));
+          UndoAction^.BindToNext                     := True;//((rdoSelSubs.Checked) and (Assigned(lstSubtitles.GetNextSelected(Node)))) or ((rdoSelSubs.Checked = False) and (Assigned(Node.NextSibling))); //modified by adenry
           PTimeChange(UndoAction^.Buffer)^.StartTime := -1;
           PTimeChange(UndoAction^.Buffer)^.FinalTime := FinalTime;
-          UndoList.Add(UndoAction);
+          AddUndo(UndoAction);
 
           if rdoExpandDuration.Checked then
           begin
             FinalTime := FinalTime + ExpandOrReduce;
             if chkPreventOverlapping.Checked then
             begin
-              if (FinalTime > GetStartTime(Node.NextSibling)) and (Node <> lstSubtitles.GetLast) then
-                FinalTime := GetStartTime(Node.NextSibling) - 1;
+              if (FinalTime > GetStartTime(Node.NextSibling) - frmMain.DefaultSubPause) and (Node <> lstSubtitles.GetLast) then // - frmMain.DefaultSubPause added by adenry
+                FinalTime := GetStartTime(Node.NextSibling) - frmMain.DefaultSubPause; // - 1 replaced with DefaultSubPause by adenry
             end;
           end else
           begin
@@ -291,10 +301,12 @@ begin
         Node := Node.NextSibling;
     end;
 
-    mnuUndo.Enabled := True;
+    if UndoList.Count > 0 then //added by adenry
+      PUndoAction(UndoList.Last)^.BindToNext := False; //added by adenry
     RefreshTimes;
-    frmTimeExpanderReducer.Close;
+    AutoRecheckAllErrors(TimeErrors); //added by adenry
   end;
+  frmTimeExpanderReducer.Close;
 end;
 
 // -----------------------------------------------------------------------------

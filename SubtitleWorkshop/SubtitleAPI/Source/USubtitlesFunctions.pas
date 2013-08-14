@@ -1,5 +1,8 @@
-// USubtitlesFunctions - Interesting functions
-// Copyright ® 2001-2003 URUSoft.
+// This file is part of Subtitle API, the subtitle file read/write library of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle API's copyright information
+// File Description: Subtitles text and timing functionality
 
 unit USubtitlesFunctions;
 
@@ -8,32 +11,83 @@ unit USubtitlesFunctions;
 interface
 
 uses
+  Classes, //added by adenry for TStrings 2013.04.11
+  Windows, //added by adenry for GetRValue, GetGValue, GetBValue 2013.04.11
   SysUtils, Math, FastStrings;
 
 // -----------------------------------------------------------------------------
 
+const
+  HexChars: set of Char = ['A'..'F', 'a'..'f' , '0'..'9']; //added by adenry 2013.04.11
+
+// -----------------------------------------------------------------------------
+
+function RemoveSWTags   (Text: String; Bold, Italic, Underline: Boolean; Color: Boolean = True): String; //moved here from USubtitlesSave by adenry 2013.04.11
 function TimeToFrames   (Time: Integer; FPS: Single): Integer;
 function FramesToTime   (Frames, FPS: Single): Integer;
-function StringCount    (const aFindString, aSourceString : string; Const CaseSensitive : Boolean = TRUE): Integer;
-function IsInteger      (const Str: String; AddChars: String = ''): Boolean;
+function StringCount    (const aFindString, aSourceString : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; Const CaseSensitive : Boolean = TRUE): Integer;
+function IsInteger      (const Str: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; AddChars: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF} = ''): Boolean;
 function TimeToString   (Time: Integer; TimeFormat: String = {$IFDEF VIPLAY}'hh:mm:ss'{$ELSE}'hh:mm:ss,zzz'{$ENDIF}): String;
-function StringToTime   (Time: String; NoHours: Boolean = False): Integer;
+//function StringToTime   (Time: String; NoHours: Boolean = False): Integer;
+function StringToTime   (Time: String; NoHours: Boolean = False; FramesInstead: Boolean = False): Integer;    // by Bedazzle 2007.05.13
 function TimeInFormat   (Time, Format: String): Boolean;
-function PadLeft        (const S: String; const PadChar: AnsiChar; const Length: Integer; const Cut: Boolean = False): String;
-function PadRight       (const S: AnsiString; const PadChar: AnsiChar; const Length: Integer; const Cut: Boolean): AnsiString;
-function LimitDecimals  (Num: Real; Limit: Integer): String;
-function ReverseText    (Text: String; KeepLinesOrder: Boolean = True) : String;
-function ReplaceEnters  (const S, NewPattern: String): String;
-function ReplaceString  (const S, OldPattern, NewPattern: String; ReplaceAll: Boolean = True; IgnoreCase: Boolean = True): String;
-function InvertHTMLColor(const Color: String): String;
-function RemoveRTFFormatting(Text: String): String;
+function PadLeft        (const S: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; const PadChar: {$IFDEF UTF8}WideChar{$ELSE}AnsiChar{$ENDIF}; const Length: Integer; const Cut: Boolean = False): String;
+function PadRight       (const S: {$IFDEF UTF8}WideString{$ELSE}AnsiString{$ENDIF}; const PadChar: {$IFDEF UTF8}WideChar{$ELSE}AnsiChar{$ENDIF}; const Length: Integer; const Cut: Boolean): {$IFDEF UTF8}WideString{$ELSE}AnsiString{$ENDIF};
+function LimitDecimals  (Num: Real; Limit: Integer): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+function ReverseText    (Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; KeepLinesOrder: Boolean = True) : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+function ReplaceEnters  (const S, NewPattern: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+function ReplaceString  (const S, OldPattern, NewPattern: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; ReplaceAll: Boolean = True; IgnoreCase: Boolean = True): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+function InvertHTMLColor(const Color: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+function InvertHTMLColor2(var Color: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): Boolean; //added by adenry 2013.04.11
+function ColorToHTML(Color: Integer): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; //added by adenry 2013.04.11
+function RemoveRTFFormatting(Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 function GetMSInFrames(const Time: Integer; const FPS: Single): Integer;
-function MSToHHMMSSFFTime(const Time: Integer; const FPS: Single; const TimeSeparator: Char = ':'; const FramesSeparator: Char = ':'): String;
+function MSToHHMMSSFFTime(const Time: Integer; const FPS: Single; const FramesSeparator: Char = ':'): String;
 function HHMMSSFFTimeToMS(const Time: String; const FPS: Single): Integer;
+function CloseUnclosedTags(Text, OpenTag, CloseTag: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; //added by adenry 2013.04.11
+function SetTagsForSingleTagsMode(Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; CloseTags: Boolean = False): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; //added by adenry 2013.04.11
+procedure SplitDelimitedString(Delimiter: Char; Str: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; ListOfStrings: TStrings); //added by adenry 2013.04.11
 
 // -----------------------------------------------------------------------------
 
 implementation
+
+// -----------------------------------------------------------------------------
+
+function RemoveSWTags(Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; Bold, Italic, Underline: Boolean; Color: Boolean = True): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+var p: Integer; //added by adenry 2013.04.11
+begin
+  if Bold      = True then begin
+    Text := ReplaceString(Text, '<b>', '');
+    Text := ReplaceString(Text, '</b>', '');
+  end;
+
+  if Italic    = True then begin
+    Text := ReplaceString(Text, '<i>', '');
+    Text := ReplaceString(Text, '</i>', '');
+  end;
+
+  if Underline = True then begin
+    Text := ReplaceString(Text, '<u>', '');
+    Text := ReplaceString(Text, '</u>', '');
+  end;
+
+  if Color = True then begin
+    while SmartPos('<c:#', Text, False) > 0 Do
+      //Delete(Text, SmartPos('<c:#', Text, False), Pos('>', Copy(Text, SmartPos('<c:#', Text, False), Length(Text)))); //removed by adenry 2013.04.11
+    //added by adenry: begin 2013.04.11
+    begin
+      p := Pos('>', Copy(Text, SmartPos('<c:#', Text, False), Length(Text)));
+      if p > 0 then //avoid infinite loop
+        Delete(Text, SmartPos('<c:#', Text, False), p) else
+        break;
+    end;
+    //added by adenry: end
+    Text := ReplaceString(Text, '</c>', '');
+  end;
+  
+  Result := Text;
+end;
 
 //------------------------------------------------------------------------------
 
@@ -51,11 +105,11 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function StringCount(const aFindString, aSourceString : string; Const CaseSensitive : Boolean = TRUE) : Integer;
+function StringCount(const aFindString, aSourceString : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; Const CaseSensitive : Boolean = TRUE) : Integer;
 var
   Find,
   Source,
-  NextPos                     : PChar;
+  NextPos                     : {$IFDEF UTF8}PWideChar{$ELSE}PChar{$ENDIF};
   LSource,
   LFind                       : Integer;
   Next                        : TFastPosProc;
@@ -71,7 +125,7 @@ begin
   if CaseSensitive then
   begin
     Next := BMPos;
-    MakeBMTable(PChar(aFindString), Length(aFindString), JumpTable);
+    MakeBMTable({$IFDEF UTF8}PWideChar{$ELSE}PChar{$ENDIF}(aFindString), Length(aFindString), JumpTable);
   end
   else
   begin
@@ -95,10 +149,10 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function IsInteger(const Str: String; AddChars: String = ''): Boolean;
+function IsInteger(const Str: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; AddChars: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF} = ''): Boolean;
 var
   i       : Integer;
-  Numbers : String;
+  Numbers : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 begin
   if Str = '' then
   begin
@@ -119,7 +173,8 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function StringToTime(Time: String; NoHours: Boolean = False): Integer;
+//function StringToTime(Time: String; NoHours: Boolean = False): Integer;
+function StringToTime(Time: String; NoHours: Boolean = False; FramesInstead: Boolean = False): Integer;
 var
   H, M, S, Z, i: Integer;
   PCount, PFirst, PSec, PThird: Integer;
@@ -177,10 +232,13 @@ begin
         begin
           if NoHours = False then
             S := StrToIntDef(Copy(Time, PSec + 1, Length(Time)), 0);
-        end;  
+        end;
       end;
 
-      Result := ((H*3600)*1000) + ((M*60)*1000) + (S*1000) + Z;
+      if FramesInstead = FALSE then
+        Result := ((H*3600)*1000) + ((M*60)*1000) + (S*1000) + Z
+      else
+        Result := ((H*3600)*1000) + ((M*60)*1000) + (S*1000) + Trunc(Z/10 * 41.667);   // 1000 / 24 = 41.667  (24 frames per sec)
     end;
   except
     Result := -1;
@@ -207,10 +265,10 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function PadLeft(const S : String; const PadChar : Char; const Length : Integer; const Cut : Boolean = False) : String;
+function PadLeft(const S : {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; const PadChar : {$IFDEF UTF8}WideChar{$ELSE}Char{$ENDIF}; const Length : Integer; const Cut : Boolean = False) : String;
 var
   F, L, P, M : Integer;
-  I, J : PChar;
+  I, J : {$IFDEF UTF8}PWideChar{$ELSE}PChar{$ENDIF};
 Begin
   if Length = 0 then
   begin
@@ -252,10 +310,10 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function PadRight(const S: AnsiString; const PadChar: AnsiChar; const Length: Integer; const Cut: Boolean): AnsiString;
+function PadRight(const S: {$IFDEF UTF8}WideString{$ELSE}AnsiString{$ENDIF}; const PadChar: {$IFDEF UTF8}WideChar{$ELSE}AnsiChar{$ENDIF}; const Length: Integer; const Cut: Boolean): AnsiString;
 var
   F, L, P, M : Integer;
-  I, J       : PAnsiChar;
+  I, J       : {$IFDEF UTF8}PWideChar{$ELSE}PAnsiChar{$ENDIF};
   function MaxI(const A, B: Integer): Integer;
   begin
     if A > B then
@@ -306,7 +364,7 @@ end;
 
 function TimeToString(Time: Integer; TimeFormat: String = {$IFDEF VIPLAY}'hh:mm:ss'{$ELSE}'hh:mm:ss,zzz'{$ENDIF}): String;
 var
-  Hour, Min, Sec, MSec : Word;
+  Hour, Min, Sec, MSec, Fram : Word;
   tmpApariciones, tmp  : Byte;
 begin
   if Time < 0 then Time := 0;
@@ -314,6 +372,7 @@ begin
   Min  := Trunc((Time-(Hour*3600000)) / 60000);
   Sec  := Trunc((Time-(Hour*3600000)-(Min*60000)) / 1000);
   MSec := Trunc((Time-(Hour*3600000)-(Min*60000)-(Sec*1000)));
+  Fram := Trunc(Msec/41.667);
 
   if TimeFormat = 'hh:mm:ss' then
     Result := Format('%.2d:%.2d:%.2d', [Hour, Min, Sec])
@@ -323,17 +382,28 @@ begin
     tmpApariciones := StringCount('h', TimeFormat);
     if tmpApariciones > 0 then TimeFormat := ReplaceString(TimeFormat, StringOfChar('h',tmpApariciones), PadLeft(IntToStr(Hour), '0', tmpApariciones)) else
       Min := Min + Hour * 60;
+
     tmpApariciones := StringCount('m', TimeFormat);
     if tmpApariciones > 0 then TimeFormat := ReplaceString(TimeFormat, StringOfChar('m',tmpApariciones), PadLeft(IntToStr(Min), '0', tmpApariciones)) else
       Sec := Sec + Min * 60;
+
     tmpApariciones := StringCount('s', TimeFormat);
     if tmpApariciones > 0 then TimeFormat := ReplaceString(TimeFormat, StringOfChar('s',tmpApariciones), PadLeft(IntToStr(Sec), '0', tmpApariciones));
+
     tmpApariciones := StringCount('z', TimeFormat);
     If tmpApariciones > 0 then
     begin
       tmp := Pos('z', TimeFormat);
       TimeFormat := Copy(ReplaceString(TimeFormat, StringOfChar('z', tmpApariciones), Copy(PadLeft(IntToStr(MSec), '0', 3), 0, tmpApariciones)), 0, tmp + tmpApariciones-1);
     end;
+
+    tmpApariciones := StringCount('f', TimeFormat);
+    If tmpApariciones > 0 then
+    begin
+      tmp := Pos('f', TimeFormat);
+      TimeFormat := Copy(ReplaceString(TimeFormat, StringOfChar('f', tmpApariciones), Copy(PadLeft(IntToStr(Fram), '0', 2), 0, tmpApariciones)), 0, tmp + tmpApariciones-1);
+    end;
+
     Result := TimeFormat;
   end;
 end;
@@ -355,7 +425,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-Function ReverseText(Text: String; KeepLinesOrder: Boolean = True): String;
+Function ReverseText(Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; KeepLinesOrder: Boolean = True): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 var
   x, TotalLines      : Integer;
   PosEnter, NewEnter : Integer;
@@ -401,14 +471,14 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function ReplaceEnters(const S, NewPattern: String): String;
+function ReplaceEnters(const S, NewPattern: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 begin
   Result := FastReplace(S, #13#10, NewPattern);
 end;
 
 // -----------------------------------------------------------------------------
 
-function ReplaceString(const S, OldPattern, NewPattern: String; ReplaceAll: Boolean = True; IgnoreCase: Boolean = True): String;
+function ReplaceString(const S, OldPattern, NewPattern: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; ReplaceAll: Boolean = True; IgnoreCase: Boolean = True): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 var
   Flags: TReplaceFlags;
 begin
@@ -420,7 +490,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function InvertHTMLColor(const Color: String): String;
+function InvertHTMLColor(const Color: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 begin
   If (Color = '') or (Length(Color) <> 6) Then Exit;
   Result := Copy(Color, 5, 2) + Copy(Color, 3, 2) + Copy(Color, 1, 2);
@@ -428,8 +498,32 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function RemoveRTFFormatting(Text: String): String;
-  function Resolve(c: Char): Integer;
+//added by adenry: begin 2013.04.11
+function InvertHTMLColor2(var Color: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): Boolean;
+begin
+  Result := False;
+  if Length(Color) = 6 then
+    if (Color[1] in HexChars)and(Color[2] in HexChars)and(Color[3] in HexChars)and(Color[4] in HexChars)and(Color[5] in HexChars)and(Color[6] in HexChars) then
+    begin
+      color := color[5] + color[6] + color[3] + color[4] + color[1] + color[2];
+      Result := True;
+    end;
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin 2013.04.11
+function ColorToHTML(Color: Integer): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+begin
+  Result := Format('%.2x%.2x%.2x', [GetRValue(Color), GetGValue(Color), GetBValue(Color)]);
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
+function RemoveRTFFormatting(Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+  function Resolve(c: {$IFDEF UTF8}WideChar{$ELSE}Char{$ENDIF}): Integer;
   { Convert char to integer value - used to decode \'## to an ansi-value }
   begin
     c := UpperCase(c)[1];
@@ -499,9 +593,9 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function MSToHHMMSSFFTime(const Time: Integer; const FPS: Single; const TimeSeparator: Char = ':'; const FramesSeparator: Char = ':'): String;
+function MSToHHMMSSFFTime(const Time: Integer; const FPS: Single; const FramesSeparator: Char = ':'): String;
 begin
-  Result := TimeToString(Time, 'hh' + TimeSeparator + 'mm' + TimeSeparator + 'ss');
+  Result := TimeToString(Time, 'hh' + FramesSeparator + 'mm' + FramesSeparator + 'ss');
   Result := Result + FramesSeparator + PadLeft(IntToStr(TimeToFrames(Time - StringToTime(Result), FPS)), '0', 2);
 end;
 
@@ -512,6 +606,83 @@ begin
   if StringToTime(Time) = -1 then Result := -1 else
   Result := StringToTime(Copy(Time, 1, 8)) + Integer(FramesToTime(StrToIntDef(Copy(Time, 10, 2), 0), FPS));
 end;
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin 2013.04.11
+function CloseUnclosedTags(Text, OpenTag, CloseTag: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+var
+  dif: Integer;
+begin
+  dif := StringCount(OpenTag, Text, False) - StringCount(CloseTag, Text, False);
+  while dif > 0 do
+  begin
+    Text := Text + CloseTag;
+    dif := dif - 1;
+  end;
+  Result := Text;
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin 2013.04.11
+function SetTagsForSingleTagsMode(Text: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; CloseTags: Boolean = False): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+var
+  TagPos: Integer;
+  Color : String;
+begin
+  //Set style:
+  Text := ReplaceString(Text, '</u>', '');
+  if Pos('<u>',Text) <> 0 then
+  begin
+    Text := ReplaceString(Text, '<u>','');
+    Text := '<u>' + Text;
+    if CloseTags then Text := Text + '</u>';
+  end;
+  Text := ReplaceString(Text, '</b>', '');
+  if Pos('<b>',Text) <> 0 then
+  begin
+    Text := ReplaceString(Text, '<b>','');
+    Text := '<b>' + Text;
+    if CloseTags then Text := Text + '</b>';
+  end;
+  Text := ReplaceString(Text, '</i>', '');
+  if Pos('<i>',Text) <> 0 then
+  begin
+    Text := ReplaceString(Text, '<i>','');
+    Text := '<i>' + Text;
+    if CloseTags then Text := Text + '</i>';
+  end;
+
+  //Set color:
+  Text := ReplaceString(Text, '</c>', '');
+  TagPos := Pos('<c:#', Text);
+  if TagPos <> 0 then
+  begin
+    Color := Copy(Text, TagPos, SmartPos('>', Text, True, TagPos+4) - TagPos + 1);
+    Text := Color + RemoveSWTags(Text, False, False, False, True);
+    if CloseTags then Text := Text + '</c>';
+  end;
+
+  Result := Text;
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin 2013.04.11
+procedure SplitDelimitedString(Delimiter: Char; Str: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}; ListOfStrings: TStrings);
+begin
+  if Assigned(ListOfStrings) then
+  begin
+    ListOfStrings.Clear;
+    //ListOfStrings.Delimiter     := Delimiter;
+    //ListOfStrings.DelimitedText := Str;
+    ExtractStrings([Delimiter], [' '], PChar(Str), ListOfStrings);
+  end;
+end;
+//added by adenry: end
 
 // -----------------------------------------------------------------------------
 

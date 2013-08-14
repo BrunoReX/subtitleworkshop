@@ -14,6 +14,7 @@ FPS=FPS
 PlainText=Gewone Tekst
 STP=Subtitle Translation Project
 SRF=Subtitle Report File
+AllTheFiles=All files
 
 [Standard buttons]
 01=&Ok
@@ -41,6 +42,11 @@ SRF=Subtitle Report File
 14=Duratie:
 15=%s (%s leestekens):
 16=- Onvertaalde Ondertitel -
+17=Lines:
+18=Notes:
+19=Pause
+20=%d subtitles selected / %d
+21=#%d / %d
 
 [Main menu header]
 01=Bestand
@@ -50,6 +56,7 @@ SRF=Subtitle Report File
 05=Film
 06=Instellingen
 07=Help
+08=View
 
 [Main menu/File]
 01=Nieuwe ondertitel...
@@ -66,6 +73,7 @@ SRF=Subtitle Report File
 12=Opslaan als...
 13=Sluiten
 14=Afsluiten
+15=Save marking
 
 [Main menu/Edit]
 01=Ongedaan maken
@@ -77,6 +85,8 @@ SRF=Subtitle Report File
 07=Kopiëren
 08=Plakken
 09=Selecteer alles
+10=Invert selection
+11=Insert symbol...
 
 [Main menu/Edit/Timings]
 01=Timings
@@ -90,6 +100,11 @@ SRF=Subtitle Report File
 09=Automatische duraties
 10=Lees timings uit bestand
 11=Vershuif %s milliseconden
+12=Extend length to previous
+13=Set pauses...
+14=Shift to next
+15=Shift to previous
+16=Round time values...
 
 [Main menu/Edit/Texts]
 01=Teksten
@@ -100,6 +115,8 @@ SRF=Subtitle Report File
 06=Snelle regelsplitsing
 07=Stel maximale regellengte in...
 08=Lees teksten uit bestand
+09=Fast smart line adjust
+10=Fast unbreak subtitles
 
 [Main menu/Edit/Subtitles]
 01=Ondertitels
@@ -117,6 +134,10 @@ SRF=Subtitle Report File
 13=Verwijder onnodige links
 14=Markeer geselecteerde ondertitels
 15=De-markeer geselecteerde ondertitels
+16=Auto combine subtitles...
+17=Delete dots at the beginning
+18=Jump to next marked
+19=Jump to previous marked
 
 [Main menu/Edit/Translation]
 01=Vertaling
@@ -148,6 +169,8 @@ SRF=Subtitle Report File
 16=Externe vooruitblik
 17=SAMI taal extractor
 18=Pascal scripts
+19=Jump to previous error
+20=Show CpS boxes
 
 [Main menu/Movie]
 01=Open...
@@ -156,6 +179,11 @@ SRF=Subtitle Report File
 04=Video vooruitblik mode
 05=Toon ondertitels
 06=Media opstart bestand opslaan
+07=Audio stream
+08=None
+09=Video renderer
+10=Default
+11=VMR9
 
 [Main menu/Movie/Playback]
 01=Afspeel
@@ -192,6 +220,9 @@ SRF=Subtitle Report File
 03=Toon linker paneel
 04=Toon tijdsbesturing
 05=Gebruik 'in-place' editie
+06=Refresh language files
+07=Files refreshed
+08=keys
 
 [Main menu/Help]
 01=Over %s...
@@ -203,6 +234,9 @@ SRF=Subtitle Report File
 03=Onderlijnd
 04=Stel kleur in
 05=Verwijder color tags
+06=Remove all tags
+07=Delete
+08=Style
 
 [Video preview hints]
 01=Afspelen/Pauzeren (%s)
@@ -221,6 +255,8 @@ SRF=Subtitle Report File
 14=Markeer als eerste sync punt (%s)
 15=Markeer als laatste sync punt (%s)
 16=Ondertitel/video synchronisatie punt toevoegen (%s)
+17=Volume: %d%%
+18=Mute/Unmute
 
 [Save as]
 01=Opslaan als
@@ -247,7 +283,6 @@ SRF=Subtitle Report File
 [Settings Form]
 01=Instellingen
 02=Pas de programma configuratie aan
-; Sections
 03=Algemeen
 04=Geavanceerd
 05=Charsets
@@ -261,9 +296,6 @@ SRF=Subtitle Report File
 13=Programma
 14=Lijst
 15=Menu
-;-----------------;
-; General section ;
-;-----------------;
 16=Altijd bovenop
 17=Programma meerdere malen opstarten toelaten
 18=Bevestig verwijderen van ondertitels
@@ -276,9 +308,6 @@ SRF=Subtitle Report File
 25=Geen interactie met tags
 26=Werk met style tags
 27=Recente bestanden limiet:
-;----------;
-; Advanced ;
-;----------;
 28=Slimme regel aanpassing
 29=Twee regels als langer dan:
 30=leestekens
@@ -289,36 +318,21 @@ SRF=Subtitle Report File
 35=Maximale regel lengte:
 36=Verschuif tijd:
 37=milliseconden
-;----------;
-; Charsets ;
-;----------;
 38=Toon in hoofdvenster
 39=Originele charset:
 40=Vertaling charset:
-;-----------------;
-; Formats section ;
-;-----------------;
 41=Standaard formaat:
 42=Formaten laten zien bij "Opslaan als":
 43=Toon aparte formaten
 44=Selecteer &alles
 45=Selecteer &niets
-;--------------------;
-; File types section ;
-;--------------------;
 46=Registreer extensies tijdens start
 47=Associeer met meest gebruikte ondertitelextensies
-;--------------;
-; Save section ;
-;--------------;
 48=Vragen om op te slaan bij programma afsluiten/sluiten ondertitel
 49=Werk automatisch opslaan elke
 50=minuten.
 51=Opslaan als backup
 52=Uitvoerinstellingen...
-;---------------;
-; Video preview ;
-;---------------;
 53=Dubbel-klik in een ondertitel:
 54=Seconden om te springen:
 55=Shift+dubbel-klik in een ondertitel:
@@ -328,9 +342,6 @@ SRF=Subtitle Report File
 59=Terugspoel en vooruitspoel tijd:
 60=seconden.
 61=Standaard aangepaste afspeelratio:
-;-------------------------;
-; Video preview Subtitles ;
-;-------------------------;
 62=Teken grens
 63=Teken schaduw
 64=Probeer transparente achtergrond
@@ -341,40 +352,83 @@ SRF=Subtitle Report File
 69=Grens breedte:
 70=Schaduw breedte:
 71=VOORBEELD
-;--------------------------;
-; External Preview General ;
-;--------------------------;
 72=Exe Van de video speler:
 73=Detecteer geassocieerd programma
 74=Vraag elke keer naar een andere video
 75=Altijd testen met video:
-;---------------------------;
-; External Preview Advanced ;
-;---------------------------;
 76=Tijdelijk ondertitel opslaan in formaat:
 77=Origineel formaat
 78=Apart formaat:
 79=Parameter om naar de video speler te zenden:
 80=VIDEO_FILE stelt het video bestand voor waarin je de ondertitels gaat testen. SUBT_FILE is de parameter waarin het tijdelijke ondertitel bestand naar de video speler gezonden wordt. Je mag andere parameters toevoegen, bijvoorbeeld volledig scherm, etc.
-;----------------;
-; Look / Program ;
-;----------------;
 81=Lettertype om te gebruiken in programma:
 82=Lettergrootte:
 83="Tekst" en "Vertaling" velden uitlijning:
 84=Links|Rechts|Centrum
-;-------------;
-; Look / List ;
-;-------------;
 85=Toon rasterlijnen
 86=Stijl toepassen op ondertitels
 87=Markeer niet-vertaalde ondertitels met kleur:
 88=Toon horizontale scrollbar
-;-------------;
-; Look / Menu ;
-;-------------;
 89=Gebruik Office XP style Menu
 90=Gebruik gradient menu
+91=Tags mode:
+92=Multiple tags mode
+93=Single tags mode (the old mode)
+94=Auto delete tags
+95=Default subtitle duration:
+96=Default subtitle pause:
+97=Increase step (time):
+98=Increase step (frames):
+99=frames
+100=Keep min duration of:
+101=but don''t allow overlaps
+102=Automatically round time values to:
+103=Round time values on subtitle load
+104=Notes charset:
+105=Add "Open with Subtitle Workshop" to shell context menu
+106=Ask to save new subttiles
+107=Save empty subtitles
+108=Vertical video center align
+109=Enter full screen on double click
+110=Setting Show and Hide times
+111=Shift Show value:
+112=Shift Hide value:
+113=Align left when subtitles contain a new line starting with "-"
+114=Relative font size
+115=Keep subtitle on video
+116=Try antialiasing (Force using regions must be off)
+117=Smart main window and subtitle list resize
+118=Resize subtitle list columns when resizing form
+119=Mark untranslated subtitles with background:
+120=Right click selection
+121=Row height:
+122=Text margin:
+123=Selection
+124=Text:
+125=Color:
+126=Transparency:
+127=Columns
+128=Align:
+129=Display style:
+130=Full
+131=Compact
+132=Marking with color:
+133=Marking with background:
+134=Columns to mark:
+135=Mark column "%s"
+136=Marking priority:
+137=Low (before error marking)
+138=High (after error marking)
+139=Marked subtitle color in video preview:
+140=Marking file
+141=Do not save marking file
+142=Ask each time to save marking file
+143=Automatically save marking file on subtitle save
+144=Automatically load marking file
+145=Marking
+146=Play video on load
+147=Visual subtitle representation color:
+148=Hilight tags in "Text" and "Translation" fields:
 
 [Output settings]
 01=Uitvoerinstellingen
@@ -435,11 +489,13 @@ SRF=Subtitle Report File
 03=Milliseconden
 04=Zet minimum duratie
 05=* De tijd verhogen veroorzaakt geen overlapping
+06=Increase at start if necessary
 
 [Set delay]
 01=Zet vertraging
 02=Voor all de ondertitels
 03=Voor geselecteerde ondertitels
+04=From first selected until last subtitle
 
 [Adjust subtitles]
 01=Ondertitels aanpassen
@@ -490,6 +546,12 @@ SRF=Subtitle Report File
 08=Alleen als nieuwe duratie kleiner is dan het origineel
 09=Alle ondertitels
 10=Alleen geselecteerde ondertitels
+11=Method
+12=Characters
+13=per second
+14=Increase at start if necessary
+15=Maximum increase at start (0 = no limit):
+16=milliseconds
 
 [Convert case]
 01=Converteer hoofdletter
@@ -540,7 +602,6 @@ SRF=Subtitle Report File
 [Batch convert]
 01=Batch conversie
 02=Converteer meerdere bestanden naar een enkel formaat in een paar stappen.
-; Buttons
 03=< &Vorige
 04=&Volgende >
 05=C&onverteer
@@ -548,7 +609,6 @@ SRF=Subtitle Report File
 07=&Sluit
 08=&Alles
 09=&Geen
-; Page 1
 10=Extensies:
 11=Zoek pad:
 12=Includeer submappen
@@ -556,19 +616,15 @@ SRF=Subtitle Report File
 14=Uitvoer map:
 15=Uitvoerformaat:
 16=Standaard FPS:
-; List columns
 17=Bestandsnaam
 18=Formaat
 19=FPS
 20=Grootte
-; Page 2
 21=&Toevoegen
 22=&Verwijderen
 23=&Leeg
-; Page 3
 24=Klaar!. Bekijk logboek voor details:
 25=Opslaan...
-; Searching
 26=Controleer bestand %s
 
 [Batch convert log]
@@ -640,21 +696,12 @@ SRF=Subtitle Report File
 06=Ondertitel
 07=Type
 08=Beschrijving
-;-------;
-; Types ;
-;-------;
 09=Fout
 10=Waarschuwing
 11=Info
 13=Gerepareerd
-;----------------------;
-; Information messages ;
-;----------------------;
 14=Totale fouten: %d
 15=Gerepareerde fouten: %d
-;---------------;
-; Error reports ;
-;---------------;
 16=Bevat regels zonder letters
 17=Lege ondertitel
 18=Overlapping met vorige ondertitel
@@ -675,9 +722,6 @@ SRF=Subtitle Report File
 33=Geen spatie voor aangepast leesteken
 34=Onnodige spaties
 35=Gemarkeerde ondertitel
-;-------------;
-; Fix reports ;
-;-------------;
 36=Verwijderde regels zonder letters
 37=Lege ondertitel is verwijdert
 38=Overlapping gerepareerd
@@ -695,8 +739,52 @@ SRF=Subtitle Report File
 50=Spatie toegevoegd na aangepast leesteken
 51=Spatie toegevoegd voor aangepast leesteken
 52=Onnodige spaties verwijdert
-;-----
 53=Dubbel-klik om naar regel op hoofd-form te springen
+67=E
+68=W
+69=F
+70=CI
+71=Select
+72=+ Select
+73=- Select
+74=Select subtitles
+75=Add to selected subtitles
+76=Remove from selected subtitles
+77=All
+78=None
+79=Inverse
+80=Select all
+81=Select none
+82=Invert selection
+83=Error types sets
+84=Save error types set
+85=Delete error types set
+86=Error types
+87=Custom info
+88=Show/hide errors
+89=Show/hide warnings
+90=Show/hide fixed
+91=Show/hide custom info
+92=Show/hide Error types panel
+93=Show/hide Custom info panel
+65=Custom info
+66=Displayed: %d
+54=Unnecessary tags
+56=Dash on first line
+58=Too many CpS
+60=Too short pause
+62=Dialogue on one line
+55=Removed unnecessary tags
+57=Removed dash on first line
+59=Fixed too much CpS
+61=Fixed too short pause
+63=Fixed dialogue on one line
+94=Export to file
+95=Text file
+96=char
+97=sec
+98=fr
+99=cps
 
 [Information and errors Settings]
 01=Instellingen
@@ -726,7 +814,6 @@ SRF=Subtitle Report File
 25=Te korte duratie:
 26=Te lange regel:
 27=leestekens.
-;------
 28=Regels zonder letters
 29=Lege ondertitels
 30=Overlappende ondertitels
@@ -747,7 +834,6 @@ SRF=Subtitle Report File
 45=Spaties na aangepaste leestekens
 46=Spaties voor aangepaste leestekens
 47=Onnodige spaties
-;------
 48=Controleer op:
 49=Repareer:
 50=Enters en spaties aan het begin en eind
@@ -757,6 +843,51 @@ SRF=Subtitle Report File
 54=Spaties na "¿" en "¡"
 55=Spaties voor "?" en "!"
 56=Spaties tussen nummers
+57=Too short pauses
+58="- " on first line
+59=Only if there is no "- " on second line
+60=Dialogue on one line
+61=Unnecessary tags
+62=Too many characters per second
+63=Mark too much CpS with CpS boxes
+64=Default errorr marking
+65=Set Default Styles
+66=Mark column "Num"
+67=Mark column "Pause"
+68=Mark column "Show"
+69=Mark column "Hide"
+70=Mark column "Duration"
+71=Mark column "Text"
+72=Mark as Bold
+73=Mark as Italic
+74=Mark as Underline
+75=Mark as Strikethrough
+76=Mark the text color
+77=Mark the background color
+78=Mark
+79=Automatically recheck errors
+80=Do not recheck on Pascal scripts
+81=Recheck all once after a Pascal script executes
+82=Recheck on each change made by a Pascal script (might be slow)
+83=Indicate too long lines in Text and Translation labels
+84=Indicate too short duration in Duration box
+85=Indicate too long duration in Duration box
+86=Indicate too short pause in Pause box
+87=Indicate overlapping subtitles in Pause box
+88=Indicate bad values in Show and Hide boxes
+89=Indicate subtitles over two lines in lines counter labels
+90=Text color
+91=Background color
+92=Too short pause under:
+93=Characters per second (CpS)
+94=Too many CpS over:
+95=characters per second
+96=Normal CpS box colors:
+97=Too many CpS box colors:
+98=Display percantage in CpS box
+99=Display current CpS in CpS box
+100=Display minimum time in CpS box
+101=Display maximum characters in CpS box
 
 [Various information]
 01=Diverse informatie
@@ -783,6 +914,18 @@ SRF=Subtitle Report File
 22=Vet
 23=Cursief
 24=Bereken
+25=Shortest line:
+26=Longest pause:
+27=Shortest pause:
+28=In subtitle %d, %d,%.3d seconds
+29=In subtitle %d, %d milliseconds
+30=Most CpS:
+31=Least CpS:
+32=In subtitle %d, %d cps
+33=Average CpS:
+34=Longest duration:
+35=Shortest duration:
+36=Refresh info
 
 [SAMI Language Extractor]
 01=SAMI Language Extractor
@@ -809,12 +952,12 @@ SRF=Subtitle Report File
 08=Geprogrammeerd door
 09=Extra programmering
 10=%s door
-; Following line is "DirectShow programming"
 11=%s programmering
 12=Vertalers
 13=Beta testers
 14=Standaard icoon door
 15=Voor updates bezoek:
+16=License
 
 [Error messages]
 01=Kan de ondertitel API niet initialiseren. Download aub de DLL "%s" van %s en kopiëer het naar de "%s" map.
@@ -837,6 +980,12 @@ SRF=Subtitle Report File
 18=Selecteer een ondertitel gedeelte uit de lijst.
 19=Als u een film fragment voor een deel van de ondertitel selecteerd, moet u een film fragment voor alle delen van de ondertitel selecteren (behalve voor het laatste deel natuurlijk).
 20=Je hebt twee of meer punten nodig.
+21=Incorrect regular expression in Custom info %s
+22=Custom Info %d was disabled.|Fix the regular expression to enable it.
+23=Subtitle duration too short!
+24=Error: can not execute script.
+25=Error: can not compile script.
+26=Save subtitles first
 
 [Question messages]
 01=Bestand "%s" is verandert.||Wilt u de veranderingen opslaan?.
@@ -848,6 +997,7 @@ SRF=Subtitle Report File
 07=De video speler''s exe is niet gespecificeerd of bestaat niet.||Wilt u een externe speler configureren?.
 08=Er is een nieuwe versie gevonden!.||Wilt u de lijst met veranderingen bekijken?.
 09=Het bestand dat u wilt opslaan is alleen-lezen.||Toch proberen op te slaan?.
+10=Do you want to save the marking in a file?
 
 [Information messages]
 01=Kon geen meerdere instanties vinden van "%s".
@@ -861,6 +1011,7 @@ SRF=Subtitle Report File
 09=Bestandsnaam: %s|Grootte: %s|FPS: %s|Duratie: %s|Totaal aantal frames: %d|Resolutie: %dx%d|FourCC: %s
 10=Sommige streams van deze film konden niet correct gerenderd worden. Het is waarschijnlijk dat er een audio of video codec mist.
 11=Het is niet nodig om het film fragment corresponderend met de ondertitel in te stellen.
+12=A sudden error occured:|"%s"
 
 [Information and errors messages]
 01=Ondertitel nummer %d is is een lege ondertitel en staat op het punt verwijdert te worden.||Wil je doorgaan?.
@@ -868,4 +1019,118 @@ SRF=Subtitle Report File
 03=Ondertitel nummer %d:||"%s" staat op het punt te worden verwijdert.||Wil je doorgaan?.
 04=Deel van ondertitel nummer %d:||"%s" staat op het punt verwijdert te worden, waardoor de ondertitel wordt:||"%s"||Wilt u doorgaan?.
 05=Ondertitel nummer %d:||"%s" is een een-regel ondertitel en begint met "-".||Wilt u de "-" aan het begin verwijderen?.
+
+[Main menu/View]
+01=Toolbar
+02=Text style bars
+03=Statusbar
+04=Columns
+05=Show notes in left panel
+06=Show time control buttons
+07=Show lines count
+08=Visual subtitle representation
+
+[Video Popup Menu]
+01=Enter full screen
+02=Exit full screen
+03=Zoom to %d%%
+04=Reset subtitle vertical position
+
+[Time control buttons hints]
+01=Shift to previous/Extend to previous
+02=Shift to next/Extend to next
+03=Set default pause/Set default pause, if pause is too short
+04=Set ato duration/Set min duration
+
+[Auto combine subtitles]
+01=Auto combine subtitles
+02=milliseconds
+03=Combine if duration is less than (0 = no limit):
+04=Combine if CpS is greater than (0 = no limit):
+05=characters per second
+06=Don't combine if pause is greater than (0 = no limit):
+07=Punctuation marks detection
+08=Combined subtitles maximum duration (0 = no limit):
+09=Decrease duration if necessary, with no more than:
+10=Combined subtitles maximum lines length (0 = no limit):
+11=characters
+12=For all the subtitles
+13=For the selected subtitles
+
+[Set pauses]
+01=Set pauses
+02=Pauses value:
+03=Shorten duration of:
+04=First subtitle only
+05=Second subtitle only
+06=Both subtitles equally
+07=The subtitle with less CpS
+08=For all the subtitles
+09=For the selected subtitles
+
+[Round time values]
+01=Round time values
+02=Round to:
+03=milliseconds
+04=For all the subtitles
+05=For the selected subtitles
+
+[Smart line adjust]
+01=Smart line adjust
+02=Two lines if longer than:
+03=characters
+04=Break method:
+05=Equal lines
+06=Break on punctuation marks
+07=Don''t unbreak subtitles that are not too long
+08=Adjust only long subs and subs with more than 2 lines
+09=For all the subtitles
+10=For the selected subtitles
+11=Always try to find a better breaking point
+
+[Unbreak subtitles]
+01=Unbreak subtitles
+02=Characters limit
+03=No limit
+04=Don''t unbreak if line length exceeds:
+05=characters
+06=Don''t unbreak subtitles with "—" on second line
+07=For all the subtitles
+08=For the selected subtitles
+
+[Custom info]
+01=Add custom info
+02=Composite custom info
+03=Subtitles duration information
+04=Subtitles line lenght information
+05=Subtitles lines count information
+06=Subtitles pause information
+07=Subtitles CpS information
+08=Subtitles text information
+09=Custom info sets
+10=Save custom info set
+11=Delete custom info set
+12=There is no custom info. Click the "+" button to add new custom info.
+13=Caption
+14=Duration
+15=Lines length
+16=Lines count
+17=Pause
+18=CpS
+19=Text
+20=Composite info
+21=ms
+22=chars
+23=lines
+24=cps
+25=AND
+26=OR
+27=Contains (Case sensitive)
+28=Contains (Case insensitive)
+29=Does not contain (Case sensitive)
+30=Does not contain (Case insensitive)
+31=Matches regular expression
+32=Matches regular expression (tags ignored)
+33=Delete
+34=Edit
 

@@ -139,7 +139,7 @@ function RandomStr(aLength : Longint) : string;
 function ReverseStr(const aSourceString: string): string;
 function RightStr(const aSourceString : string; Size : Integer) : string;
 function RGBToColor(aRGB : string) : TColor;
-function StringCount(const aSourceString, aFindString : string; Const CaseSensitive : Boolean = TRUE) : Integer;
+//function StringCount(const aSourceString, aFindString : string; Const CaseSensitive : Boolean = TRUE) : Integer;//removed by adenry
 function SoundEx(const aSourceString: string): Integer;
 function UniqueFilename(aFilename : string) : string;
 function URLToText(aValue : string) : string;
@@ -679,7 +679,8 @@ begin
   if S <> '' then Result.Add(S);
 end;
 
-//counts how many times a substring exists within a string
+//removed by adenry: begin
+{//counts how many times a substring exists within a string
 //StringCount('XXXXX','XX') would return 2
 function StringCount(const aSourceString, aFindString : string; Const CaseSensitive : Boolean = TRUE) : Integer;
 var
@@ -720,7 +721,8 @@ begin
       Source := NextPos + LFind;
     end;
   until NextPos = nil;
-end;
+end;}
+//removed by adenry: end
 
 function SoundEx(const aSourceString: string): Integer;
 var

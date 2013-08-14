@@ -1,15 +1,21 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Convert Case form
+
 unit formConvertCase;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, StdCtrls, VirtualTrees, TreeViewHandle, General, Functions, Undo,
-  IniFiles;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls, StdCtrls, IniFiles,
+  VirtualTrees,
+  CommonTypes;
 
 type
   TfrmConvertCase = class(TForm)
-    btnOk: TButton;
+    btnApply: TButton;
     btnCancel: TButton;
     pnlConvertCase: TPanel;
     rdoInverseType: TRadioButton;
@@ -22,7 +28,7 @@ type
     rdoAllSubs: TRadioButton;
     chkDotsDetection: TCheckBox;
     chkOnlyFirstLetterOfFirstWord: TCheckBox;
-    procedure btnOkClick(Sender: TObject);
+    procedure btnApplyClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure rdoSentenceTypeClick(Sender: TObject);
   private
@@ -40,7 +46,9 @@ var
 
 implementation
 
-uses formMain;
+uses
+  General, Functions, Undo, TreeViewHandle,
+  formMain;
 
 {$R *.dfm}
 
@@ -65,15 +73,15 @@ begin
       rdoAllSubs.Caption                    := ReadString('Convert case', '09', 'All subtitles');
       rdoSelectedSubs.Caption               := ReadString('Convert case', '10', 'Selected subtitles only');
 
-      btnOk.Caption      := BTN_OK;
+      btnApply.Caption   := BTN_APPLY;
       btnCancel.Caption  := BTN_CANCEL;
       
       // ------------------ //
       //      Set font      //
       // ------------------ //
-      btnOk.ParentFont := True;
-      Font             := frmMain.Font;
-      btnOk.Font.Style := frmMain.Font.Style + [fsBold];
+      btnApply.ParentFont := True;
+      Font                := frmMain.Font;
+      btnApply.Font.Style := frmMain.Font.Style + [fsBold];
     end;
   finally
     LF.Free;
@@ -90,9 +98,11 @@ var
 begin
   AlreadyDone  := False;
   FirstCharPos := 0;
-  for i := 0 to Length(Str) do
+  for i := 1 to Length(Str) do //0 changed to 1 by adenry
   begin
-    if ((Str[i] in SpecialChars) = False) then
+    if ((Str[i] in SpecialChars) = False)
+    and( (SubtitleApi.MultiTagsMode = False) or (not IsTagPart(Str, i)) ) //added by adenry
+    then
     begin
       if FirstCharPos = 0 then FirstCharPos := i;
       if (AlreadyDone = False) or ((FirstCharPos = i) and (Copy(Str, 1, 3) <> '...')) then
@@ -164,7 +174,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmConvertCase.btnOkClick(Sender: TObject);
+procedure TfrmConvertCase.btnApplyClick(Sender: TObject);
 var
   Node       : PVirtualNode;
   Text       : String;
@@ -177,9 +187,6 @@ var
   ConvType   : Integer;
   UndoAction : PUndoAction;
 begin
-  ClearUndoList(RedoList);
-  frmMain.mnuRedo.Enabled := False;
-  
   if rdoAllSubs.Checked then
     Node := frmMain.lstSubtitles.GetFirst else
     Node := frmMain.lstSubtitles.GetFirstSelected;
@@ -189,6 +196,7 @@ begin
     
     New(UndoAction);
     UndoAction^.UndoActionType := uaFullTextChange;
+    UndoAction^.UndoActionName := uanConvertCase; //added by adenry
     UndoAction^.BufferSize     := SizeOf(TFullTextChange);
     UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
     UndoAction^.Node           := Node;
@@ -196,14 +204,14 @@ begin
     PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := True;
     PFullTextChange(UndoAction^.Buffer)^.OldText := Text;
 
-    // We store if the subtitle has tags or not, because we don't have to
-    // convert case of tags
+    // We store if the subtitle has tags or not, because we don't have to convert case of tags
     Bold      := Pos('<b>', Text) > 0;
     Italic    := Pos('<i>', Text) > 0;
     Underline := Pos('<u>', Text) > 0;
     Color     := GetSubColor(Text);
-
-    Text := RemoveSWTags(Text, True, True, True, True);
+    if SubtitleApi.SingleTagsMode then //added by adenry
+      Text := RemoveSWTags(Text, True, True, True, True);
+      
     if Text <> '' then
     begin
       if rdoSentenceType.Checked then
@@ -226,7 +234,7 @@ begin
       if rdoTitleType.Checked    then Text := CaseTitleType(Text) else
       if rdoInverseType.Checked  then Text := CaseInverseType(Text);
 
-      if SubtitleAPI.NoInteractionWithTags = False then
+      if SubtitleApi.SingleTagsMode then //added by adenry
       begin
         // Restore tags
         if Underline = True then Text := '<u>' + Text;
@@ -240,15 +248,16 @@ begin
     end;
     
     if rdoAllSubs.Checked then
-        Node := Node.NextSibling else
-        Node := frmMain.lstSubtitles.GetNextSelected(Node);
-    UndoAction^.BindToNext := Assigned(Node);
+      Node := Node.NextSibling else
+      Node := frmMain.lstSubtitles.GetNextSelected(Node);
+    UndoAction^.BindToNext := True;//Assigned(Node); //modified by adenry
 
-    if Text <> '' then UndoList.Add(UndoAction);
+    if Text <> '' then
+      AddUndo(UndoAction);
   end;
 
   if UndoList.Count > 0 then
-    PUndoAction(UndoList.Last)^.BindToNext := False;      
+    PUndoAction(UndoList.Last)^.BindToNext := False;
 
   ConvType := 0;
   Ini := TIniFile.Create(IniRoot);
@@ -265,10 +274,10 @@ begin
   finally
     Ini.Free;
   end;
-
-  frmMain.mnuUndo.Enabled := True;
+  
   frmMain.RefreshTimes;
   frmMain.OrgModified := True;
+  frmMain.AutoRecheckAllErrors(TextErrors); //added by adenry
   Close;
 end;
 

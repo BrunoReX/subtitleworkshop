@@ -4008,7 +4008,7 @@ procedure TRegExpr.Error (AErrorID : integer);
   fLastError := AErrorID; // dummy stub - useless because will raise exception
   if AErrorID < 1000 // compilation error ?
    then e := ERegExpr.Create (ErrorMsg (AErrorID) // yes - show error pos
-             + ' (pos ' + IntToStr (CompilerErrorPos) + ')')
+             + ' (on position ' + IntToStr (CompilerErrorPos) + ')') //'(pos ' replaced with '(on position ' by adenry
    else e := ERegExpr.Create (ErrorMsg (AErrorID));
   e.ErrorCode := AErrorID;
   e.CompilerErrorPos := CompilerErrorPos;

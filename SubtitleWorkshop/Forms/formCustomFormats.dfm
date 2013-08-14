@@ -1,7 +1,7 @@
 object frmCustomFormats: TfrmCustomFormats
   Left = 197
   Top = 105
-  BorderIcons = []
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'frmCustomFormats'
   ClientHeight = 448

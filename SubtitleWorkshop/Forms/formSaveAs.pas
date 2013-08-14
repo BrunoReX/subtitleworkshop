@@ -1,11 +1,16 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Save As form
+
 unit formSaveAs;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls,
-  Dialogs, ImgList, ComCtrls, General, Functions, USubtitleAPI, IniFiles,
-  FastStrings, USubtitlesFunctions, TreeViewHandle;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, StdCtrls, Dialogs, ImgList, ComCtrls, IniFiles,
+  FastStrings;
 
 // -----------------------------------------------------------------------------
 
@@ -25,6 +30,7 @@ type
       Shift: TShiftState);
     procedure btnCustomFormatClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormResize(Sender: TObject); //added by adenry
   private
     procedure AddCustomFormats;
     procedure SetLanguage;
@@ -39,7 +45,9 @@ var
 
 implementation
 
-uses formMain, formCustomFormats;
+uses
+  General, Functions, TreeViewHandle, Undo, //USubtitlesFunctions, USubtitleAPI, //Undo added by adenry //USubtitlesFunctions, USubtitleAPI removed by adenry
+  formMain, formCustomFormats, formOutputSettings;
 
 {$R *.dfm}
 
@@ -98,7 +106,8 @@ var
   Item         : TListItem;
   Ini          : TIniFile;
 begin
-//  frmSaveAsExecuting := True;   // removed by BDZL
+  //frmSaveAsExecuting := True;   // removed by BDZL
+  frmMain.frmSaveAsExecuting := True; //added by adenry. Another option is frmMain.tmrSaveWork.Enabled:=False;
   SetLanguage;
   SaveTranslation := False;
   TotalFormats := SubtitleApi.FormatsCount;
@@ -106,6 +115,10 @@ begin
   lstFormats.Clear;
 
   Ini := TIniFile.Create(IniRoot);
+  //added by adenry: begin
+  Width:=Ini.ReadInteger('Save', 'Width', 337);
+  Height:=Ini.ReadInteger('Save', 'Height', 247);
+  //added by adenry: end
   try
     for i := 1 to TotalFormats do
     begin
@@ -185,10 +198,12 @@ var
   Time, Frames   : Boolean;
   FPS            : Single;
   Lines          : TStrings;
+  i              : Byte;
 begin
   if lstFormats.ItemIndex = -1 then exit;
-  UpdateArray(SaveTranslation);
+  UpdateArray(SubtitleAPI.GetFormatIndex(lstFormats.Items[lstFormats.ItemIndex].Caption), SaveTranslation); //format index added by adenry
 
+  // Regular Formats (non-custom)
   if lstFormats.Items[lstFormats.ItemIndex].StateIndex = 0 then
   begin
     SubFormat := SubtitleAPI.GetFormatIndex(lstFormats.Items[lstFormats.ItemIndex].Caption);
@@ -219,34 +234,78 @@ begin
       begin
         case MsgBox(Format(QuestionMsg[02], [SubFile]), BTN_YES, BTN_NO, BTN_CANCEL, MB_ICONQUESTION, frmSaveAs) of
           1: GoTo SaveSubFile;
-          2: begin Close; exit; end;
-          3: exit;
+          2: begin SubtitleAPI.ClearSubtitles; Close; exit; end; //SubtitleAPI.ClearSubtitles added by adenry
+          3: begin SubtitleAPI.ClearSubtitles; exit; end;        //SubtitleAPI.ClearSubtitles added by adenry
         end;
       end;
 
       SaveSubFile:
+      //added by adenry: begin
+      //show Output Settings window if necessary
+      for i := 0 to Length(frmMain.OutputSettingsFormats) - 1 do
+        if FormatName = frmMain.OutputSettingsFormats[i].FormatName then
+        begin
+          if frmMain.OutputSettingsFormats[i].AlwaysShow = TRUE then
+          begin
+            frmOutputSettings := TfrmOutputSettings.Create(Application);
+            with frmOutputSettings do
+            begin
+              pgeFormats.ActivePage := pgeFormats.Pages[i];
+              pgeFormats.ActivePageIndex := i;
+              pnlHeading.Caption := tvFormats.Items[i].Text;
+              tvFormats.Visible := False;
+              pnlHeading.Left := tvFormats.Left;
+              pgeFormats.Left := tvFormats.Left; // - pgeFormats.Pages[0].Left;
+              //pgeFormats.Width := pgeFormats.Width + pgeFormats.Pages[0].Left;
+              bvlSeparate1.Left := bvlSeparate1.Left + pgeFormats.Pages[0].Left;
+              bvlSeparate1.Width := bvlSeparate1.Width - pgeFormats.Pages[0].Left;
+              btnOk.Left := btnOk.Left - tvFormats.Width - tvFormats.Left;
+              btnCancel.Left := btnCancel.Left - tvFormats.Width - tvFormats.Left;
+              ClientWidth := ClientWidth - tvFormats.Width - tvFormats.Left;
+            end;
+            if frmOutputSettings.ShowModal <> mrOk then
+            begin
+              SubtitleAPI.ClearSubtitles;
+              frmOutputSettings.Free;
+              //Close;
+              exit;
+            end;
+            frmOutputSettings.Free;
+          end;
+          break;
+        end;
+      //added by adenry: end
+
       if SaveFile(SubFile, SubFormat, GetFPS) = False then
       begin
+        SubtitleAPI.ClearSubtitles; //added by adenry
         Close;
         exit;
       end;
+      //Save successful!
       if SaveTranslation then
       begin
         frmMain.TransFile     := SubFile;
         frmMain.TransFormat   := SubFormat;
         frmMain.TransModified := False;
+        frmMain.UndoNumWhenTransSaved := UndoList.Count; //added by adenry
       end else
       begin
         frmMain.OrgFile     := SubFile;
         frmMain.OrgFormat   := SubFormat;
         frmMain.OrgModified := False;
+        frmMain.UndoNumWhenOrgSaved := UndoList.Count; //added by adenry
       end;
+      frmMain.RefreshStatusbar; //added by adenry - refresh format name in statusbar
+
+      if (frmMain.MarkingSave = 2) and (frmMain.MarkingModified) then SaveMarking(SubFile+ID_SRFEXT, SubFile); //added by adenry
 
       SetFormCaption;
       frmMain.AddToRecent(SubFile);
       Close;
     end;
   end else
+  // Custom Format
   if lstFormats.Items[lstFormats.ItemIndex].StateIndex = 1 then
   begin
     Lines := TStringList.Create;
@@ -271,8 +330,8 @@ begin
         begin
           case MsgBox(Format(QuestionMsg[02], [SubFile]), BTN_YES, BTN_NO, BTN_CANCEL, MB_ICONQUESTION, frmSaveAs) of
             1: GoTo SaveCustFile;
-            2: begin Close; exit; end;
-            3: exit;
+            2: begin SubtitleAPI.ClearSubtitles; Close; exit; end; //SubtitleAPI.ClearSubtitles added by adenry
+            3: begin SubtitleAPI.ClearSubtitles; exit; end;        //SubtitleAPI.ClearSubtitles added by adenry
           end;
         end;
         SaveCustFile:
@@ -306,9 +365,34 @@ end;
 // -----------------------------------------------------------------------------
 
 procedure TfrmSaveAs.FormDestroy(Sender: TObject);
+var
+  Ini: TIniFile; //added by adenry
 begin
-//  frmSaveAsExecuting := False;  // removed by BDZL
+  //frmSaveAsExecuting := False;  // removed by BDZL
+  //added by adenry: begin
+  Ini := TIniFile.Create(IniRoot);
+  Ini.WriteInteger('Save', 'Width', Width);
+  Ini.WriteInteger('Save', 'Height', Height);
+  frmMain.frmSaveAsExecuting := False;  //added by adenry. another option is frmMain.tmrSaveWork.Enabled:=True;
+  Ini.Free;
+  //added by adenry: end
 end;
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin
+procedure TfrmSaveAs.FormResize(Sender: TObject);
+begin
+  btnCustomFormat.Top := ClientHeight - 8 - btnCustomFormat.Height;
+  btnCancel.Top := btnCustomFormat.Top;
+  btnCancel.Left := ClientWidth - 8 - btnCancel.Width;
+  chkAllFormats.Top := btnCustomFormat.Top - 8 - chkAllFormats.Height;
+  chkAllFormats.Width := ClientWidth - 16;
+  lstFormats.Width := ClientWidth - 16;
+  lstFormats.Height := chkAllFormats.Top - 8 - lstFormats.Top;
+  chkAllFormatsClick(Sender);
+end;
+//added by adenry: end
 
 // -----------------------------------------------------------------------------
 

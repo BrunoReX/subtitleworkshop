@@ -2,7 +2,7 @@ object frmBatchConvert: TfrmBatchConvert
   Left = 216
   Top = 144
   ActiveControl = chkIncludeSubFolders
-  BorderIcons = []
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'frmBatchConvert'
   ClientHeight = 408

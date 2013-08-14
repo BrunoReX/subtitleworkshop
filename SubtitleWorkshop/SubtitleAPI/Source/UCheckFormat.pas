@@ -1,5 +1,10 @@
-// UCheckFormat - Unidad para la detección de subtítulos
-// Copyright ® 2001-2003 URUSoft.
+// This file is part of Subtitle API, the subtitle file read/write library of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle API's copyright information
+// File Description: Automatic subtitle format recognition functionality
+
+{$DEFINE REGEXPR}
 
 unit UCheckFormat;
 
@@ -8,12 +13,14 @@ unit UCheckFormat;
 interface
 
 uses
-  windows, USubtitleFile, USubtitlesRead, SysUtils, FastStrings;
+  Dialogs,
+  Windows, USubtitleFile, USubtitlesRead, SysUtils, FastStrings
+  {$IFDEF REGEXPR}, RegExpr{$ENDIF};
 
 //------------------------------------------------------------------------------
 
 function CheckSubtitleFormat(const tmpSubFile: TSubtitleFile): TSubtitleFormats;
-function DeleteDoubleTabs(const Line: String): String;
+function DeleteDoubleTabs(const Line: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 
 //------------------------------------------------------------------------------
 
@@ -23,7 +30,7 @@ uses USubtitlesFunctions;
 
 //------------------------------------------------------------------------------
 
-function DeleteDoubleTabs(const Line: String): String;
+function DeleteDoubleTabs(const Line: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF}): {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 var
   c: Integer;
 begin
@@ -41,14 +48,93 @@ end;
 function CheckSubtitleFormat(const tmpSubFile: TSubtitleFile): TSubtitleFormats;
 var
   i: Integer;
+  j: Integer; //added by adenry
 begin
   Result := sfInvalid;
 
   for i := 0 to tmpSubFile.Count-1 do
   begin
     try
+      // Captions Inc //moved here by adenry 2013.04.12
+      //00:00:03:00 00:00:08:00
+      //{0 [1 Text
+      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz') and
+         (TimeInFormat(Copy(tmpSubFile[i], 13, 11), 'hh:mm:ss:zz') and
+         (Pos('{0 [1 ', tmpSubFile[i+1]) = 1))) then
+      begin
+        Result := sfCaptionsInc;
+        Break;
+      end;
 
-      // Adobe Encore DVD
+      // PowerPixel //moved here by adenry 2013.04.12
+      //00:00:03:00	00:00:08:00
+      //Text
+      //Text
+      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
+         (TimeInFormat(Copy(tmpSubFile[i], 13,11), 'hh:mm:ss:zz')) and
+         (Pos(#9, tmpSubFile[i]) = 12) and
+         (Length(tmpSubFile[i]) = 23) then
+      begin
+        Result := sfPowerPixel;
+        Break;
+      end;
+
+      // Spruce Subtitle File //moved here by adenry 2013.04.12
+      //00:00:03:00,00:00:08:00,Text|Text
+      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
+         (TimeInFormat(Copy(tmpSubFile[i], 13, 11), 'hh:mm:ss:zz')) and
+         (StringCount(',', Copy(tmpSubFile[i], 1, 24)) = 2) and
+         (Pos(',',tmpSubFile[i]) = 12) then
+      begin
+        Result := sfSpruceSubtitleFile;
+        Break;
+      end;
+
+      // OVR Script //moved here by adenry 2013.04.12
+      //00:00:03:00 Text//Text
+      //00:00:08:00
+      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
+         (Copy(tmpSubFile[i], 12, 1) = ' ') and
+         (Length(tmpSubFile[i+1]) = 11) and //added by adenry
+         (TimeInFormat(Copy(tmpSubFile[i+1], 1, 11), 'hh:mm:ss:zz')) then
+      begin
+        Result := sfOVRScript;
+        Break;
+      end;
+
+      // DVD Subtitle System //moved here by adenry 2013.04.12
+      //00:00:03:00 00:00:08:00 Text//Text
+      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
+         (TimeInFormat(Copy(tmpSubFile[i], 13, 11), 'hh:mm:ss:zz')) and
+         (SmartPos(' ', tmpSubFile[i], False, 12) = 12) and
+         (SmartPos(' ', tmpSubFile[i], False, 24) = 24) then
+      begin
+        Result := sfDVDSubtitleSystem;
+        //added by adenry: begin 2013.04.12
+        for j := i+1 to tmpSubFile.Count-1 do
+          if not (tmpSubFile[j][1] in ['0'..'9']) then //a line with a non-digit first symbols can't be DVD Subtitle System, so it's Adobe Encore DVD (Old)
+          begin
+            Result := sfAdobeEncoreDVD;
+            Break;
+          end;
+        //added by adenry: end
+        Break;
+      end;
+
+      // MAC DVD Studio Pro //moved here by adenry 2013.04.12
+      //00:00:03:00 00:00:08:00 Text<P>Text
+      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
+         (TimeInFormat(Copy(tmpSubFile[i], 13, 11), 'hh:mm:ss:zz')) and
+         (Pos(#9, tmpSubFile[i]) = 12) and
+         (StringCount(#9, tmpSubFile[i]) = 2) then
+      begin
+        Result := sfMACDVDStudioPro;
+        Break;
+      end;
+
+      // Adobe Encore DVD (Old)
+      //00:00:03:00 00:00:08:00 Text
+      //Text
       if ((StringCount(':', Copy(tmpSubFile[i], 1, 11)) = 3) and
          (StrToIntDef(Copy(tmpSubFile[i], 10, 2), 0) < 30) and
          (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:ff'))) and
@@ -57,6 +143,36 @@ begin
          (TimeInFormat(Copy(tmpSubFile[i], 13, 11), 'hh:mm:ss:ff'))) then
       begin
         Result := sfAdobeEncoreDVD;
+        Break;
+      end;
+
+      // Adobe Encore DVD 2+ NTSC //added by adenry 2013.04.11
+      //1 00;00;03;00 00;00;08;00 Text
+      //Text
+      if (Copy(tmpSubFile[i], 1, 2)='1 ') and
+         //((StringCount(';', Copy(tmpSubFile[i], 3, 11)) = 3) and
+         //(StrToIntDef(Copy(tmpSubFile[i], 10, 2), 0) < 30) and
+         (TimeInFormat(Copy(tmpSubFile[i], 3, 11), 'hh;mm;ss;ff')) and
+         //((StringCount(';', Copy(tmpSubFile[i], 15, 11)) = 3) and
+         //(StrToIntDef(Copy(tmpSubFile[i], 22, 2), 0) < 30) and
+         (TimeInFormat(Copy(tmpSubFile[i], 15, 11), 'hh;mm;ss;ff')) then
+      begin
+        Result := sfAdobeEncoreDVDNTSC;
+        Break;
+      end;
+
+      // Adobe Encore DVD 2+ PAL //added by adenry 2013.04.11
+      //1 00:00:03:00 00:00:08:00 Text
+      //Text
+      if (Copy(tmpSubFile[i], 1, 2)='1 ') and
+         //((StringCount(';', Copy(tmpSubFile[i], 3, 11)) = 3) and
+         //(StrToIntDef(Copy(tmpSubFile[i], 10, 2), 0) < 30) and
+         (TimeInFormat(Copy(tmpSubFile[i], 3, 11), 'hh:mm:ss:ff')) and
+         //((StringCount(';', Copy(tmpSubFile[i], 15, 11)) = 3) and
+         //(StrToIntDef(Copy(tmpSubFile[i], 22, 2), 0) < 30) and
+         (TimeInFormat(Copy(tmpSubFile[i], 15, 11), 'hh:mm:ss:ff')) then
+      begin
+        Result := sfAdobeEncoreDVDPAL;
         Break;
       end;
 
@@ -70,6 +186,15 @@ begin
         Result := sfAdvancedSubStationAlpha;
         Break;
       end;
+
+      // by Bedazzle 2007.01.26 start
+      // Advanced Subtitles (*.xas)
+      if (SmartPos('dvddisc/ADV_OBJ/', tmpSubFile[i], False) > 0) then   // i+4 changed to i by adenry; =1 changed to >0 by adenry
+      begin
+        Result := sfAdvancedSubtitlesXAS;
+        Break;
+      end;
+      // by Bedazzle 2007.01.26 end
 
       // AQTitle
       if (IsInteger(Copy(tmpSubFile[i], 6, Length(tmpSubFile[i])))) and
@@ -108,15 +233,6 @@ begin
         Break;
       end;
 
-      // Captions Inc
-      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz') and
-         (TimeInFormat(Copy(tmpSubFile[i], 13, 11), 'hh:mm:ss:zz') and
-         (Pos('{0 [1 ', tmpSubFile[i+1]) = 1))) then
-      begin
-        Result := sfCaptionsInc;
-        Break;
-      end;
-
       // Cheetah
       if (SmartPos('** caption number', tmpSubFile[i], False) = 1) or
          ((SmartPos('*t ', tmpSubFile[i], False) = 1) and
@@ -129,8 +245,8 @@ begin
       // CPC-600
       if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
          (TimeInFormat(Copy(tmpSubFile[i+1], 1, 11), 'hh:mm:ss:zz')) and
-         (SmartPos('³0NEN³',tmpSubFile[i], False) = 12) and
-         (SmartPos('³0NEN³',tmpSubFile[i+1], False) = 12) then
+         (SmartPos('_0NEN_',tmpSubFile[i], False) = 12) and //i0NENi replaced with _0NEN_ by adenry
+         (SmartPos('_0NEN_',tmpSubFile[i+1], False) = 12) then //i0NENi replaced with _0NEN_ by adenry
       begin
         Result := sfCPC600;
         Break;
@@ -154,16 +270,6 @@ begin
          (SmartPos('#', tmpSubFile[i], False, 24) = 24)) then
       begin
         Result := sfDVDJunior;
-        Break;
-      end;
-
-      // DVD Subtitle System
-      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
-         (TimeInFormat(Copy(tmpSubFile[i], 13, 11), 'hh:mm:ss:zz')) and
-         (SmartPos(' ', tmpSubFile[i], False, 12) = 12) and
-         (SmartPos(' ', tmpSubFile[i], False, 24) = 24) then
-      begin
-        Result := sfDVDSubtitleSystem;
         Break;
       end;
 
@@ -230,16 +336,6 @@ begin
         Break;
       end;
 
-      // MAC DVD Studio Pro
-      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
-         (TimeInFormat(Copy(tmpSubFile[i], 13, 11), 'hh:mm:ss:zz')) and
-         (Pos(#9, tmpSubFile[i]) = 12) and
-         (StringCount(#9, tmpSubFile[i]) = 2) then
-      begin
-        Result := sfMACDVDStudioPro;
-        Break;
-      end;
-
       // MacSUB
       if (Pos('/', tmpSubFile[i]) = 1) and
          (IsInteger(Copy(tmpSubFile[i], 2, Length(tmpSubFile[i])))) then
@@ -290,15 +386,6 @@ begin
         Break;
       end;
 
-      // OVR Script
-      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
-         (Copy(tmpSubFile[i], 12, 1) = ' ') and
-         (TimeInFormat(Copy(tmpSubFile[i+1], 1, 11), 'hh:mm:ss:zz')) then
-      begin
-        Result := sfOVRScript;
-        Break;
-      end;
-
       // Panimator
       if (Pos('/d ', tmpSubFile[i]) = 1) and
          (IsInteger(Copy(tmpSubFile[i], 4, Length(tmpSubFile[i])-SmartPos(' ', tmpSubFile[i], False, 4)-1))) then
@@ -345,16 +432,6 @@ begin
          (Pos('{', tmpSubFile[i]) = 1) then
       begin
         Result := sfPowerDivX;
-        Break;
-      end;
-
-      // PowerPixel
-      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
-         (TimeInFormat(Copy(tmpSubFile[i], 13,11), 'hh:mm:ss:zz')) and
-         (Pos(#9, tmpSubFile[i]) = 12) and
-         (Length(tmpSubFile[i]) = 23) then
-      begin
-        Result := sfPowerPixel;
         Break;
       end;
 
@@ -409,12 +486,24 @@ begin
         Break;
       end;
 
-      // Softni
+      // by Bedazzle 2005.11.18 start
+      // Scantitle/890   '    1       00:00:01:70   00:00:05:70
+      if (
+          ( TimeInFormat(Copy(tmpSubFile[i], length(tmpSubFile[i])-24, 11), 'hh:mm:ss:zz')) and
+          (TimeInFormat(Copy(tmpSubFile[i], length(tmpSubFile[i])-10, 11), 'hh:mm:ss:zz'))
+         ) then
+      begin
+        Result := sfScantitle;
+        Break;
+      end;
+      // by Bedazzle 2005.11.18 end
+
+      // Sofni
       if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss.zz')) and
          (TimeInFormat(Copy(tmpSubFile[i], 13, 11), 'hh:mm:ss.zz')) and
          (Pos('\',tmpSubFile[i]) = 12) then
       begin
-        Result := sfSoftni;
+        Result := sfSofni;
         Break;
       end;
 
@@ -455,16 +544,6 @@ begin
          (IsInteger(Copy(tmpSubFile[i], 1, 4))) then
       begin
         Result := sfSpruceDVDMaestro;
-        Break;
-      end;
-
-      // Spruce Subtitle File
-      if (TimeInFormat(Copy(tmpSubFile[i], 1, 11), 'hh:mm:ss:zz')) and
-         (TimeInFormat(Copy(tmpSubFile[i], 13, 11), 'hh:mm:ss:zz')) and
-         (StringCount(',', Copy(tmpSubFile[i], 1, 24)) = 2) and
-         (Pos(',',tmpSubFile[i]) = 12) then
-      begin
-        Result := sfSpruceSubtitleFile;
         Break;
       end;
 
@@ -555,6 +634,24 @@ begin
         Break;
       end;
 
+      // Timed Text
+      if (SmartPos('<tt xml:', tmpSubFile[i], False) <> 0) or
+         (SmartPos('</tt>', tmpSubFile[i], False) <> 0) then
+      begin
+        Result := sfTimedText;
+        Break;
+      end;
+
+      // Titlevision ANSI text with cues
+      //{$IFDEF REGEXPR}
+      //if (ExecRegExpr('^\t\t\t\t\d\d:\d\d:\d\d:\d\d$', tmpSubFile[i]) and
+      //    ExecRegExpr('^\t\t\t\t\d\d:\d\d:\d\d:\d\d$', tmpSubFile[i+1])) then
+      //begin
+      //  Result := sfTitlevisionTXT;
+      //  Break;
+      //end;
+      //{$ENDIF}
+
       // TMPlayer
       if SmartPos('NTP', tmpSubFile[i]) = 0 then
         if // TMPlayer Multiline Format
@@ -601,11 +698,20 @@ begin
       end;
 
       // Ulead DVD Workshop 2.0
-
-      // ViPlay Subtitle File
       if (AnsiLowerCase(tmpSubFile[i]) = '#ulead subtitle format') then
       begin
-        Result := sfUleadDVDWorkshop2;
+        // #0 00;00;00;15 00;00;01;23 //2.0
+        // #0 00:00:00.15 00:00:01.23 //2.0 a
+
+        {$IFDEF REGEXPR}
+        //if ExecRegExpr('\d+ \d\d:\d\d:\d\d\.\d\d \d\d:\d\d:\d\d\.\d\d', tmpSubFile[i+7]) then //removed by adenry 2013.04.11
+        {$ENDIF}
+
+        if (TimeInFormat(Copy(tmpSubFile[i+5], 4, 11), 'hh:mm:ss.zz')) and (TimeInFormat(Copy(tmpSubFile[i+5], 16, 11), 'hh:mm:ss.zz')) then //added by adenry 2013.04.11
+          Result := sfUleadDVDWorkshop2a
+        else
+          Result := sfUleadDVDWorkshop2;
+
         Break;
       end;
 
@@ -619,6 +725,55 @@ begin
         Result := sfViPlay;
         Break;
       end;
+
+      // Wincaps text timecoded
+      if (TimeInFormat(Copy(tmpSubFile[i], 6, 11), 'hh:mm:ss:zz')) and
+         (TimeInFormat(Copy(tmpSubFile[i], 18, 11), 'hh:mm:ss:zz')) and
+         (length(tmpSubFile[i]) = 28 ) and
+         (length(tmpSubFile[i+2]) > 1 ) then
+      begin
+        Result := sfWincapsTextTimecoded;
+        Break;
+      end;
+
+{
+123456789_123456789_123456789_123456789_
+0001 01:01:13:16 01:01:16:06
+
+Salutations, snack.
+
+0002 01:01:17:12 01:01:19:12
+}
+{
+123456789_123456789_123456789_123456789_
+0001  00:00:45:06  00:00:48:13  [ Girl ] People once believed
+that when someone dies...
+
+0002  00:00:48:15  00:00:52:18  a crow carries their soul
+to the land of the dead.
+
+0003  00:00:52:20  00:00:56:00  But sometimes,
+something so bad happens...
+}
+
+      // Youtube sbv
+      if (TimeInFormat(  Copy(tmpSubFile[i], 1,  11), 'h:mm:ss.zzz') ) and
+         (TimeInFormat(  Copy(tmpSubFile[i], 13, 11), 'h:mm:ss.zzz') ) and
+         (copy(tmpSubFile[i], 12, 1) = ',') then
+      begin
+        Result := sfYoutube;
+        Break;
+      end;
+
+{ Youtube example
+123456789_123456789_123456789_123456789_
+0:00:01.000,0:00:32.559
+aaa	bbb	ccc
+AA	BBB	CCC
+
+0:00:32.560,0:00:35.760
+[ Indistinct Police Radio ]
+}
 
       // ZeroG
       if (SmartPos('% Zero G 1.0', tmpSubFile[i], False) <> 0) Or

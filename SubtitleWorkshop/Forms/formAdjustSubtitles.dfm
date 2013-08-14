@@ -1,7 +1,7 @@
 object frmAdjustSubtitles: TfrmAdjustSubtitles
-  Left = 272
-  Top = 141
-  BorderIcons = []
+  Left = 543
+  Top = 138
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'frmAdjustSubtitles'
   ClientHeight = 327
@@ -53,7 +53,7 @@ object frmAdjustSubtitles: TfrmAdjustSubtitles
     Top = 8
     Width = 305
     Height = 281
-    ActivePage = pgeSimple
+    ActivePage = pgeAdvanced
     TabOrder = 2
     object pgeSimple: TTabSheet
       Caption = 'Simple'
@@ -76,24 +76,30 @@ object frmAdjustSubtitles: TfrmAdjustSubtitles
         Top = 24
         Width = 97
         Height = 22
+        Alignment = taCenter
         ChangeTimeOnModify = True
         FPS = 25.000000000000000000
         MinTime = 0
         TabOrder = 0
         Time = 0
         TimeMode = tmTime
+        TimeStep = 100
+        FramesStep = 1
       end
       object tmeLastSpokenLine: TTimeMaskEdit
         Left = 8
         Top = 72
         Width = 97
         Height = 22
+        Alignment = taCenter
         ChangeTimeOnModify = True
         FPS = 25.000000000000000000
         MinTime = 0
         TabOrder = 1
         Time = 0
         TimeMode = tmTime
+        TimeStep = 100
+        FramesStep = 1
       end
     end
     object pgeAdvanced: TTabSheet
@@ -112,6 +118,7 @@ object frmAdjustSubtitles: TfrmAdjustSubtitles
         Width = 281
         Height = 105
         Header.AutoSizeIndex = 0
+        Header.DefaultHeight = 17
         Header.Font.Charset = ANSI_CHARSET
         Header.Font.Color = clWindowText
         Header.Font.Height = -11

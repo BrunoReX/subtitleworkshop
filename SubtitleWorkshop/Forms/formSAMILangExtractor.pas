@@ -1,3 +1,9 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: SAMI Language Extractor form
+
 unit formSAMILangExtractor;
 
 {$WARN UNIT_PLATFORM OFF}
@@ -5,9 +11,8 @@ unit formSAMILangExtractor;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, StdCtrls, HTMLPars, USubtitleAPI, FastStrings, IniFiles,
-  FastStringFuncs, General, Functions, FileCtrl, ComCtrls;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ExtCtrls, StdCtrls, IniFiles, FileCtrl, ComCtrls,
+  FastStrings, HTMLPars;
 
 type
   TfrmSAMILangExtractor = class(TForm)
@@ -44,7 +49,9 @@ var
 
 implementation
 
-uses formMain;
+uses
+  General, Functions, USubtitlesFunctions, //USubtitleApi, //FastStringFuncs replaced with USubtitlesFunctions //USubtitleApi removed by adenry
+  formMain;
 
 {$R *.dfm}
 
@@ -132,7 +139,7 @@ begin
   begin
     if SubtitleAPI.GetFileFormat(dlgLoadFile.FileName) = SubtitleAPI.GetFormatIndex('SAMI Captioning') then
       edtSAMIFile.Text := dlgLoadFile.FileName else
-      MsgBox(Format('"%s" is not a valid SAMI file.', [dlgLoadFile.FileName]), BTN_OK, '', '', MB_ICONERROR, frmSAMILangExtractor); 
+      MsgBox(Format(ErrorMsg[17], [dlgLoadFile.FileName]), BTN_OK, '', '', MB_ICONERROR, frmSAMILangExtractor);
   end;
 end;
 
@@ -345,7 +352,7 @@ begin
     if (a > 0) and (b > 0) then
     begin
       BigStr := Copy(BigStr, a, b);
-      if (StringCount(BigStr, 'lang:', False) < 2) or (StringCount(BigStr, '.', False) < 2) then
+      if (StringCount('lang:', BigStr, False) < 2) or (StringCount('.', BigStr, False) < 2) then
         MsgBox(InfoMsg[05], BTN_OK, '', '', MB_ICONWARNING, frmSAMILangExtractor) else
       begin
         a := SmartPos('.', BigStr);
@@ -355,7 +362,7 @@ begin
           BigStr := Copy(BigStr, SmartPos('{', BigStr, True, a) + 1, Length(BigStr));
           b := SmartPos('Name:', BigStr, False);
           RealLang := Copy(BigStr, b + 5, SmartPos(';', BigStr, True, b));
-          if StringCount(RealLang, '"') = 2 then
+          if StringCount('"', RealLang) = 2 then
           begin
             b := Pos('"', RealLang) + 1;
             RealLang := Copy(RealLang, b, SmartPos('"', RealLang, True, b) - b);

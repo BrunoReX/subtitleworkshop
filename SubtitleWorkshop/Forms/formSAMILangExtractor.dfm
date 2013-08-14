@@ -1,7 +1,7 @@
 object frmSAMILangExtractor: TfrmSAMILangExtractor
   Left = 192
   Top = 107
-  BorderIcons = []
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'frmSAMILangExtractor'
   ClientHeight = 353

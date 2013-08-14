@@ -1,10 +1,8 @@
-{*
- *  USGraphics
- *  Copyright (C) 2001-2003 URUSoft
- *
- *  Website : http://urusoft.co.nr
- *
- *}
+// This file is part of SWComponents, the component package for Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Transparent bitmap functionality
 
 unit USGraphics;
 

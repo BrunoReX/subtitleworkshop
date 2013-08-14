@@ -1,11 +1,11 @@
 object frmTimeExpanderReducer: TfrmTimeExpanderReducer
-  Left = 222
-  Top = 138
-  BorderIcons = []
+  Left = 422
+  Top = 594
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'frmTimeExpanderReducer'
-  ClientHeight = 337
-  ClientWidth = 257
+  ClientHeight = 353
+  ClientWidth = 297
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -21,8 +21,8 @@ object frmTimeExpanderReducer: TfrmTimeExpanderReducer
   object pnlTimeExpander: TPanel
     Left = 8
     Top = 64
-    Width = 241
-    Height = 233
+    Width = 281
+    Height = 193
     TabOrder = 0
     object lblModifyDuration: TLabel
       Left = 8
@@ -48,7 +48,7 @@ object frmTimeExpanderReducer: TfrmTimeExpanderReducer
     object bvlSeparator: TBevel
       Left = 8
       Top = 56
-      Width = 225
+      Width = 265
       Height = 9
       Shape = bsTopLine
     end
@@ -70,7 +70,7 @@ object frmTimeExpanderReducer: TfrmTimeExpanderReducer
     object chkOnlyIfLongerThan: TCheckBox
       Left = 8
       Top = 72
-      Width = 225
+      Width = 265
       Height = 17
       Caption = 'Only if subtitle is longer than:'
       TabOrder = 1
@@ -95,31 +95,13 @@ object frmTimeExpanderReducer: TfrmTimeExpanderReducer
       Position = 40
       TabOrder = 3
     end
-    object rdoSelSubs: TRadioButton
-      Left = 8
-      Top = 208
-      Width = 225
-      Height = 17
-      Caption = 'For the selected subtitles'
-      TabOrder = 4
-    end
-    object rdoAllSubs: TRadioButton
-      Left = 8
-      Top = 192
-      Width = 225
-      Height = 17
-      Caption = 'For all the subtitles'
-      Checked = True
-      TabOrder = 5
-      TabStop = True
-    end
     object chkOnlyIfDuration: TCheckBox
       Left = 8
       Top = 120
-      Width = 225
+      Width = 265
       Height = 17
       Caption = 'Only if duration is longer/shorter than:'
-      TabOrder = 6
+      TabOrder = 4
       OnClick = chkOnlyIfDurationClick
     end
     object edtMinMaxDuration: TMaskEdit
@@ -127,21 +109,21 @@ object frmTimeExpanderReducer: TfrmTimeExpanderReducer
       Top = 138
       Width = 46
       Height = 21
-      TabOrder = 7
+      TabOrder = 5
       OnKeyPress = edtMinMaxDurationKeyPress
     end
     object chkPreventOverlapping: TCheckBox
       Left = 8
       Top = 168
-      Width = 225
+      Width = 265
       Height = 17
       Caption = 'Prevent overlapping'
-      TabOrder = 8
+      TabOrder = 6
     end
   end
   object btnApply: TButton
-    Left = 80
-    Top = 304
+    Left = 120
+    Top = 320
     Width = 81
     Height = 25
     Caption = '&Apply'
@@ -156,8 +138,8 @@ object frmTimeExpanderReducer: TfrmTimeExpanderReducer
     OnClick = btnApplyClick
   end
   object btnCancel: TButton
-    Left = 168
-    Top = 304
+    Left = 208
+    Top = 320
     Width = 81
     Height = 25
     Cancel = True
@@ -165,16 +147,16 @@ object frmTimeExpanderReducer: TfrmTimeExpanderReducer
     ModalResult = 2
     TabOrder = 2
   end
-  object Panel1: TPanel
+  object pnlExpandOrReduce: TPanel
     Left = 8
     Top = 8
-    Width = 241
+    Width = 281
     Height = 49
     TabOrder = 3
     object rdoExpandDuration: TRadioButton
       Left = 8
       Top = 8
-      Width = 225
+      Width = 265
       Height = 17
       Caption = 'Expand duration'
       TabOrder = 0
@@ -183,11 +165,36 @@ object frmTimeExpanderReducer: TfrmTimeExpanderReducer
     object rdoReduceDuration: TRadioButton
       Left = 8
       Top = 24
-      Width = 225
+      Width = 265
       Height = 17
       Caption = 'Reduce duration'
       TabOrder = 1
       OnClick = rdoExpandDurationClick
+    end
+  end
+  object pnlFor: TPanel
+    Left = 8
+    Top = 264
+    Width = 281
+    Height = 49
+    TabOrder = 4
+    object rdoAllSubs: TRadioButton
+      Left = 8
+      Top = 8
+      Width = 265
+      Height = 17
+      Caption = 'For all the subtitles'
+      Checked = True
+      TabOrder = 0
+      TabStop = True
+    end
+    object rdoSelSubs: TRadioButton
+      Left = 8
+      Top = 24
+      Width = 265
+      Height = 17
+      Caption = 'For the selected subtitles'
+      TabOrder = 1
     end
   end
 end

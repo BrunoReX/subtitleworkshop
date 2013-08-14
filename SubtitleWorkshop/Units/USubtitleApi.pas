@@ -1,5 +1,8 @@
-// URUSoft Subtitle API 1.0 WRAPPER for Delphi
-// Copyright ® 2002-2003 URUSoft.
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: SubtitleAPI wrapper
 
 unit USubtitleApi;
 
@@ -29,6 +32,10 @@ type
     procedure SetPlaybackDelay(Time: Integer);
     function GetNoInteractionWithTags: Boolean;
     procedure SetNoInteractionWithTags(Value: Boolean);
+    function GetSingleTagsMode: Boolean; //added by adenry
+    procedure SetSingleTagsMode(Value: Boolean); //added by adenry
+    function GetMultiTagsMode: Boolean; //added by adenry
+    procedure SetMultiTagsMode(Value: Boolean); //added by adenry
     function GetWorkWithTags: Boolean;
     procedure SetWorkWithTags(Value: Boolean);
     function GetInitialized: Boolean;
@@ -68,19 +75,22 @@ type
     property CurrentFormatIndex    : Integer read GetCurrentFormatIndex;
     property PlaybackDelay         : Integer read GetPlaybackDelay          write SetPlaybackDelay;
     property NoInteractionWithTags : Boolean read GetNoInteractionWithTags  write SetNoInteractionWithTags;
+    property SingleTagsMode        : Boolean read GetSingleTagsMode         write SetSingleTagsMode; //added by adenry
+    property MultiTagsMode         : Boolean read GetMultiTagsMode          write SetMultiTagsMode; //added by adenry
     property WorkWithTags          : Boolean read GetWorkWithTags           write SetWorkWithTags;
     property Initialized           : Boolean read GetInitialized;
     // -------------------------------------- //
     //             Output settings            //
     // -------------------------------------- //
-    procedure SetOutputSettingsAdvancedSubStationAlpha(Assigned: Boolean; Collisions: String; PlayResX, PlayResY: Integer; Timer, FontName: String; FontSize, PrimaryColor, SecondaryColor, OutlineColour, BackColour: Integer; Bold, Italic, Underline, StrikeOut: Boolean; ScaleX, ScaleY, Spacing: Integer; Angle: Single; BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding: Integer);
+    procedure SetOutputSettingsAdvancedSubStationAlpha(Assigned: Boolean; Title, Script, Collisions: String; PlayResX, PlayResY: Integer; Timer, FontName: String; FontSize: Integer; Bold, Italic: Boolean; BorderStyle, PrimaryColor, SecondaryColor, OutlineColour, ShadowColor, Outline, Shadow, Alignment, LeftMargin, RightMargin, VerticalMargin, Encoding: Integer; Underline, StrikeOut: Boolean; ScaleX, ScaleY, Spacing: Integer; Angle: String);
     procedure SetOutputSettingsDVDSubtitle(Assigned: Boolean; DiskId, DVDTitle, Language, Author, Web, Info, License: String);
     procedure SetOutputSettingsSAMI(Assigned: Boolean; FontName: String; FontSize: Integer; Bold, Italic, Underline: Boolean; SubColor, BackgroundColor: Integer; Align: TTextAlign);
     procedure SetOutputSettingsSonicScenarist(Assigned, PAL, DropFrame: Boolean; Color0, Color1, Color2, Color3, Contrast0, Contrast1, Contrast2, Contrast3: Integer);
     procedure SetOutputSettingsSubViewer1(Assigned: Boolean; Title, Author, Source, vProgram, Path: String; Delay: Integer);
     procedure SetOutputSettingsSubViewer2(Assigned: Boolean; Title, Author, Source, vProgram, Path: String; Delay, CDTrack: Integer; Comment, FontName: String; FontSize, FontColor: Integer; Bold, Italic, Underline, StrikeOut: Boolean);
-    procedure SetOutputSettingsSubStationAlpha(Assigned: Boolean; Title, Script, FontName: String; FontSize: Integer; Bold, Italic: Boolean; BorderStyle, PrimaryColor, SecondaryColor, TertiaryColor, ShadowColor, Outline, Shadow, Alignment, LeftMargin, RightMargin, VerticalMargin, Encoding : Integer);
+    procedure SetOutputSettingsSubStationAlpha(Assigned: Boolean; Title, Script, Collisions: String; PlayResX, PlayResY: Integer; Timer, FontName: String; FontSize: Integer; Bold, Italic: Boolean; BorderStyle, PrimaryColor, SecondaryColor, OutlineColour, ShadowColor, Outline, Shadow, Alignment, LeftMargin, RightMargin, VerticalMargin, Encoding: Integer);
     procedure SetOutputSettingsTMPlayer(Assigned: Boolean; TypeOfFormat: TTMPlayerFormat);
+    procedure SetOutputSettingsXAS(Assigned: Boolean; FontName: String; FontSize: Integer; FontSizeInPercent: Boolean; TextColor: Integer; Shadow: Boolean; ShadowColor: Integer; Transparency: Byte; X, Y, Width, Height: Integer; XInPercent, YInPercent, WidthInPercent, HeightInPercent: Boolean; Alignment: Byte; Encoding, Language: String; JoinShortLines, WrapLines: Boolean; WrapLinesValue: Byte); //added by adenry
   end;
 
 // -----------------------------------------------------------------------------
@@ -220,7 +230,7 @@ begin
   Begin
     LoadSubFile := GetProcAddress(FInstance, 'LoadSubtitleFile');
     If @LoadSubFile <> NIL Then
-      Result := LoadSubFile(PChar(FileName), FPS, FormatIndex, Append, ReCalcTimeValues);
+      Result := LoadSubFile(PChar(FileName), FPS, FormatIndex, Append, ReCalcTimeValues); //FormatIndex = 0 is automatic format detection
   End;
 end;
 
@@ -597,9 +607,86 @@ begin
   Begin
     SetNoInterWithTags := GetProcAddress(FInstance, 'SetNoInteractionWithTags');
     If @SetNoInterWithTags <> NIL Then
+    begin
+      Value := Boolean(Integer(Value)); //added by adenry: IMPORTANT! This is a dummy operation to fix some sort of a bug. For some reason there must be an operation (but not any operation) before the Set call... otherwise it's never set to False when Value=False. Must be a memory issue of some sort...
       SetNoInterWithTags(Value);
+    end;
   End;
 end;
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin
+function TSubtitleApi.GetSingleTagsMode: Boolean;
+var
+  GetSTagsMode: function: LongBool; stdcall;
+begin
+  Result := False;
+
+  If FInstance <> 0 Then
+  Begin
+    GetSTagsMode := GetProcAddress(FInstance, 'GetSingleTagsMode');
+    If @GetSTagsMode <> NIL Then
+      Result := GetSTagsMode;
+  End;
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin
+procedure TSubtitleApi.SetSingleTagsMode(Value: Boolean);
+var
+  SetSTagsMode: procedure(Value: Boolean); stdcall;
+begin
+  If FInstance <> 0 Then
+  Begin
+    SetSTagsMode := GetProcAddress(FInstance, 'SetSingleTagsMode');
+    If @SetSTagsMode <> NIL Then
+    begin
+      Value := Boolean(Integer(Value)); //added by adenry: IMPORTANT! This is a dummy operation to fix some sort of a bug. For some reason there must be an operation (but not any operation) before the Set call... otherwise it's never set to False when Value=False. Must be a memory issue of some sort...
+      SetSTagsMode(Value);
+    end;
+  End;
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin
+function TSubtitleApi.GetMultiTagsMode: Boolean;
+var
+  GetMTagsMode: function: LongBool; stdcall;
+begin
+  Result := False;
+
+  If FInstance <> 0 Then
+  Begin
+    GetMTagsMode := GetProcAddress(FInstance, 'GetMultiTagsMode');
+    If @GetMTagsMode <> NIL Then
+      Result := GetMTagsMode;
+  End;
+end;
+//added by adenry: end
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin
+procedure TSubtitleApi.SetMultiTagsMode(Value: Boolean);
+var
+  SetMTagsMode: procedure(Value: Boolean); stdcall;
+begin
+  If FInstance <> 0 Then
+  Begin
+    SetMTagsMode := GetProcAddress(FInstance, 'SetMultiTagsMode');
+    If @SetMTagsMode <> NIL Then
+    begin
+      Value := Boolean(Integer(Value)); //added by adenry: IMPORTANT! This is a dummy operation. For some reason there must be an operation (but not any operation) before the Set call... otherwise it's never set to False when Value=False. Must be a memory issue of some sort...
+      SetMTagsMode(Value);
+    end;
+  End;
+end;
+//added by adenry: end
 
 // -----------------------------------------------------------------------------
 
@@ -627,7 +714,10 @@ begin
   Begin
     SetSubWorkWithTags := GetProcAddress(FInstance, 'SetSubtitleWorkWithTags');
     If @SetSubWorkWithTags <> NIL Then
+    begin
+      Value := Boolean(Integer(Value)); //added by adenry: IMPORTANT! This is a dummy operation. For some reason there must be an operation (but not any operation) before the Set call... otherwise it's never set to False when Value=False. Must be a memory issue of some sort...
       SetSubWorkWithTags(Value);
+    end;
   End;
 end;
 
@@ -769,21 +859,21 @@ end;
 //                               Output settings                              //
 // -------------------------------------------------------------------------- //
 
-procedure TSubtitleApi.SetOutputSettingsAdvancedSubStationAlpha(Assigned: Boolean; Collisions: String; PlayResX, PlayResY: Integer; Timer, FontName: String; FontSize, PrimaryColor, SecondaryColor, OutlineColour, BackColour: Integer; Bold, Italic, Underline, StrikeOut: Boolean; ScaleX, ScaleY, Spacing: Integer; Angle: Single; BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding: Integer);
+procedure TSubtitleApi.SetOutputSettingsAdvancedSubStationAlpha(Assigned: Boolean; Title, Script, Collisions: String; PlayResX, PlayResY: Integer; Timer, FontName: String; FontSize: Integer; Bold, Italic: Boolean; BorderStyle, PrimaryColor, SecondaryColor, OutlineColour, ShadowColor, Outline, Shadow, Alignment, LeftMargin, RightMargin, VerticalMargin, Encoding: Integer; Underline, StrikeOut: Boolean; ScaleX, ScaleY, Spacing: Integer; Angle: String);
 var
-  SetOSAdvancedSubStationAlpha: procedure(Assigned: LongBool; Collisions: PChar;
+  SetOSAdvancedSubStationAlpha: procedure(Assigned: LongBool; Title, Script, Collisions: PChar;
                                           PlayResX, PlayResY: Integer; Timer, FontName: PChar;
-                                          FontSize, PrimaryColor, SecondaryColor, OutlineColour,
-                                          BackColour: Integer; Bold, Italic, Underline, StrikeOut: LongBool;
-                                          ScaleX, ScaleY, Spacing: Integer; Angle: Single;
-                                          BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR,
-                                          MarginV, Encoding : Integer); stdcall;
+                                          FontSize: Integer; Bold, Italic: LongBool; BorderStyle,
+                                          PrimaryColor, SecondaryColor, OutlineColour, ShadowColor,
+                                          Outline, Shadow, Alignment, MarginL, MarginR, MarginV,
+                                          Encoding: Integer; Underline, StrikeOut: LongBool;
+                                          ScaleX, ScaleY, Spacing: Integer; Angle: PChar); stdcall;
 begin
   If FInstance <> 0 Then
   Begin
-    SetOSAdvancedSubStationAlpha := GetProcAddress(FInstance, 'SetOutputSettingsDVDSubtitle');
+    SetOSAdvancedSubStationAlpha := GetProcAddress(FInstance, 'SetOutputSettingsAdvancedSubStationAlpha');
     If @SetOSAdvancedSubStationAlpha <> NIL Then
-      SetOSAdvancedSubStationAlpha(LongBool(Assigned), PChar(Collisions), PlayResX, PlayResY, PChar(Timer), PChar(FontName), FontSize, PrimaryColor, SecondaryColor, OutlineColour, BackColour, LongBool(Bold), LongBool(Italic), LongBool(Underline), LongBool(StrikeOut), ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding);
+      SetOSAdvancedSubStationAlpha(LongBool(Assigned), PChar(Title), PChar(Script), PChar(Collisions), PlayResX, PlayResY, PChar(Timer), PChar(FontName), FontSize, LongBool(Bold), LongBool(Italic), BorderStyle, PrimaryColor, SecondaryColor, OutlineColour, ShadowColor, Outline, Shadow, Alignment, LeftMargin, RightMargin, VerticalMargin, Encoding, LongBool(Underline), LongBool(StrikeOut), ScaleX, ScaleY, Spacing, PChar(Angle));
   End;
 end;
 
@@ -878,19 +968,20 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TSubtitleAPI.SetOutputSettingsSubStationAlpha(Assigned: Boolean; Title, Script, FontName: String; FontSize: Integer; Bold, Italic: Boolean; BorderStyle, PrimaryColor, SecondaryColor, TertiaryColor, ShadowColor, Outline, Shadow, Alignment, LeftMargin, RightMargin, VerticalMargin, Encoding : Integer);
+procedure TSubtitleAPI.SetOutputSettingsSubStationAlpha(Assigned: Boolean; Title, Script, Collisions: String; PlayResX, PlayResY: Integer; Timer, FontName: String; FontSize: Integer; Bold, Italic: Boolean; BorderStyle, PrimaryColor, SecondaryColor, OutlineColour, ShadowColor, Outline, Shadow, Alignment, LeftMargin, RightMargin, VerticalMargin, Encoding : Integer);
 var
-  SetOSSubStationAlpha: procedure(Assigned: LongBool; Title, Script, FontName: PChar;
+  SetOSSubStationAlpha: procedure(Assigned: LongBool; Title, Script, Collisions: PChar;
+                                  PlayResX, PlayResY: Integer; Timer, FontName: PChar;
                                   FontSize: Integer; Bold, Italic: LongBool; BorderStyle,
-                                  PrimaryColor, SecondaryColor, TertiaryColor, ShadowColor,
+                                  PrimaryColor, SecondaryColor, OutlineColour, ShadowColor,
                                   Outline, Shadow, Alignment, MarginL, MarginR, MarginV,
-                                  Encoding : Integer); stdcall;
+                                  Encoding: Integer); stdcall;
 begin
   If FInstance <> 0 Then
   Begin
     SetOSSubStationAlpha := GetProcAddress(FInstance, 'SetOutputSettingsSubStationAlpha');
     If @SetOSSubStationAlpha <> NIL Then
-      SetOSSubStationAlpha(LongBool(Assigned), PChar(Title), PChar(Script), PChar(FontName), FontSize, LongBool(Bold), LongBool(Italic), BorderStyle, PrimaryColor, SecondaryColor, TertiaryColor, ShadowColor, Outline, Shadow, Alignment, LeftMargin, RightMargin, VerticalMargin, Encoding);
+      SetOSSubStationAlpha(LongBool(Assigned), PChar(Title), PChar(Script), PChar(Collisions), PlayResX, PlayResY, PChar(Timer), PChar(FontName), FontSize, LongBool(Bold), LongBool(Italic), BorderStyle, PrimaryColor, SecondaryColor, OutlineColour, ShadowColor, Outline, Shadow, Alignment, LeftMargin, RightMargin, VerticalMargin, Encoding);
   End;
 end;
 
@@ -907,6 +998,24 @@ begin
       SetOSTMPlayer(LongBool(Assigned), Integer(TypeOfFormat));
   End;
 end;
+
+// -----------------------------------------------------------------------------
+
+//added by adenry: begin
+procedure TSubtitleAPI.SetOutputSettingsXAS(Assigned: Boolean; FontName: String; FontSize: Integer; FontSizeInPercent: Boolean; TextColor: Integer; Shadow: Boolean; ShadowColor: Integer; Transparency: Byte; X, Y, Width, Height: Integer; XInPercent, YInPercent, WidthInPercent, HeightInPercent: Boolean; Alignment: Byte; Encoding, Language: String; JoinShortLines, WrapLines: Boolean; WrapLinesValue: Byte);
+var
+  SetOSXAS: procedure(Assigned: LongBool; FontName: String; FontSize: Integer; FontSizeInPercent: LongBool; TextColor: Integer; Shadow: LongBool; ShadowColor: Integer; Transparency: Byte;
+                      X, Y, Width, Height: Integer; XInPercent, YInPercent, WidthInPercent, HeightInPercent: LongBool; Alignment: Byte;
+                      Encoding, Language: String; JoinShortLines, WrapLines: LongBool; WrapLinesValue: Byte); stdcall;
+begin
+  If FInstance <> 0 Then
+  Begin
+    SetOSXAS := GetProcAddress(FInstance, 'SetOutputSettingsXAS');
+    If @SetOSXAS <> NIL Then
+      SetOSXAS(LongBool(Assigned), FontName, FontSize, LongBool(FontSizeInPercent), TextColor, LongBool(Shadow), ShadowColor, Transparency, X, Y, Width, Height, LongBool(XInPercent), LongBool(YInPercent), LongBool(WidthInPercent), LongBool(HeightInPercent), Alignment, Encoding, Language, LongBool(JoinShortLines), LongBool(WrapLines), WrapLinesValue);
+  End;
+end;
+//added by adenry: end
 
 // -----------------------------------------------------------------------------
 

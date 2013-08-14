@@ -1,5 +1,8 @@
-// MIMENU (VIPLAY)
-// Copyright © 2002 AML / DEKSOFT.
+// This file is part of SWComponents, the component package for Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: MiMenu component - menu customization
 
 unit MiMenu;
 
@@ -736,7 +739,7 @@ end;
 
 procedure Register;
 begin
-  RegisterComponents('URUSoft Components', [TMiMenu]);
+  RegisterComponents('Subtitle Workshop', [TMiMenu]);
 end;
 
 // -----------------------------------------------------------------------------

@@ -1,11 +1,15 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Join Subtitles form
+
 unit formJoin;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ComCtrls, StdCtrls, ExtCtrls, General, TreeViewHandle, Functions,
-  USubtitleAPI, IniFiles;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, ComCtrls, StdCtrls, ExtCtrls, IniFiles;
 
 type
   TfrmJoin = class(TForm)
@@ -55,7 +59,9 @@ var
 
 implementation
 
-uses formMain;
+uses
+  General, Functions, //TreeViewHandle,
+  formMain;
 
 {$R *.dfm}
 
@@ -176,6 +182,9 @@ procedure TfrmJoin.FormCreate(Sender: TObject);
 var
   Ini: TIniFile;
 begin
+  Constraints.MaxWidth := Width - ClientWidth + btnCancel.Left + btnCancel.Width + pnlJoin.Left;
+  Constraints.MinWidth := Constraints.MaxWidth;
+
   SetLanguage;
   cmbFPS.Items           := frmMain.cmbInputFPS.Items;
   cmbFPS.ItemIndex       := frmMain.cmbInputFPS.ItemIndex;
@@ -302,7 +311,7 @@ begin
 
       end;
     end;
-    if ExtractFileExt(dlgSave.FileName) = '' then
+    if ExtractFileExt(dlgSave.FileName) <> Ext then //= '' replaced with <> Ext by adenry //bug fix
       dlgSave.FileName := dlgSave.FileName + Copy(Ext, 2, Length(Ext));
 
     if FileExists(dlgSave.FileName) then

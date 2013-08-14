@@ -1,3 +1,9 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: OCR Script functionality
+
 unit OCRScripts;
 
 // -----------------------------------------------------------------------------
@@ -6,7 +12,9 @@ interface
 
 // -----------------------------------------------------------------------------
 
-uses SysUtils, HTMLPars, FastStrings, Functions, RegExpr;
+uses
+  SysUtils,
+  FastStrings, HTMLPars, RegExpr;
 
 // -----------------------------------------------------------------------------
 type
@@ -24,7 +32,7 @@ type
 // -----------------------------------------------------------------------------
 
 function ParseOCRErrors(const FileName: String): Boolean;
-function FixOCRErrors(Text: String): String;
+function FixOCRErrors(Text: String; CheckOnly: Boolean = False): String;
 function HasOCRErrors(const Text: String): Boolean;
 
 // -----------------------------------------------------------------------------
@@ -37,6 +45,9 @@ var
 // -----------------------------------------------------------------------------
 
 implementation
+
+uses
+  Functions;
 
 // -----------------------------------------------------------------------------
                         
@@ -92,6 +103,7 @@ begin
               Param := Tag.Params[a];
               if Param.Key = 'FIND' then
                 OCRErrors[AMax].Find := Param.Value;
+              OCRErrors[AMax].ReplaceBy := #0; //added by adenry
               if Param.Key = 'REPLACEBY' then
                 OCRErrors[AMax].ReplaceBy := Param.Value;
               // Read values from tag parameters
@@ -147,29 +159,36 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function FixOCRErrors(Text: String): String;
+function FixOCRErrors(Text: String; CheckOnly: Boolean = False): String; //CheckOnly added by adenry
 var
   i: Integer;
+  S: String; //added by adenry
 begin
-  if OCRMax < 1 then exit;
+  S := Text;   //added by adenry
+  //if OCRMax < 1 then exit; //removed by adenry
+  if OCRMax > 0 then  //added by adenry
   for i := 0 to OCRMax-1 do
-  begin
-    if OCRErrors[i].UseRE then
+    if (OCRErrors[i].ReplaceBy <> #0) or CheckOnly then //added by adenry
     begin
-      if OCRErrors[i].UseREOnlyToFind = True then
-        Text := RepRE(OCRErrors[i].Find, Text, OCRErrors[i].ReplaceBy) else
-        Text := ReplaceRegExpr(OCRErrors[i].Find, Text, OCRErrors[i].ReplaceBy);
-    end else
-      Text := Replace(Text, OCRErrors[i].Find, OCRErrors[i].ReplaceBy, OCRErrors[i].CaseSensitive, OCRErrors[i].WholeWord, OCRErrors[i].PreserveCase);
-  end;
-  Result := Text;
+      if OCRErrors[i].UseRE then
+      begin
+        if OCRErrors[i].UseREOnlyToFind = True then
+          S := RepRE(OCRErrors[i].Find, S, OCRErrors[i].ReplaceBy) else      //Text replaced with S by adenry
+          S := ReplaceRegExpr(OCRErrors[i].Find, S, OCRErrors[i].ReplaceBy); //Text replaced with S by adenry
+      end else
+        S := Replace(S, OCRErrors[i].Find, OCRErrors[i].ReplaceBy, OCRErrors[i].CaseSensitive, OCRErrors[i].WholeWord, OCRErrors[i].PreserveCase); //Text replaced with S by adenry
+      //added by adenry: we are only checking for OCR errors. One difference is enough to say there is an OCR error. But not if this error is fixed later in the script...
+      //if CheckOnly then
+      //  if S <> Text then break;
+    end;
+  Result := S; //Text replaced with S by adenry
 end;
 
 // -----------------------------------------------------------------------------
 
 function HasOCRErrors(const Text: String): Boolean;
 begin
-  Result := FixOCRErrors(Text) <> Text;
+  Result := FixOCRErrors(Text, True) <> Text; //True added by adenry
 end;
 
 // -----------------------------------------------------------------------------

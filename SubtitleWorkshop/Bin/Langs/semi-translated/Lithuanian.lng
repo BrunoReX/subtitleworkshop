@@ -13,6 +13,7 @@ FPS=KPS
 PlainText=Paprastas tekstas
 STP=Titro vertimo projektas
 SRF=Titro informacijos byla
+AllTheFiles=All files
 
 [Standard buttons]
 01=&Gerai
@@ -40,6 +41,11 @@ SRF=Titro informacijos byla
 14=Trukmë:
 15=%s (%s simboliø):
 16=- Neiðverstas titras -
+17=Lines:
+18=Notes:
+19=Pause
+20=%d subtitles selected / %d
+21=#%d / %d
 
 [Main menu header]
 01=Byla
@@ -49,6 +55,7 @@ SRF=Titro informacijos byla
 05=Filmas
 06=Nustatymai
 07=Pagalba
+08=View
 
 [Main menu/File]
 01=Nauji titrai...
@@ -65,6 +72,7 @@ SRF=Titro informacijos byla
 12=Iðsaugoti kaip...
 13=Uþdaryti
 14=Iðeiti
+15=Save marking
 
 [Main menu/Edit]
 01=Kaip buvo (Undo)
@@ -76,6 +84,8 @@ SRF=Titro informacijos byla
 07=Kopijuoti
 08=Áklijuoti
 09=Viskà paþymëti
+10=Invert selection
+11=Insert symbol...
 
 [Main menu/Edit/Timings]
 01=Trukmës
@@ -89,6 +99,11 @@ SRF=Titro informacijos byla
 09=Automatinës trukmës
 10=Nuskaityti trukmes ið bylos
 11=Paslinkti %s milisekundëmis
+12=Extend length to previous
+13=Set pauses...
+14=Shift to next
+15=Shift to previous
+16=Round time values...
 
 [Main menu/Edit/Texts]
 01=Tekstai
@@ -99,6 +114,8 @@ SRF=Titro informacijos byla
 06=Greito dalijimo eilutës
 07=Nustatyti ilgiausià eilutæ...
 08=Nuskaityti tekstus ið bylos
+09=Fast smart line adjust
+10=Fast unbreak subtitles
 
 [Main menu/Edit/Subtitles]
 01=Titrai
@@ -116,6 +133,10 @@ SRF=Titro informacijos byla
 13=Trinti nereikalingas nuorodas
 14=Þymëti parinktus titrus
 15=Panaikinti parinktø titrø þymëjimà
+16=Auto combine subtitles...
+17=Delete dots at the beginning
+18=Jump to next marked
+19=Jump to previous marked
 
 [Main menu/Edit/Translation]
 01=Vertimas
@@ -147,6 +168,8 @@ SRF=Titro informacijos byla
 16=Iðorinë perþiûra
 17=SAMI kalbos ekstraktorius
 18=Pascal skriptai
+19=Jump to previous error
+20=Show CpS boxes
 
 [Main menu/Movie]
 01=Atidaryti...
@@ -155,6 +178,11 @@ SRF=Titro informacijos byla
 04=Vaizdo perþiûros reþimas
 05=Rodyti titrus
 06=Iðsaugoti pradiná media failà
+07=Audio stream
+08=None
+09=Video renderer
+10=Default
+11=VMR9
 
 [Main menu/Movie/Playback]
 01=Rodymas
@@ -191,6 +219,9 @@ SRF=Titro informacijos byla
 03=Rodyti kairiàjà panelæ
 04=Rodyti laiko valdiklius
 05=Naudoti in-place versijà
+06=Refresh language files
+07=Files refreshed
+08=keys
 
 [Main menu/Help]
 01=Apie %s...
@@ -202,6 +233,9 @@ SRF=Titro informacijos byla
 03=Pabrauktas
 04=Nustatyti spalvà
 05=Ðalinti spalvø þymenis
+06=Remove all tags
+07=Delete
+08=Style
 
 [Video preview hints]
 01=Rodyti/Pauzë (%s)
@@ -220,6 +254,8 @@ SRF=Titro informacijos byla
 14=Þymëti kaip pirmà sinchr. vietà (%s)
 15=Þymëti kaip paskutinæ sinchr. vietà (%s)
 16=Pridëti titrø/video sinchronizacijos vietà (%s)
+17=Volume: %d%%
+18=Mute/Unmute
 
 [Save as]
 01=Iðsaugoti kaip
@@ -246,7 +282,6 @@ SRF=Titro informacijos byla
 [Settings Form]
 01=Nustatymai
 02=Pakeisti programos konfigûracijà
-; Sections
 03=Bendra
 04=Daugiau nustatymø
 05=Koduotës
@@ -260,9 +295,6 @@ SRF=Titro informacijos byla
 13=Programa
 14=Sàraðas
 15=Meniu
-;-----------------;
-; General section ;
-;-----------------;
 16=Visuomet virðuje
 17=Leisti daugiau nei vienà programos paleidimà
 18=Patvirtinti titrø iðtrynimà
@@ -275,9 +307,6 @@ SRF=Titro informacijos byla
 25=Jokios saveikos su tagais
 26=Dirbti su tipo þymenomis
 27=Paskutiniø bylø limitas:
-;----------;
-; Advanced ;
-;----------;
 28=Gudrus eiluèiø pritaikymas
 29=Dvi eilutës jei ilgesnë nei:
 30=simboliø
@@ -288,36 +317,21 @@ SRF=Titro informacijos byla
 35=Ilgiausia eilutë:
 36=Paslinkimo laikas:
 37=milisekundëmis
-;----------;
-; Charsets ;
-;----------;
 38=Rodyti pagrindinëje formoje
 39=Originali koduotë:
 40=Vertimo koduotë:
-;-----------------;
-; Formats section ;
-;-----------------;
 41=Pagrindinis formatas:
 42="Iðsaugoti kaip" rodomi formatai:
 43=Rodyti kitus formatus
 44=Paþymëti &visus
 45=Naikinti &paþymëjimà
-;--------------------;
-; File types section ;
-;--------------------;
 46=Susieti su bylø tipais atidarius programà
 47=Susieti su gerai palaikomø titrø formatø plëtiniais
-;--------------;
-; Save section ;
-;--------------;
 48=Paklausti apie iðsaugojimà uþdarant programà (titrus)
 49=Iðsaugoti pakitimus kas
 50=min.
 51=Iðsaugoti kaip atsarginá var.
 52=Iðsaugojimo nustatymai...
-;---------------;
-; Video preview ;
-;---------------;
 53=Dukart kliktelëti titrà:
 54=Kiek sekundþiø perðokti:
 55=Shift-dukart kliktelëti titrà:
@@ -327,9 +341,6 @@ SRF=Titro informacijos byla
 59=Persukimo laikas:
 60=sek.
 61=Nustatytasis pakeistas rodymo greitis:
-;-------------------------;
-; Video preview Subtitles ;
-;-------------------------;
 62=Pieðti rëmelá
 63=Pieðti ðeðëlá
 64=Bandyti permatomà fonà
@@ -340,40 +351,83 @@ SRF=Titro informacijos byla
 69=Rëmelio plotis:
 70=Ðeðëlio plotis:
 71=ÈEBURAÐKA
-;--------------------------;
-; External Preview General ;
-;--------------------------;
 72=Vaizdo rodymo programos Exe:
 73=Rasti susietà programà
 74=Kaskart klausti kitos vaizdo bylos
 75=Visuomet iðbandyti su vaizdo byla:
-;---------------------------;
-; External Preview Advanced ;
-;---------------------------;
 76=Laikinø titrø iðsaugojimo formatas:
 77=Originalus formatas
 78=Kitas formatas:
 79=Vaizdo grotuvui siøsti parametrus:
 80=VIDEO_FILE nurodo vaizdo bylà, su kuria iðbandysite subtitrus. SUBT_FILE yra parametras, pagal kurá laikina subtitrø byla bus nusiøsta vaizdo grotuvui. Galite nurodyti papildomus parametrus, pvz. /FS rodymui
-;----------------;
-; Look / Program ;
-;----------------;
 81=Programoje naudoti ðriftà:
 82=Ðrifto dydis:
 83="Teksto" ir "Vertimo" laukø lygiavimas:
 84=Kairinis|Deðinysis|Centruotas
-;-------------;
-; Look / List ;
-;-------------;
 85=Rodyti linijas
 86=Pritaikyti stiliø titrams
 87=Þymëti neiðverstus titrus spalva:
 88=Rodyti horizontalø ðliauþiklá
-;-------------;
-; Look / Menu ;
-;-------------;
 89=Naudoti Office XP stiliaus meniu
 90=Naudoti nuolydiná meniu
+91=Tags mode:
+92=Multiple tags mode
+93=Single tags mode (the old mode)
+94=Auto delete tags
+95=Default subtitle duration:
+96=Default subtitle pause:
+97=Increase step (time):
+98=Increase step (frames):
+99=frames
+100=Keep min duration of:
+101=but don''t allow overlaps
+102=Automatically round time values to:
+103=Round time values on subtitle load
+104=Notes charset:
+105=Add "Open with Subtitle Workshop" to shell context menu
+106=Ask to save new subttiles
+107=Save empty subtitles
+108=Vertical video center align
+109=Enter full screen on double click
+110=Setting Show and Hide times
+111=Shift Show value:
+112=Shift Hide value:
+113=Align left when subtitles contain a new line starting with "-"
+114=Relative font size
+115=Keep subtitle on video
+116=Try antialiasing (Force using regions must be off)
+117=Smart main window and subtitle list resize
+118=Resize subtitle list columns when resizing form
+119=Mark untranslated subtitles with background:
+120=Right click selection
+121=Row height:
+122=Text margin:
+123=Selection
+124=Text:
+125=Color:
+126=Transparency:
+127=Columns
+128=Align:
+129=Display style:
+130=Full
+131=Compact
+132=Marking with color:
+133=Marking with background:
+134=Columns to mark:
+135=Mark column "%s"
+136=Marking priority:
+137=Low (before error marking)
+138=High (after error marking)
+139=Marked subtitle color in video preview:
+140=Marking file
+141=Do not save marking file
+142=Ask each time to save marking file
+143=Automatically save marking file on subtitle save
+144=Automatically load marking file
+145=Marking
+146=Play video on load
+147=Visual subtitle representation color:
+148=Hilight tags in "Text" and "Translation" fields:
 
 [Output settings]
 01=Iðsaugojimo nustatymai
@@ -434,11 +488,13 @@ SRF=Titro informacijos byla
 03=Milisekundës
 04=Nustatyti minimalià trukmæ
 05=Dël trukmës padidinimo titrø perdanga neávyks
+06=Increase at start if necessary
 
 [Set delay]
 01=Nustatyti uþlaikymà
 02=Visai titrø bylai
 03=Paþymëtiems titrams
+04=From first selected until last subtitle
 
 [Adjust subtitles]
 01=Pritaikyti titrus
@@ -489,6 +545,12 @@ SRF=Titro informacijos byla
 08=Tik jei nauja trukmë trumpesnë nei originalas
 09=Visiems titrams
 10=Tik paþymëtiems titrams
+11=Method
+12=Characters
+13=per second
+14=Increase at start if necessary
+15=Maximum increase at start (0 = no limit):
+16=milliseconds
 
 [Convert case]
 01=Keisti didþiàsias maþosiomis ir atv.
@@ -539,7 +601,6 @@ SRF=Titro informacijos byla
 [Batch convert]
 01=Masinis konvertavimas
 02=Konvertuoti grupæ bylø keliais veiksmais á vienà formatà
-; Buttons
 03=< &Atgal
 04=&Toliau>
 05=K&onvertuoti
@@ -547,7 +608,6 @@ SRF=Titro informacijos byla
 07=&Uþdaryti
 08=&Viskà
 09=&Nieko
-; Page 1
 10=Iðplëtimai:
 11=Ieðkojimo kelias:
 12=Átraukti pakatalogius
@@ -555,19 +615,15 @@ SRF=Titro informacijos byla
 14=Iðsaugojimo katalogas:
 15=Iðsaugojimo formatas:
 16=Pagrindiniai KPS:
-; List columns
 17=Bylos pavadinimas
 18=Formatas
 19=KPS
 20=Dydis
-; Page 2
 21=&Pridëti
 22=P&aðalinti
 23=I&ðvalyti
-; Page 3
 24=Atlikta! Detaliau:
 25=Iðsaugoti...
-; Searching
 26=Tikrinama byla %s
 
 [Batch convert log]
@@ -639,21 +695,12 @@ SRF=Titro informacijos byla
 06=Titras
 07=Tipas
 08=Apibûdinimas
-;-------;
-; Types ;
-;-------;
 09=Klaida
 10=Áspëjimas
 11=Info
 13=Pataisyta
-;----------------------;
-; Information messages ;
-;----------------------;
 14=Ið viso klaidø: %d
 15=Pataisyta klaidø: %d
-;---------------;
-; Error reports ;
-;---------------;
 16=Yra eiluèiø be raidþiø
 17=Tuðèias titras
 18=Persidengimas su ankstesniu subtitru
@@ -674,9 +721,6 @@ SRF=Titro informacijos byla
 33=Nëra tarpo prieð tam tikrà simbolá
 34=Nereikalingi tarpai
 35=Paþymëtas titras
-;-------------;
-; Fix reports ;
-;-------------;
 36=Iðtrintos eilutës be raidþiø
 37=Tuðèias titras buvo iðtrintas
 38=Iðtaisytas persidengimas
@@ -694,8 +738,52 @@ SRF=Titro informacijos byla
 50=Pridëtas tarpas po tam tikro simbolio
 51=Pridëtas tarpas prieð tam tikrà simbolá
 52=Paðalinti nereikalingi tarpai
-;-----
 53=Dukart kliktelëkite, kad perðokti á eilutæ pagrindinëje formoje
+67=E
+68=W
+69=F
+70=CI
+71=Select
+72=+ Select
+73=- Select
+74=Select subtitles
+75=Add to selected subtitles
+76=Remove from selected subtitles
+77=All
+78=None
+79=Inverse
+80=Select all
+81=Select none
+82=Invert selection
+83=Error types sets
+84=Save error types set
+85=Delete error types set
+86=Error types
+87=Custom info
+88=Show/hide errors
+89=Show/hide warnings
+90=Show/hide fixed
+91=Show/hide custom info
+92=Show/hide Error types panel
+93=Show/hide Custom info panel
+65=Custom info
+66=Displayed: %d
+54=Unnecessary tags
+56=Dash on first line
+58=Too many CpS
+60=Too short pause
+62=Dialogue on one line
+55=Removed unnecessary tags
+57=Removed dash on first line
+59=Fixed too much CpS
+61=Fixed too short pause
+63=Fixed dialogue on one line
+94=Export to file
+95=Text file
+96=char
+97=sec
+98=fr
+99=cps
 
 [Information and errors Settings]
 01=Nustatymai
@@ -725,7 +813,6 @@ SRF=Titro informacijos byla
 25=Per maþa trukmë:
 26=Per ilga eilutë:
 27=simb.
-;------
 28=Eilutës be raidþiø
 29=Tuðti subtitrai
 30=Persidengiantys subtitrai
@@ -746,7 +833,6 @@ SRF=Titro informacijos byla
 45=Tarpai po tam tikrø simboliø
 46=Tarpai prieð tam tikrus simbolius
 47=Nereikalingi tarpai
-;------
 48=Ieðkoti:
 49=Taisyti:
 50="Enter" ir tarpai pradþioje ir pabaigoje
@@ -756,6 +842,51 @@ SRF=Titro informacijos byla
 54=Tarpai po "¿" ir "¡"
 55=Tarpai prieð "?" ir "!"
 56=Tarpai tarp skaièiø
+57=Too short pauses
+58="- " on first line
+59=Only if there is no "- " on second line
+60=Dialogue on one line
+61=Unnecessary tags
+62=Too many characters per second
+63=Mark too much CpS with CpS boxes
+64=Default errorr marking
+65=Set Default Styles
+66=Mark column "Num"
+67=Mark column "Pause"
+68=Mark column "Show"
+69=Mark column "Hide"
+70=Mark column "Duration"
+71=Mark column "Text"
+72=Mark as Bold
+73=Mark as Italic
+74=Mark as Underline
+75=Mark as Strikethrough
+76=Mark the text color
+77=Mark the background color
+78=Mark
+79=Automatically recheck errors
+80=Do not recheck on Pascal scripts
+81=Recheck all once after a Pascal script executes
+82=Recheck on each change made by a Pascal script (might be slow)
+83=Indicate too long lines in Text and Translation labels
+84=Indicate too short duration in Duration box
+85=Indicate too long duration in Duration box
+86=Indicate too short pause in Pause box
+87=Indicate overlapping subtitles in Pause box
+88=Indicate bad values in Show and Hide boxes
+89=Indicate subtitles over two lines in lines counter labels
+90=Text color
+91=Background color
+92=Too short pause under:
+93=Characters per second (CpS)
+94=Too many CpS over:
+95=characters per second
+96=Normal CpS box colors:
+97=Too many CpS box colors:
+98=Display percantage in CpS box
+99=Display current CpS in CpS box
+100=Display minimum time in CpS box
+101=Display maximum characters in CpS box
 
 [Various information]
 01=Ávairi informacija
@@ -782,6 +913,18 @@ SRF=Titro informacijos byla
 22=Paryðkintas
 23=Pasviræs
 24=Skaièiuoti
+25=Shortest line:
+26=Longest pause:
+27=Shortest pause:
+28=In subtitle %d, %d,%.3d seconds
+29=In subtitle %d, %d milliseconds
+30=Most CpS:
+31=Least CpS:
+32=In subtitle %d, %d cps
+33=Average CpS:
+34=Longest duration:
+35=Shortest duration:
+36=Refresh info
 
 [SAMI Language Extractor]
 01=SAMI kalbos trauktuvas
@@ -808,12 +951,12 @@ SRF=Titro informacijos byla
 08=Programavo:
 09=Papildomas programavimas
 10=%s atliktas
-; Following line is "DirectShow programming"
 11=%s programavimas
 12=Vertëjai
 13=Beta bandytojai
 14=Pagrindinæ ikonà sukûrë
 15=Atnaujinimø ieðkoti:
+16=License
 
 [Error messages]
 01=Nepavyko ákrauti titrø API. Atsisiøskite DLL "%s" ið %s ir iðsaugokite já "%s" aplanke.
@@ -836,6 +979,12 @@ SRF=Titro informacijos byla
 18=Pasirinkite titro dalá ið sàraðo.
 19=Jei renkatës filmo fragmentà vienai titro daliai, jums reikia pasirinkti filmo fragmentà visoms titro dalims (þinoma iðskyrus paskutinàjà).
 20=Reikia dviejø ar daugiau taðkø.
+21=Incorrect regular expression in Custom info %s
+22=Custom Info %d was disabled.|Fix the regular expression to enable it.
+23=Subtitle duration too short!
+24=Error: can not execute script.
+25=Error: can not compile script.
+26=Save subtitles first
 
 [Question messages]
 01=Byla "%s" buvo pakeista.||Ar norite iðsaugoti pakeitimus?
@@ -847,6 +996,7 @@ SRF=Titro informacijos byla
 07=Nenurodyta arba neegzistuoja vaizdo grotuvo exe byla.||Ar norite konfigûruoti iðoriná grotuvà?
 08=Rasta nauja versija!||Ar norite pamatyti pakeitimø sàraðà?
 09=Byla, kurià norite iðsaugoti, yra tik skaitymui.||Vis tiek bandyti iðsaugoti?
+10=Do you want to save the marking in a file?
 
 [Information messages]
 01=Nerasta daugiau "%s" atvejø.
@@ -860,6 +1010,7 @@ SRF=Titro informacijos byla
 09=Bylos pavadinimas: %s|Dydis: %s|KPS: %s|Trukmë: %s|Ið viso kadrø: %d|Rezoliucija: %dx%d|FourCC: %s
 10=Kai kuriø filmo srautø nepavyko teisingai perteikti. Turbût trûksta audio ar video kodeko.
 11=Nebûtina nustatyti filmo fragmentà pagal paskutiná titrà.
+12=A sudden error occured:|"%s"
 
 [Information and errors messages]
 01=Titras Nr. %d buvo tuðèias ir dabar bus iðtrintas.||Ar norite já iðtrinti?
@@ -867,3 +1018,118 @@ SRF=Titro informacijos byla
 03=Titras Nr. %d:||"%s" bus iðtrintas.||Ar tikrai já iðtrinti?
 04=Dalis titro Nr. %d:||"%s" bus iðtrinta, ir titras bus:||"%s"||Ar norite tæsti?
 05=Titras Nr. %d:||"%s" yra ið vienos eilutës ir prasideda "-".||Ar norite iðtrinti "-" titro pradþioje?
+
+[Main menu/View]
+01=Toolbar
+02=Text style bars
+03=Statusbar
+04=Columns
+05=Show notes in left panel
+06=Show time control buttons
+07=Show lines count
+08=Visual subtitle representation
+
+[Video Popup Menu]
+01=Enter full screen
+02=Exit full screen
+03=Zoom to %d%%
+04=Reset subtitle vertical position
+
+[Time control buttons hints]
+01=Shift to previous/Extend to previous
+02=Shift to next/Extend to next
+03=Set default pause/Set default pause, if pause is too short
+04=Set ato duration/Set min duration
+
+[Auto combine subtitles]
+01=Auto combine subtitles
+02=milliseconds
+03=Combine if duration is less than (0 = no limit):
+04=Combine if CpS is greater than (0 = no limit):
+05=characters per second
+06=Don't combine if pause is greater than (0 = no limit):
+07=Punctuation marks detection
+08=Combined subtitles maximum duration (0 = no limit):
+09=Decrease duration if necessary, with no more than:
+10=Combined subtitles maximum lines length (0 = no limit):
+11=characters
+12=For all the subtitles
+13=For the selected subtitles
+
+[Set pauses]
+01=Set pauses
+02=Pauses value:
+03=Shorten duration of:
+04=First subtitle only
+05=Second subtitle only
+06=Both subtitles equally
+07=The subtitle with less CpS
+08=For all the subtitles
+09=For the selected subtitles
+
+[Round time values]
+01=Round time values
+02=Round to:
+03=milliseconds
+04=For all the subtitles
+05=For the selected subtitles
+
+[Smart line adjust]
+01=Smart line adjust
+02=Two lines if longer than:
+03=characters
+04=Break method:
+05=Equal lines
+06=Break on punctuation marks
+07=Don''t unbreak subtitles that are not too long
+08=Adjust only long subs and subs with more than 2 lines
+09=For all the subtitles
+10=For the selected subtitles
+11=Always try to find a better breaking point
+
+[Unbreak subtitles]
+01=Unbreak subtitles
+02=Characters limit
+03=No limit
+04=Don''t unbreak if line length exceeds:
+05=characters
+06=Don''t unbreak subtitles with "—" on second line
+07=For all the subtitles
+08=For the selected subtitles
+
+[Custom info]
+01=Add custom info
+02=Composite custom info
+03=Subtitles duration information
+04=Subtitles line lenght information
+05=Subtitles lines count information
+06=Subtitles pause information
+07=Subtitles CpS information
+08=Subtitles text information
+09=Custom info sets
+10=Save custom info set
+11=Delete custom info set
+12=There is no custom info. Click the "+" button to add new custom info.
+13=Caption
+14=Duration
+15=Lines length
+16=Lines count
+17=Pause
+18=CpS
+19=Text
+20=Composite info
+21=ms
+22=chars
+23=lines
+24=cps
+25=AND
+26=OR
+27=Contains (Case sensitive)
+28=Contains (Case insensitive)
+29=Does not contain (Case sensitive)
+30=Does not contain (Case insensitive)
+31=Matches regular expression
+32=Matches regular expression (tags ignored)
+33=Delete
+34=Edit
+

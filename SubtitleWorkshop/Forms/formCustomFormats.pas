@@ -1,10 +1,15 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Custom Formats form
+
 unit formCustomFormats;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, General, IniFiles, USubtitleAPI, TreeViewHandle;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls, IniFiles;
 
 type
   TfrmCustomFormats = class(TForm)
@@ -43,7 +48,9 @@ var
 
 implementation
 
-uses formMain;
+uses
+  General, TreeViewHandle,
+  formMain;
 
 {$R *.dfm}
 
@@ -204,7 +211,7 @@ end;
 
 procedure TfrmCustomFormats.btnSaveClick(Sender: TObject);
 begin
-  UpdateArray;
+  UpdateArray(-666); //format index added by adenry
   dlgSave.Filter     := edtFormatName.Text + ' (' + edtExtension.Text + ')|' + edtExtension.Text;
   dlgSave.InitialDir := frmMain.dlgLoadFile.InitialDir;
   if (dlgSave.Execute) and (dlgSave.FileName <> '') then

@@ -1,20 +1,29 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: File extensions functionality
+
 unit FileTypes;
 
 interface
 
-uses Forms, Windows, Classes, SysUtils, USubtitlesFunctions, General,
-     Registry, ShlObj;
+uses
+  Forms, Windows, Classes, SysUtils, Registry, ShlObj;
 
 // -----------------------------------------------------------------------------
 
 procedure SeparateExtensions(var List: TStrings; ExtStr: String; TxtAndScr: Boolean = False);
 function GetExtStr(List: TStrings): String;
 function GetExtensionsList: String;
-procedure AssociateExtensions(Extensions: String; Associate: Boolean = True);
+procedure AssociateExtensions(Extensions: String; Associate: Boolean = True; OnlyIfNotAssociateWithAnything: Boolean = False);
 
 // -----------------------------------------------------------------------------
 
 implementation
+
+uses
+  General, USubtitlesFunctions;
 
 // -----------------------------------------------------------------------------
 
@@ -97,17 +106,20 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure AssociateExtensions(Extensions: String; Associate: Boolean = True);
+procedure AssociateExtensions(Extensions: String; Associate: Boolean = True; OnlyIfNotAssociateWithAnything: Boolean = False); //OnlyIfNotAssociateWithAnything added by adenry
 var
-  Reg         : TRegistry;
-  i           : Integer;
-  Exts        : TStrings;
-  FileType    : String;
-  Exe         : String;
-  Description : String;
+  Reg           : TRegistry;
+  i             : Integer;
+  Exts          : TStrings;
+  FileType      : String;
+  //CurFileType   : String; //added by adenry
+  Exe           : String;
+  Description   : String;
+  AssocChanged  : Boolean; //added by adenry
 begin
   if Extensions = '' then exit;
-  if Associate = True then
+  //removed by adenry: begin
+  {if Associate = True then
   begin
     FileType    := 'SubtitleWorkshop';
     Description := 'Subtitle file';
@@ -117,7 +129,15 @@ begin
     FileType    := '';
     Description := '';
     Exe         := '';
-  end;
+  end;}
+  //removed by adenry: end
+  
+  //added by adenry: begin
+  FileType      := 'SubtitleWorkshop';
+  Description   := 'Subtitle file';
+  Exe           := Application.ExeName;
+  AssocChanged  := False;
+  //added by adenry: end
 
   Reg := TRegistry.Create;
   try
@@ -126,11 +146,13 @@ begin
     for i := 0 to Exts.Count-1 do
     begin
       Exts[i] := Copy(Exts[i], 2, Length(Exts[i]));
+
       with Reg do
       begin
         RootKey := HKEY_CLASSES_ROOT;
-        OpenKey(Exts[i], True);
 
+        //removed by adenry: begin
+        {OpenKey(Exts[i], True);
         WriteString('', FileType);
         CloseKey;
 
@@ -154,14 +176,61 @@ begin
         if Associate = True then
           WriteString('', '"' + Exe + '" /OPEN("%1")') else
           WriteString('', '""');
-        CloseKey;
+        CloseKey;}
+        //removed by adenry: end
+
+        //added by adenry: begin
+        if (OnlyIfNotAssociateWithAnything = False) or not KeyExists(Exts[i]) then
+        begin
+          OpenKey(Exts[i], True);
+          if Associate = True then
+          begin //associate and write backup
+            if ReadString('') <> FileType then
+            begin
+              WriteString('SubtitleWorkshopBackup', ReadString(''));
+              WriteString('', FileType);
+              AssocChanged := True; //added by adenry
+            end;
+          end else
+            if ReadString('') = FileType then
+            begin //unassociate, restore backup, and delete backup
+              WriteString('', ReadString('SubtitleWorkshopBackup'));
+              DeleteValue('SubtitleWorkshopBackup');
+              AssocChanged := True; //added by adenry
+            end;
+          //if the extension is not associated with anything, delete it
+          if ReadString('') = '' then
+          begin
+            CloseKey;
+            DeleteKey(Exts[i]);
+          end else
+            CloseKey;
+        end;
+
+        if (Associate = True) and not KeyExists(FileType) then
+        begin //add SubtitleWorkshop Subtitle file type
+          OpenKey(FileType, True);
+          WriteString('', Description);
+          CloseKey;
+
+          OpenKey(FileType + '\DefaultIcon', True);
+          WriteString('', Exe + ',0'); // 0 = Icon index
+          CloseKey;
+
+          OpenKey(FileType + '\Shell\Open\Command', True);
+          WriteString('', '"' + Exe + '" /OPEN("%1")');
+          CloseKey;
+        end;
+        //added by adenry: end
+
       end;
     end;
   finally
     Reg.Free;
     Exts.Free;
   end;
-  SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST,nil, nil);
+  if AssocChanged then //added by adenry
+    SHChangeNotify(SHCNE_ASSOCCHANGED,SHCNF_IDLIST,nil, nil);
 end;
 
 // -----------------------------------------------------------------------------

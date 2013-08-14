@@ -1,12 +1,18 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Divide Lines form
+
 unit formDivideLines;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, Mask, ExtCtrls, General, TreeViewHandle, USubtitlesFunctions,
-  VirtualTrees, ComCtrls, Functions, StrMan, Math, FastStrings, IniFiles,
-  Menus, TimeMaskEdit, Undo;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, Mask, ExtCtrls, ComCtrls, Math, IniFiles, Menus, ClipBrd, //ClipBrd added by adenry
+  VirtualTrees, TimeMaskEdit,
+  StrMan,
+  CommonTypes;
 
 type
   TfrmDivideLines = class(TForm)
@@ -29,8 +35,8 @@ type
     lblShowSub2: TLabel;
     lblHideSub2: TLabel;
     chkContinueDirectly: TCheckBox;
-    mmoSub1: TMemo;
-    mmoSub2: TMemo;
+    mmoSub1Old: TMemo;
+    mmoSub2Old: TMemo;
     lblDuration1: TLabel;
     lblDuration2: TLabel;
     lblLength1: TLabel;
@@ -42,15 +48,17 @@ type
     tmeShowSub2: TTimeMaskEdit;
     tmeHideSub2: TTimeMaskEdit;
     tmeDuration2: TTimeMaskEdit;
+    mmoSub1: TRichEdit;
+    mmoSub2: TRichEdit; //TMemo changed to TRichEdit
     procedure chkContinueDirectlyClick(Sender: TObject);
     procedure btnDivideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure udDivideAfterBreakNumChangingEx(Sender: TObject;
       var AllowChange: Boolean; NewValue: Smallint;
       Direction: TUpDownDirection);
-    procedure mmoSub1KeyDown(Sender: TObject; var Key: Word;
+    procedure mmoSubtitle1KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure mmoSub2KeyDown(Sender: TObject; var Key: Word;
+    procedure mmoSubtitle2KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btn11Click(Sender: TObject);
     procedure btn12Click(Sender: TObject);
@@ -59,8 +67,8 @@ type
     procedure btn31Click(Sender: TObject);
     procedure btn23Click(Sender: TObject);
     procedure btn32Click(Sender: TObject);
-    procedure mmoSub1Change(Sender: TObject);
-    procedure mmoSub2Change(Sender: TObject);
+    procedure mmoSubtitle1Change(Sender: TObject);
+    procedure mmoSubtitle2Change(Sender: TObject);
     procedure chkUseAutoDurClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure tmeShowSub2TimeChangeFromEditOnly(Sender: TObject;
@@ -80,13 +88,15 @@ var
   frmDivideLines      : TfrmDivideLines;
   OriginalString      : String;
   BreaksArray         : TOpenIntegerArray;
-  AdjustAutomatically : Boolean;
+  //AdjustAutomatically : Boolean; //moved to formMain by adenry
   LengthInChars       : String;
-  TotalOrgLength      : Integer;
+  DoSelectAll         : Boolean; //added by adenry
 
 implementation
 
-uses formMain;
+uses
+  General, Functions, TreeViewHandle, USubtitlesFunctions, Undo, VideoPreview, //VideoPreview added by adenry
+  formMain;
 
 {$R *.dfm}
 
@@ -144,40 +154,20 @@ procedure TfrmDivideLines.CalculateTimes(Prop1, Prop2: Integer; AutomaticDur: Bo
 var
   InitialTime : Integer;
   FinalTime   : Integer;
-  Time1       : Integer;
-  DurPerChar  : Single;
+  Duration1   : Integer;
 begin
   with frmMain do
   begin
     InitialTime := GetStartTime(lstSubtitles.FocusedNode);
     FinalTime   := GetFinalTime(lstSubtitles.FocusedNode);
-    if AutomaticDur = False then
-    begin
-      Time1 := Trunc(InitialTime + ((FinalTime - InitialTime) / (Prop1+Prop2) * Prop1));
-      tmeShowSub1.Time  := InitialTime;
-      tmeHideSub2.Time  := FinalTime;
-      tmeHideSub1.Time  := Time1;
-      tmeShowSub2.Time  := Time1 + 1;
-      tmeDuration1.Time := Time1 - InitialTime;
-    end else
-    begin
-      if TotalOrgLength <> 0 then
-        DurPerChar := (FinalTime - InitialTime) / TotalOrgLength else // Milliseconds
-        DurPerChar := 0;
-      Time1 := Round(DurPerChar * Length(mmoSub1.Text));
-
-      // We don't want to leave second subtitle with 0 duration!
-      if FinalTime-InitialTime-Time1 > 100 then
-      begin
-        tmeShowSub1.Time  := InitialTime;
-        tmeHideSub2.Time  := FinalTime;
-        tmeHideSub1.Time  := Time1 + InitialTime;
-        tmeShowSub2.Time  := InitialTime + Time1 + 1;
-        tmeDuration1.Time := Time1;
-        tmeDuration2.Time := FinalTime - (InitialTime + Time1 + 1);
-      end;
-
-    end;
+    Duration1   := DivideSubDuration(lstSubtitles.FocusedNode, mmoSub1.Text, Prop1, Prop2, DefaultSubPause, AutomaticDur);
+    
+    tmeShowSub1.Time  := InitialTime;
+    tmeHideSub2.Time  := FinalTime;
+    tmeHideSub1.Time  := InitialTime + Duration1;
+    tmeShowSub2.Time  := tmeHideSub1.Time + DefaultSubPause; //1 replaced with DefaultSubPause by adenry
+    tmeDuration1.Time := Duration1;
+    tmeDuration2.Time := tmeHideSub2.Time - tmeShowSub2.Time; //1 replaced with DefaultSubPause by adenry
   end;
 end;
 
@@ -190,8 +180,8 @@ begin
     tmeShowSub2.Enabled := False;
     if chkUseAutoDur.Checked = False then
     begin
-      tmeShowSub2.Time  := StringToTime(tmeHideSub1.Text) + 1;
-      tmeDuration2.Time := Cardinal(GetFinalTime(frmMain.lstSubtitles.FocusedNode)) - (tmeShowSub2.Time + 1);
+      tmeShowSub2.Time  := StringToTime(tmeHideSub1.Text) + frmMain.DefaultSubPause; //1 replaced with DefaultSubPause by adenry
+      tmeDuration2.Time := Cardinal(GetFinalTime(frmMain.lstSubtitles.FocusedNode)) - (tmeShowSub2.Time {+ 1}); //+1 removed by adenry
     end else
       CalculateTimes(1, 1, True);
   end else
@@ -207,9 +197,6 @@ var
 begin
   with frmMain do
   begin
-    ClearUndoList(RedoList);
-    mnuRedo.Enabled := False;
-
     // ------------------ //
     // Set first subtitle //
     // ------------------ //
@@ -217,6 +204,7 @@ begin
 
     New(UndoAction);
     UndoAction^.UndoActionType := uaFullTextChange;
+    UndoAction^.UndoActionName := uanDivideLines; //added by adenry
     UndoAction^.Node           := lstSubtitles.FocusedNode;
     UndoAction^.LineNumber     := lstSubtitles.FocusedNode.Index;
     UndoAction^.BindToNext     := True;
@@ -224,10 +212,11 @@ begin
     UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
     PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := True;
     PFullTextChange(UndoAction^.Buffer)^.OldText := Data.Text;
-    UndoList.Add(UndoAction);
+    AddUndo(UndoAction);
 
     New(UndoAction);
     UndoAction^.UndoActionType := uaTimeChange;
+    UndoAction^.UndoActionName := uanDivideLines; //added by adenry
     UndoAction^.Node           := lstSubtitles.FocusedNode;
     UndoAction^.LineNumber     := lstSubtitles.FocusedNode.Index;
     UndoAction^.BindToNext     := True;
@@ -235,10 +224,10 @@ begin
     UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
     PTimeChange(UndoAction^.Buffer)^.StartTime := Data.InitialTime;
     PTimeChange(UndoAction^.Buffer)^.FinalTime := Data.FinalTime;
-    UndoList.Add(UndoAction);
+    AddUndo(UndoAction);
 
-    Data.FinalTime := tmeHideSub1.Time;
-    Data.Text := mmoSub1.Text;
+    SetFinalTime(lstSubtitles.FocusedNode, tmeHideSub1.Time); //modified by adenry. was //Data.FinalTime := tmeHideSub1.Time;
+    SetText(lstSubtitles.FocusedNode, mmoSub1.Text); //modified by adenry. was //Data.Text := mmoSub1.Text;
     lstSubtitles.InsertNode(lstSubtitles.FocusedNode, amInsertAfter);
 
     // ------------------- //
@@ -246,12 +235,13 @@ begin
     // ------------------- //
     New(UndoAction);
     UndoAction^.UndoActionType := uaInsertLine;
+    UndoAction^.UndoActionName := uanDivideLines; //added by adenry
     UndoAction^.Node           := lstSubtitles.GetNextSibling(lstSubtitles.FocusedNode);
     UndoAction^.LineNumber     := UndoAction^.Node.Index;
     UndoAction^.BindToNext     := False;
     UndoAction^.Buffer         := nil;
     UndoAction^.BufferSize     := 0;
-    UndoList.Add(UndoAction);
+    AddUndo(UndoAction);
 
     Data := lstSubtitles.GetNodeData(lstSubtitles.GetNextSibling(lstSubtitles.FocusedNode));
     Data.InitialTime := tmeShowSub2.Time;
@@ -260,11 +250,15 @@ begin
     if mnuTranslatorMode.Checked then
       Data.Translation := UntranslatedSub;
 
-    mnuUndo.Enabled := True;
-    lstSubtitles.Refresh;
+    UpdateSubSubtitleVisibilityAfterNodeChange(UndoAction^.Node, -1, -1, Data.InitialTime, Data.FinalTime); //added by adenry
+
+    //lstSubtitles.Refresh; //AutoRecheck***Errors refreshes it
     RefreshTimes;
     OrgModified   := True;
     TransModified := True;
+    //AutoRecheckAllErrors; //added by adenry
+    AutoRecheckNodeErrorsAndRepaint(lstSubtitles.FocusedNode); //added by adenry
+    AutoRecheckNodeErrorsAndRepaint(lstSubtitles.GetNextSibling(lstSubtitles.FocusedNode)); //added by adenry
   end;
 end;
 
@@ -279,11 +273,13 @@ begin
   SetLanguage;
   Ini := TIniFile.Create(IniRoot);
   try
-    AdjustAutomatically   := Ini.ReadBool('Advanced', 'Smart line adjust automatically', True);
-    chkUseAutoDur.Checked := Ini.ReadBool('General', 'Use automatic durations (Divide lines)', False);
+    //AdjustAutomatically   := Ini.ReadBool('Advanced', 'Smart line adjust automatically', True);
+    chkUseAutoDur.Checked := Ini.ReadBool('General', 'Use automatic durations (Divide lines)', True); //False changed to True by adenry
   finally
     Ini.Free;
   end;
+
+  DoSelectAll := False; //added by adenry
 
   tmeShowSub1.FPS  := GetFPS;
   tmeHideSub1.FPS  := GetFPS;
@@ -324,12 +320,12 @@ begin
   begin
     mmoSub1.Alignment  := frmMain.mmoSubtitleText.Alignment;
     mmoSub2.Alignment  := frmMain.mmoSubtitleText.Alignment;
-    OriginalString     := GetSubText(lstSubtitles.FocusedNode);
-    TotalOrgLength     := Length(OriginalString) - (StringCount(#13#10, OriginalString)*2);
+    OriginalString     := GetSubText(lstSubtitles.FocusedNode);//RemoveSWTags(GetSubText(lstSubtitles.FocusedNode), True, True, True, True); //RemoveSWTags added by adenry
     if Pos(#13#10, OriginalString) = 0 then
-      OriginalString := WrapText(OriginalString, frmMain.BreakLineAfter);
+      //OriginalString := WrapText(OriginalString, frmMain.BreakLineAfter); //removed by adenry
+      OriginalString := SmartWrapText(OriginalString, frmMain.OrgCharset, frmMain.BreakLineAfter); //added by adenry
   end;
-  ProcessStringToDivide(OriginalString, BreaksArray, AdjustAutomatically, Out1, Out2, MaxBreaks);
+  DivideSubText(OriginalString, BreaksArray, frmMain.AdjustAutomatically, Out1, Out2, MaxBreaks); //ProcessStringToDivide replaced with DivideSubText by adenry
   mmoSub1.Text := Out1;
   mmoSub2.Text := Out2;
   udDivideAfterBreakNum.Max := MaxBreaks;
@@ -369,36 +365,106 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmDivideLines.mmoSub1Change(Sender: TObject);
+procedure TfrmDivideLines.mmoSubtitle1Change(Sender: TObject);
 begin
   lblLength1.Caption := Format(LengthInChars, [GetLengthForEachLine(mmoSub1.Text)]);
   if chkUseAutoDur.Checked then CalculateTimes(1, 1, True);
+
+  if mmoSub1.ClassName = TRichEdit.ClassName then
+  begin
+    HighlightTags(TRichEdit(mmoSub1)); //by BDZL
+    //added by adenry: fix Undo of TRichEdit
+    if DoSelectAll then
+    begin
+      mmoSub1.SelectAll;
+      DoSelectAll := False;
+    end;
+  end;
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmDivideLines.mmoSub2Change(Sender: TObject);
+procedure TfrmDivideLines.mmoSubtitle2Change(Sender: TObject);
 begin
   lblLength2.Caption := Format(LengthInChars, [GetLengthForEachLine(mmoSub2.Text)]);
   if chkUseAutoDur.Checked then CalculateTimes(1, 1, True);
+
+  if mmoSub2.ClassName = TRichEdit.ClassName then
+  begin
+    HighlightTags(TRichEdit(mmoSub2)); //by BDZL
+    //added by adenry: fix Undo of TRichEdit
+    if DoSelectAll then
+    begin
+      mmoSub2.SelectAll;
+      DoSelectAll := False;
+    end;
+  end;
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmDivideLines.mmoSub1KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmDivideLines.mmoSubtitle1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  Out1, Out2: String; //added by adenry
+  MaxBreaks : Integer;//added by adenry
 begin
-  if ShortCut(Key, Shift) = frmMain.mnuSmartLineAdjust.ShortCut then
-    mmoSub1.Text := AdjustLines(mmoSub1.Text);
+  if ShortCut(Key, Shift) = frmMain.mnuFastSmartLineAdjust.ShortCut then
+    //mmoSub1.Text := AdjustLines(mmoSub1.Text); //removed by adenry
+  //added by adenry: begin
+  begin
+    mmoSub1.Text := FastSmartLineAdjust(mmoSub1.Text, frmMain.OrgCharset);
+    mmoSub1.Text := FixTagsPositions(mmoSub1.Text);
+    mmoSub1.Text := DeleteEmptyLines(mmoSub1.Text);
+  end;
+  //added by adenry: end
+
+  //added by adenry: Undo support for when Tags Highlight is on
+  if frmMain.TagsHighlight then
+    if ShortCut(Key, Shift) = frmMain.mnuUndo.ShortCut then
+    begin
+      DivideSubText(OriginalString, BreaksArray, frmMain.AdjustAutomatically, Out1, Out2, MaxBreaks); //ProcessStringToDivide replaced with DivideSubText by adenry
+      mmoSub1.Text := Out1;
+      DoSelectAll := True;
+    end;
+  //added by adenry: paste plain text
+  if ShortCut(Key, Shift) = frmMain.mnuPaste.ShortCut then
+  begin
+    Key := 0;
+    frmMain.mnuPasteClick(Sender);
+  end;
 end;
 
 // -----------------------------------------------------------------------------
 
-procedure TfrmDivideLines.mmoSub2KeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmDivideLines.mmoSubtitle2KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  Out1, Out2: String; //added by adenry
+  MaxBreaks : Integer;//added by adenry
 begin
-  if ShortCut(Key, Shift) = frmMain.mnuSmartLineAdjust.ShortCut then
-    mmoSub2.Text := AdjustLines(mmoSub2.Text);
+  if ShortCut(Key, Shift) = frmMain.mnuFastSmartLineAdjust.ShortCut then
+    //mmoSub2.Text := AdjustLines(mmoSub2.Text); //removed by adenry
+  //added by adenry: begin
+  begin
+    mmoSub2.Text := FastSmartLineAdjust(mmoSub2.Text, frmMain.OrgCharset);
+    mmoSub2.Text := FixTagsPositions(mmoSub2.Text);
+    mmoSub2.Text := DeleteEmptyLines(mmoSub2.Text);
+  end;
+  //added by adenry: end
+
+  //added by adenry: Undo support for when Tags Highlight is on
+  if frmMain.TagsHighlight then
+    if ShortCut(Key, Shift) = frmMain.mnuUndo.ShortCut then
+    begin
+      DivideSubText(OriginalString, BreaksArray, frmMain.AdjustAutomatically, Out1, Out2, MaxBreaks); //ProcessStringToDivide replaced with DivideSubText by adenry
+      mmoSub2.Text := Out2;
+      DoSelectAll := True;
+    end;
+  //added by adenry: paste plain text
+  if ShortCut(Key, Shift) = frmMain.mnuPaste.ShortCut then
+  begin
+    Key := 0;
+    frmMain.mnuPasteClick(Sender);
+  end;
 end;
 
 // -----------------------------------------------------------------------------
@@ -496,16 +562,18 @@ procedure TfrmDivideLines.tmeHideSub1TimeChangeFromEditOnly(
 var
   Time: Integer;
 begin
-  if (chkContinueDirectly.Checked) then
-  begin
+  //if (chkContinueDirectly.Checked) then //removed by adenry
+  //begin //removed by adenry
     Time := tmeHideSub1.Time;
     if (Time > -1) then
     begin
-      tmeShowSub2.Time  := Time + 1;
+      if (chkContinueDirectly.Checked) then //added by adenry
+        tmeShowSub2.Time  := Time + frmMain.DefaultSubPause; //1 replaced with DefaultSubPause by adenry
       tmeDuration1.Time := Time - GetStartTime(frmMain.lstSubtitles.FocusedNode);
-      tmeDuration2.Time := GetFinalTime(frmMain.lstSubtitles.FocusedNode) - (StringToTime(tmeShowSub2.Text));
+      if (chkContinueDirectly.Checked) then //added by adenry
+        tmeDuration2.Time := GetFinalTime(frmMain.lstSubtitles.FocusedNode) - (StringToTime(tmeShowSub2.Text));
     end;
-  end;
+  //end; //removed by adenry
 end;
 
 // -----------------------------------------------------------------------------
@@ -515,17 +583,19 @@ procedure TfrmDivideLines.tmeDuration1TimeChangeFromEditOnly(
 var
   Time: Integer;
 begin
-  if (chkContinueDirectly.Checked) then
-  begin
+  //if (chkContinueDirectly.Checked) then //removed by adenry
+  //begin //removed by adenry
     Time := tmeDuration1.Time;
     if (Time > -1) then
     begin
-      tmeShowSub2.Time  := GetStartTime(frmMain.lstSubtitles.FocusedNode) + Time + 1;
+      if (chkContinueDirectly.Checked) then //added by adnery
+        tmeShowSub2.Time  := GetStartTime(frmMain.lstSubtitles.FocusedNode) + Time + frmMain.DefaultSubPause; //1 replaced with DefaultSubPause by adenry
       if GetFocus <> tmeHideSub1.Handle then
         tmeHideSub1.Time  := GetStartTime(frmMain.lstSubtitles.FocusedNode) + Time;
-      tmeDuration2.Time := GetFinalTime(frmMain.lstSubtitles.FocusedNode) - (StringToTime(tmeShowSub2.Text));
+      if (chkContinueDirectly.Checked) then //added by adenry
+        tmeDuration2.Time := GetFinalTime(frmMain.lstSubtitles.FocusedNode) - (StringToTime(tmeShowSub2.Text));
     end;
-  end;
+  //end; //removed by adenry
 end;
 
 // -----------------------------------------------------------------------------

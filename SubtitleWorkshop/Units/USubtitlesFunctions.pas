@@ -1,5 +1,8 @@
-// USubtitlesFunctions - Interesting functions
-// Copyright ® 2001-2003 URUSoft.
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Subtitles text and timing functionality
 
 unit USubtitlesFunctions;
 
@@ -8,26 +11,36 @@ unit USubtitlesFunctions;
 interface
 
 uses
-  SysUtils, Math, FastStrings;
+  SysUtils, Math,
+  FastStrings;
 
 // -----------------------------------------------------------------------------
 
-function TimeToFrames   (Time: Integer; FPS: Single): Integer;
-function FramesToTime   (Frames, FPS: Single): Integer;
+// --------------------------//
+//      Help functions       //
+// --------------------------//
 function StringCount    (const aFindString, aSourceString : string; Const CaseSensitive : Boolean = TRUE): Integer;
-function IsInteger      (const Str: String; AddChars: String = ''): Boolean;
-function TimeToString   (Time: Integer; TimeFormat: String = {$IFDEF VIPLAY}'hh:mm:ss'{$ELSE}'hh:mm:ss,zzz'{$ENDIF}): String;
-function StringToTime   (Time: String; NoHours: Boolean = False): Integer;
-function TimeInFormat   (Time, Format: String): Boolean;
+function ReplaceString  (const S, OldPattern, NewPattern: String; ReplaceAll: Boolean = True; IgnoreCase: Boolean = True): String;
 function PadLeft        (const S: String; const PadChar: AnsiChar; const Length: Integer; const Cut: Boolean = False): String;
 function PadRight       (const S: AnsiString; const PadChar: AnsiChar; const Length: Integer; const Cut: Boolean): AnsiString;
-function LimitDecimals  (Num: Real; Limit: Integer): String;
+function IsInteger      (const Str: String; AddChars: String = ''): Boolean;
+//function LimitDecimals  (Num: Real; Limit: Integer): String; //removed by adenry
+// --------------------------//
+//      Text functions       //
+// --------------------------//
 function ReverseText    (Text: String; KeepLinesOrder: Boolean = True) : String;
 function ReplaceEnters  (const S, NewPattern: String): String;
-function ReplaceString  (const S, OldPattern, NewPattern: String; ReplaceAll: Boolean = True; IgnoreCase: Boolean = True): String;
-function InvertHTMLColor(const Color: String): String;
-function RemoveRTFFormatting(Text: String): String;
-function GetMSInFrames(const Time: Integer; const FPS: Single): Integer;
+//function InvertHTMLColor(const Color: String): String; //removed by adenry
+//function RemoveRTFFormatting(Text: String): String; //removed by adenry
+// ----------------------------//
+//      Timing functions       //
+// ----------------------------//
+function TimeToFrames   (Time: Integer; FPS: Single): Integer;
+function FramesToTime   (Frames, FPS: Single): Integer;
+function TimeToString   (Time: Integer; TimeFormat: String = {$IFDEF VIPLAY}'hh:mm:ss'{$ELSE}'hh:mm:ss,zzz'{$ENDIF}): String;
+function StringToTime   (Time: String; NoHours: Boolean = False): Integer;
+//function TimeInFormat   (Time, Format: String): Boolean; //removed by adenry
+//function GetMSInFrames(const Time: Integer; const FPS: Single): Integer; //removed by adenry
 function MSToHHMMSSFFTime(const Time: Integer; const FPS: Single; const FramesSeparator: Char = ':'): String;
 function HHMMSSFFTimeToMS(const Time: String; const FPS: Single): Integer;
 
@@ -46,7 +59,9 @@ end;
 
 function FramesToTime(Frames, FPS: Single): Integer;
 begin
-  Result := Round((Frames / FPS) * 1000);
+  //if FPS <> 0 then
+    Result := Round((Frames / FPS) * 1000);// else
+    //Result := 0;
 end;
 
 // -----------------------------------------------------------------------------
@@ -189,7 +204,8 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function TimeInFormat(Time, Format: String): Boolean;
+//removed by adenry: begin
+{function TimeInFormat(Time, Format: String): Boolean;
 begin
   Result := False;
   if StringToTime(Time) > -1 then
@@ -203,10 +219,14 @@ begin
        (Length(Time) = Length(Format)) then
        Result := True;
   end;
-end;
+end;}
+//removed by adenry: end
 
 // -----------------------------------------------------------------------------
 
+//add padding on the left of a string with a specific character
+//for example: to add padding with dots to the left of the string 'dog' so that the total length would be 10, call PadLeft('dog', '.', 10);
+//the result will be '.......dog'; if the Cut parameter is set to True, if the string is shorter than the desired total Length, the string would be cut, otherwise the length of the string would be used, and if the length of the string is shorter than the desired total Length, the Cut parameter has no effect
 function PadLeft(const S : String; const PadChar : Char; const Length : Integer; const Cut : Boolean = False) : String;
 var
   F, L, P, M : Integer;
@@ -252,6 +272,9 @@ end;
 
 // -----------------------------------------------------------------------------
 
+//add padding on the right of a string with a specific character
+//for example: to add padding with dots to the right of the string 'dog' so that the total length would be 10, call PadRight('dog', '.', 10);
+//the result will be 'dog.......'; if the Cut parameter is set to True, if the string is shorter than the desired total Length, the string would be cut, otherwise the length of the string would be used, and if the length of the string is shorter than the desired total Length, the Cut parameter has no effect
 function PadRight(const S: AnsiString; const PadChar: AnsiChar; const Length: Integer; const Cut: Boolean): AnsiString;
 var
   F, L, P, M : Integer;
@@ -348,10 +371,12 @@ end;   }
 
 // -----------------------------------------------------------------------------
 
-function LimitDecimals(Num: Real; Limit: Integer) : String;
+//removed by adenry: begin
+{function LimitDecimals(Num: Real; Limit: Integer) : String;
 begin
   Result := FloatToStr(Round(Num * Power(10, Limit)) / Power(10, Limit));
-end;
+end;}
+//removed by adenry: end
 
 // -----------------------------------------------------------------------------
 
@@ -420,69 +445,75 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function InvertHTMLColor(const Color: String): String;
+//removed by adenry: begin
+{function InvertHTMLColor(const Color: String): String;
 begin
   If (Color = '') or (Length(Color) <> 6) Then Exit;
   Result := Copy(Color, 5, 2) + Copy(Color, 3, 2) + Copy(Color, 1, 2);
-end;
+end;}
+//removed by adenry: end
 
 // -----------------------------------------------------------------------------
 
-function RemoveRTFFormatting(Text: String): String;
-  function Resolve(c: Char): Integer;
-  { Convert char to integer value - used to decode \'## to an ansi-value }
-  begin
-    c := UpperCase(c)[1];
-    case Byte(c) of
-      48..57 : Result := Byte(c) - 48;
-      65..70 : Result := Byte(c) - 55;
-      else Result := 0;
-    end;
-  end;
-var
-  i,c: Integer;
-begin
-  i := Pos('{', Text);
-  c := Pos('}', Text);
-  while (i > 0) and (c > 0) do
-  begin
-    if c < i then
-      Delete(Text, c, 1) else
-      Delete(Text, i, c-i+1);
-    i := Pos('{', Text);
-    c := Pos('}', Text);
-  end;
-
-  // Decode each \'## value to an ansi character
-  c := Pos('\''', Text);
-  while c > 0 do
-  begin
-    Delete(Text, c, 2);
-    Text[c] := Char(Resolve(Text[c])*16 + Resolve(Text[c+1]));
-    Delete(Text, c+1, 1);
-    c := Pos('\''', Text);
-  end;
-
-  i := Pos('\', Text);
-  if i > 0 then
-  begin
-    c := SmartPos(' ', Text, True, i);
-    while (i > 0) and (c > 0) do
-    begin
-      Delete(Text, i, c-i+1);
-      i := Pos('\', Text);
-      if i > 0 then
-        c := SmartPos(' ', Text, True, i) else
-        c := 0;
-    end;
-  end; 
-
-  Result := Text;
-end;
+//removed by adenry: begin
+//function RemoveRTFFormatting(Text: String): String;
+//  function Resolve(c: Char): Integer;
+//  // Convert char to integer value - used to decode \'## to an ansi-value
+//  begin
+//    c := UpperCase(c)[1];
+//    case Byte(c) of
+//      48..57 : Result := Byte(c) - 48;
+//      65..70 : Result := Byte(c) - 55;
+//      else Result := 0;
+//    end;
+//  end;
+//var
+//  i,c: Integer;
+//begin
+//  i := Pos('{', Text);
+//  c := Pos('}', Text);
+//  while (i > 0) and (c > 0) do
+//  begin
+//    if c < i then
+//      Delete(Text, c, 1) else
+//      Delete(Text, i, c-i+1);
+//    i := Pos('{', Text);
+//    c := Pos('}', Text);
+//  end;
+//
+//  // Decode each \'## value to an ansi character
+//  c := Pos('\''', Text);
+//  while c > 0 do
+//  begin
+//    Delete(Text, c, 2);
+//    Text[c] := Char(Resolve(Text[c])*16 + Resolve(Text[c+1]));
+//    Delete(Text, c+1, 1);
+//    c := Pos('\''', Text);
+//  end;
+//
+//  i := Pos('\', Text);
+//  if i > 0 then
+//  begin
+//    c := SmartPos(' ', Text, True, i);
+//    while (i > 0) and (c > 0) do
+//    begin
+//      Delete(Text, i, c-i+1);
+//      i := Pos('\', Text);
+//      if i > 0 then
+//        c := SmartPos(' ', Text, True, i) else
+//        c := 0;
+//    end;
+//  end;
+//
+//  Result := Text;
+//end;
+//removed by adenry: end
 
 // -----------------------------------------------------------------------------
 
-function GetMSInFrames(const Time: Integer; const FPS: Single): Integer;
+//removed by adenry: begin
+//Convert milliseconds to frames
+{function GetMSInFrames(const Time: Integer; const FPS: Single): Integer;
 var
   Hour : Integer;
   Min  : Integer;
@@ -495,10 +526,12 @@ begin
   Sec  := Trunc((Time-(Hour*3600000)-(Min*60000)) / 1000);
   MS   := Trunc((Time-(Hour*3600000)-(Min*60000)-(Sec*1000)));
   Result := TimeToFrames(MS, FPS)
-end;
+end;}
+//removed by adenry: end
 
 // -----------------------------------------------------------------------------
 
+//Convert an integer representing time in milliseconds to a 'hh:mm:ss,ff' string
 function MSToHHMMSSFFTime(const Time: Integer; const FPS: Single; const FramesSeparator: Char = ':'): String;
 begin
   Result := TimeToString(Time, 'hh:mm:ss');
@@ -507,6 +540,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
+//Convert a 'hh:mm:ss,ff' string to an integer representing time in milliseconds
 function HHMMSSFFTimeToMS(const Time: String; const FPS: Single): Integer;
 begin
   if StringToTime(Time) = -1 then Result := -1 else

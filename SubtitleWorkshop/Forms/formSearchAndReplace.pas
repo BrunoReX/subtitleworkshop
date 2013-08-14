@@ -1,11 +1,17 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Search and Replace form
+
 unit formSearchAndReplace;
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, ComCtrls, VirtualTrees, Functions, General, IniFiles,
-  TreeViewHandle, USubtitlesFunctions, Undo;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, ExtCtrls, ComCtrls, IniFiles,
+  VirtualTrees,
+  CommonTypes;
 
 type
   TfrmSearchAndReplace = class(TForm)
@@ -56,7 +62,9 @@ var
 
 implementation
 
-uses formMain;
+uses
+  General, Functions, TreeViewHandle, USubtitlesFunctions, Undo,
+  formMain;
 
 {$R *.dfm}
 
@@ -260,8 +268,6 @@ var
   Flag       : Boolean;
   UndoAction : PUndoAction;
 begin
-  ClearUndoList(RedoList);
-  frmMain.mnuRedo.Enabled := False;
   Flag := False;
 
   TextToFind := ReplaceString(edtTextToFind2.Text, '|', #13#10);
@@ -271,6 +277,7 @@ begin
 
   New(UndoAction);
   UndoAction^.UndoActionType := uaFullTextChange;
+  UndoAction^.UndoActionName := uanSearchAndReplace; //added by adenry
   UndoAction^.BufferSize     := SizeOf(TFullTextChange);
   UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
   UndoAction^.Node           := frmMain.lstSubtitles.FocusedNode;
@@ -300,18 +307,16 @@ begin
     end;
   end;
   if Flag = True then
-  begin
-    UndoList.Add(UndoAction);
-    frmMain.mnuUndo.Enabled := True;
-  end;
+    AddUndo(UndoAction);
 
   if FindInNode(TextToFind, chkCaseSensitive.Checked, chkWholeWords.Checked, True) = nil then
     MsgBox(Format(InfoMsg[01], [TextToFind]), BTN_OK, '', '', MB_ICONINFORMATION, frmSearchAndReplace, StrCharsetToInt(cmbCharset.Items[cmbCharset.ItemIndex])) else
 
   if UndoList.Count > 0 then
-    PUndoAction(UndoList.Last)^.BindToNext := False;         
+    PUndoAction(UndoList.Last)^.BindToNext := False;
   frmMain.SearchWord := TextToFind;
   frmMain.RefreshTimes;
+  frmMain.AutoRecheckAllErrors(TextErrors); //added by adenry
 end;
 
 // -----------------------------------------------------------------------------
@@ -330,9 +335,6 @@ var
   ReplaceBy  : String;
   UndoAction : PUndoAction;
 begin
-  ClearUndoList(RedoList);
-  frmMain.mnuRedo.Enabled := False;
-  
   Replaces := 0;
   LastNode := nil;
   TextToFind := ReplaceString(edtTextToFind2.Text, '|', #13#10);
@@ -347,6 +349,7 @@ begin
   begin
     New(UndoAction);
     UndoAction^.UndoActionType := uaFullTextChange;
+    UndoAction^.UndoActionName := uanSearchAndReplace; //added by adenry
     UndoAction^.BufferSize     := SizeOf(TFullTextChange);
     UndoAction^.Buffer         := AllocMem(UndoAction^.BufferSize);
     UndoAction^.Node           := Node;
@@ -364,14 +367,15 @@ begin
       Italic    := Pos('<i>', Text) > 0;
       Underline := Pos('<u>', Text) > 0;
       Color     := GetSubColor(Text);
-      Text      := RemoveSWTags(Text, True, True, True, True);
+      if SubtitleApi.SingleTagsMode then //added by adenry
+        Text      := RemoveSWTags(Text, True, True, True, True);
 
       RepStr := Replace(Text, TextToFind, ReplaceBy, chkCaseSensitive.Checked, chkWholeWords.Checked, chkPreserveCase.Checked);
       if RepStr <> Text then
       begin
         if frmMain.mnuTranslatorMode.Checked = False then
-          UndoList.Add(UndoAction);
-        if SubtitleAPI.NoInteractionWithTags = False then
+          AddUndo(UndoAction);
+        if SubtitleApi.SingleTagsMode then //added by adenry
         begin
           // Restore tags
           if Underline = True then RepStr := '<u>' + RepStr;
@@ -381,7 +385,7 @@ begin
             RepStr := SetColorTag(RepStr, Color);
         end;
 
-        Data.Text := RepStr;
+        SetText(Node, RepStr); //modified by adenry. was: //Data.Text := RepStr;
         Inc(Replaces);
         LastNode := Node;
       end;
@@ -394,18 +398,19 @@ begin
       begin
         PFullTextChange(UndoAction^.Buffer)^.OriginalOnly := False;
         PFullTextChange(UndoAction^.Buffer)^.OldTrans := Text;
-        UndoList.Add(UndoAction);
+        AddUndo(UndoAction);
         
         Bold      := Pos('<b>', Text) > 0;
         Italic    := Pos('<i>', Text) > 0;
         Underline := Pos('<u>', Text) > 0;
         Color     := GetSubColor(Text);
-        Text      := RemoveSWTags(Text, True, True, True, True);
+        if SubtitleApi.SingleTagsMode then //added by adenry
+          Text    := RemoveSWTags(Text, True, True, True, True);
 
         RepStr := Replace(Text, TextToFind, ReplaceBy, chkCaseSensitive.Checked, chkWholeWords.Checked, chkPreserveCase.Checked);
         if RepStr <> Text then
         begin
-          if SubtitleAPI.NoInteractionWithTags = False then
+          if SubtitleApi.SingleTagsMode then //added by adenry
           begin
             // Restore tags
             if Underline = True then RepStr := '<u>' + RepStr;
@@ -414,7 +419,7 @@ begin
             if Color > -1 then
               RepStr := SetColorTag(RepStr, Color);
           end;
-          Data.Translation := RepStr;
+          SetTranslation(Node, RepStr); //modified by adenry. was: //Data.Translation := RepStr;
           Inc(Replaces);
           LastNode := Node;
         end;
@@ -426,23 +431,24 @@ begin
 
   if Assigned(LastNode) then
   begin
-    frmMain.lstSubtitles.Selected[frmMain.lstSubtitles.FocusedNode] := False;
+    //frmMain.lstSubtitles.Selected[frmMain.lstSubtitles.FocusedNode] := False; //removed by adenry
+    UnSelectAll(frmMain.lstSubtitles); //added by adenry
     frmMain.lstSubtitles.FocusedNode := LastNode;
     frmMain.lstSubtitles.Selected[LastNode] := True;
     frmMain.lstSubtitles.ScrollIntoView(LastNode, True);
   end;
   frmMain.RefreshTimes;
+  frmMain.AutoRecheckAllErrors(TextErrors); //added by adenry
 
   if Replaces = 0 then
     MsgBox(Format(InfoMsg[01], [TextToFind]), BTN_OK, '', '', MB_ICONINFORMATION, frmSearchAndReplace, StrCharsetToInt(cmbCharset.Items[cmbCharset.ItemIndex])) else
   begin
     if UndoList.Count > 0 then
       PUndoAction(UndoList.Last)^.BindToNext := False;
-    frmMain.mnuUndo.Enabled := True;
     MsgBox(Format(InfoMsg[08], [Replaces]), BTN_OK, '', '', MB_ICONINFORMATION, frmSearchAndReplace);
     frmMain.OrgModified   := True;
     frmMain.TransModified := True;
-  end;
+  end; 
 end;
 
 // -----------------------------------------------------------------------------

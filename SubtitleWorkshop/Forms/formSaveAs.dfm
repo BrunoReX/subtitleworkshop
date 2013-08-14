@@ -1,12 +1,14 @@
 object frmSaveAs: TfrmSaveAs
-  Left = 192
-  Top = 103
-  BorderIcons = []
-  BorderStyle = bsSingle
+  Left = 283
+  Top = 561
+  AutoScroll = False
+  BorderIcons = [biSystemMenu]
   Caption = 'frmSaveAs'
-  ClientHeight = 458
-  ClientWidth = 638
+  ClientHeight = 213
+  ClientWidth = 329
   Color = clBtnFace
+  Constraints.MinHeight = 247
+  Constraints.MinWidth = 337
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -16,6 +18,7 @@ object frmSaveAs: TfrmSaveAs
   Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object lblDblClick: TLabel
@@ -27,8 +30,8 @@ object frmSaveAs: TfrmSaveAs
   end
   object chkAllFormats: TCheckBox
     Left = 8
-    Top = 400
-    Width = 457
+    Top = 152
+    Width = 313
     Height = 17
     Caption = 'All formats'
     TabOrder = 1
@@ -37,8 +40,8 @@ object frmSaveAs: TfrmSaveAs
   object lstFormats: TListView
     Left = 8
     Top = 24
-    Width = 625
-    Height = 369
+    Width = 313
+    Height = 121
     Columns = <>
     HideSelection = False
     LargeImages = ImageList
@@ -49,8 +52,8 @@ object frmSaveAs: TfrmSaveAs
     OnKeyDown = lstFormatsKeyDown
   end
   object btnCustomFormat: TButton
-    Left = 320
-    Top = 428
+    Left = 8
+    Top = 180
     Width = 225
     Height = 25
     Caption = 'Custom format'
@@ -58,8 +61,8 @@ object frmSaveAs: TfrmSaveAs
     OnClick = btnCustomFormatClick
   end
   object btnCancel: TButton
-    Left = 552
-    Top = 428
+    Left = 240
+    Top = 180
     Width = 81
     Height = 25
     Cancel = True
@@ -69,12 +72,12 @@ object frmSaveAs: TfrmSaveAs
   end
   object dlgSave: TSaveDialog
     Options = [ofHideReadOnly, ofPathMustExist, ofEnableSizing]
-    Left = 280
-    Top = 152
+    Left = 128
+    Top = 64
   end
   object ImageList: TImageList
-    Left = 248
-    Top = 152
+    Left = 96
+    Top = 64
     Bitmap = {
       494C010101000400040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010

@@ -1,11 +1,11 @@
 object frmDivideLines: TfrmDivideLines
-  Left = 274
-  Top = 204
-  BorderIcons = []
+  Left = 372
+  Top = 224
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Divide lines'
-  ClientHeight = 352
-  ClientWidth = 554
+  ClientHeight = 353
+  ClientWidth = 577
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -19,11 +19,11 @@ object frmDivideLines: TfrmDivideLines
   PixelsPerInch = 96
   TextHeight = 13
   object btnDivide: TButton
-    Left = 376
+    Left = 400
     Top = 320
     Width = 81
     Height = 25
-    Caption = '&Divide!'
+    Caption = '&Divide'
     Default = True
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
@@ -36,7 +36,7 @@ object frmDivideLines: TfrmDivideLines
     OnClick = btnDivideClick
   end
   object btnCancel: TButton
-    Left = 464
+    Left = 488
     Top = 320
     Width = 81
     Height = 25
@@ -48,7 +48,7 @@ object frmDivideLines: TfrmDivideLines
   object pnlDivideLines: TPanel
     Left = 8
     Top = 8
-    Width = 541
+    Width = 561
     Height = 305
     TabOrder = 2
     object lblDivideAfterLineNumber: TLabel
@@ -61,7 +61,7 @@ object frmDivideLines: TfrmDivideLines
     object Bevel1: TBevel
       Left = 8
       Top = 192
-      Width = 525
+      Width = 545
       Height = 3
     end
     object lblShowSub1: TLabel
@@ -119,18 +119,57 @@ object frmDivideLines: TfrmDivideLines
       Caption = 'Duration:'
     end
     object lblLength1: TLabel
-      Left = 184
+      Left = 192
       Top = 72
       Width = 49
       Height = 13
       Caption = 'lblLength1'
     end
     object lblLength2: TLabel
-      Left = 184
+      Left = 192
       Top = 208
       Width = 49
       Height = 13
       Caption = 'lblLength2'
+    end
+    object mmoSub2Old: TMemo
+      Left = 192
+      Top = 224
+      Width = 361
+      Height = 70
+      TabOrder = 2
+      Visible = False
+      OnChange = mmoSubtitle2Change
+      OnKeyDown = mmoSubtitle2KeyDown
+    end
+    object mmoSub1Old: TMemo
+      Left = 192
+      Top = 88
+      Width = 361
+      Height = 70
+      TabOrder = 0
+      Visible = False
+      OnChange = mmoSubtitle1Change
+      OnKeyDown = mmoSubtitle1KeyDown
+    end
+    object mmoSub1: TRichEdit
+      Left = 192
+      Top = 88
+      Width = 361
+      Height = 70
+      PlainText = True
+      TabOrder = 1
+      OnChange = mmoSubtitle1Change
+      OnKeyDown = mmoSubtitle1KeyDown
+    end
+    object mmoSub2: TRichEdit
+      Left = 192
+      Top = 224
+      Width = 361
+      Height = 70
+      TabOrder = 3
+      OnChange = mmoSubtitle2Change
+      OnKeyDown = mmoSubtitle2KeyDown
     end
     object edtDivideAfterBreakNum: TEdit
       Left = 16
@@ -138,7 +177,7 @@ object frmDivideLines: TfrmDivideLines
       Width = 33
       Height = 21
       ReadOnly = True
-      TabOrder = 2
+      TabOrder = 4
       Text = '1'
     end
     object udDivideAfterBreakNum: TUpDown
@@ -149,70 +188,70 @@ object frmDivideLines: TfrmDivideLines
       Associate = edtDivideAfterBreakNum
       Min = 1
       Position = 1
-      TabOrder = 3
+      TabOrder = 5
       OnChangingEx = udDivideAfterBreakNumChangingEx
     end
     object btn31: TButton
-      Left = 422
+      Left = 430
       Top = 8
       Width = 33
       Height = 41
       Caption = '3:1'
-      TabOrder = 10
+      TabOrder = 12
       OnClick = btn31Click
     end
     object btn13: TButton
-      Left = 389
+      Left = 397
       Top = 8
       Width = 33
       Height = 41
       Caption = '1:3'
-      TabOrder = 9
+      TabOrder = 11
       OnClick = btn13Click
     end
     object btn32: TButton
-      Left = 348
+      Left = 356
       Top = 8
       Width = 33
       Height = 41
       Caption = '3:2'
-      TabOrder = 8
+      TabOrder = 10
       OnClick = btn32Click
     end
     object btn23: TButton
-      Left = 315
+      Left = 323
       Top = 8
       Width = 33
       Height = 41
       Caption = '2:3'
-      TabOrder = 7
+      TabOrder = 9
       OnClick = btn23Click
     end
     object btn21: TButton
-      Left = 274
+      Left = 282
       Top = 8
       Width = 33
       Height = 41
       Caption = '2:1'
-      TabOrder = 6
+      TabOrder = 8
       OnClick = btn21Click
     end
     object btn12: TButton
-      Left = 241
+      Left = 249
       Top = 8
       Width = 33
       Height = 41
       Caption = '1:2'
-      TabOrder = 5
+      TabOrder = 7
       OnClick = btn12Click
     end
     object btn11: TButton
-      Left = 184
+      Left = 192
       Top = 8
       Width = 49
       Height = 41
       Caption = '1:1'
-      TabOrder = 4
+      TabOrder = 6
       OnClick = btn11Click
     end
     object chkContinueDirectly: TCheckBox
@@ -221,26 +260,8 @@ object frmDivideLines: TfrmDivideLines
       Width = 449
       Height = 17
       Caption = 'Continue directly'
-      TabOrder = 12
+      TabOrder = 14
       OnClick = chkContinueDirectlyClick
-    end
-    object mmoSub1: TMemo
-      Left = 184
-      Top = 88
-      Width = 349
-      Height = 70
-      TabOrder = 0
-      OnChange = mmoSub1Change
-      OnKeyDown = mmoSub1KeyDown
-    end
-    object mmoSub2: TMemo
-      Left = 184
-      Top = 224
-      Width = 349
-      Height = 70
-      TabOrder = 1
-      OnChange = mmoSub2Change
-      OnKeyDown = mmoSub2KeyDown
     end
     object chkUseAutoDur: TCheckBox
       Left = 8
@@ -248,89 +269,107 @@ object frmDivideLines: TfrmDivideLines
       Width = 449
       Height = 17
       Caption = 'Use automatic duration'
-      TabOrder = 11
+      TabOrder = 13
       OnClick = chkUseAutoDurClick
     end
     object tmeShowSub1: TTimeMaskEdit
       Left = 88
       Top = 88
-      Width = 89
+      Width = 97
       Height = 22
+      Alignment = taCenter
       ChangeTimeOnModify = False
       Enabled = False
       FPS = 25.000000000000000000
       MinTime = 0
       ReadOnly = True
-      TabOrder = 13
+      TabOrder = 15
       Time = 0
       TimeMode = tmTime
+      TimeStep = 100
+      FramesStep = 1
     end
     object tmeHideSub1: TTimeMaskEdit
       Left = 88
       Top = 112
-      Width = 89
+      Width = 97
       Height = 22
-      ChangeTimeOnModify = False
-      FPS = 25.000000000000000000
-      MinTime = 0
-      TabOrder = 14
-      Time = 0
-      TimeMode = tmTime
-      OnTimeChangeFromEditOnly = tmeHideSub1TimeChangeFromEditOnly
-    end
-    object tmeDuration1: TTimeMaskEdit
-      Left = 88
-      Top = 136
-      Width = 89
-      Height = 22
-      ChangeTimeOnModify = False
-      FPS = 25.000000000000000000
-      MinTime = 0
-      TabOrder = 15
-      Time = 0
-      TimeMode = tmTime
-      OnTimeChangeFromEditOnly = tmeDuration1TimeChangeFromEditOnly
-    end
-    object tmeShowSub2: TTimeMaskEdit
-      Left = 88
-      Top = 224
-      Width = 89
-      Height = 22
+      Alignment = taCenter
       ChangeTimeOnModify = False
       FPS = 25.000000000000000000
       MinTime = 0
       TabOrder = 16
       Time = 0
       TimeMode = tmTime
+      TimeStep = 100
+      FramesStep = 1
+      OnTimeChangeFromEditOnly = tmeHideSub1TimeChangeFromEditOnly
+    end
+    object tmeDuration1: TTimeMaskEdit
+      Left = 88
+      Top = 136
+      Width = 97
+      Height = 22
+      Alignment = taCenter
+      ChangeTimeOnModify = False
+      FPS = 25.000000000000000000
+      MinTime = 0
+      TabOrder = 17
+      Time = 0
+      TimeMode = tmTime
+      TimeStep = 100
+      FramesStep = 1
+      OnTimeChangeFromEditOnly = tmeDuration1TimeChangeFromEditOnly
+    end
+    object tmeShowSub2: TTimeMaskEdit
+      Left = 88
+      Top = 224
+      Width = 97
+      Height = 22
+      Alignment = taCenter
+      ChangeTimeOnModify = False
+      FPS = 25.000000000000000000
+      MinTime = 0
+      TabOrder = 18
+      Time = 0
+      TimeMode = tmTime
+      TimeStep = 100
+      FramesStep = 1
       OnTimeChangeFromEditOnly = tmeShowSub2TimeChangeFromEditOnly
     end
     object tmeHideSub2: TTimeMaskEdit
       Left = 88
       Top = 248
-      Width = 89
+      Width = 97
       Height = 22
+      Alignment = taCenter
       ChangeTimeOnModify = False
       Enabled = False
       FPS = 25.000000000000000000
       MinTime = 0
       ReadOnly = True
-      TabOrder = 17
+      TabOrder = 19
       Time = 0
       TimeMode = tmTime
+      TimeStep = 100
+      FramesStep = 1
     end
     object tmeDuration2: TTimeMaskEdit
       Left = 88
       Top = 272
-      Width = 89
+      Width = 97
       Height = 22
+      Alignment = taCenter
       ChangeTimeOnModify = False
       Enabled = False
       FPS = 25.000000000000000000
       MinTime = 0
       ReadOnly = True
-      TabOrder = 18
+      TabOrder = 20
       Time = 0
       TimeMode = tmTime
+      TimeStep = 100
+      FramesStep = 1
     end
   end
 end

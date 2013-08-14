@@ -1,3 +1,9 @@
+// This file is part of Subtitle Workshop
+// URL: subworkshop.sf.net
+// Licesne: GPL v3
+// Copyright: See Subtitle Workshop's copyright information
+// File Description: Batch Convert form
+
 unit formBatchConvert;
 
 {$WARN UNIT_PLATFORM OFF}
@@ -5,11 +11,9 @@ unit formBatchConvert;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, CheckLst, ComCtrls, ExtCtrls, Functions, General, IniFiles,
-  FileTypes, FileCtrl, USubtitleAPI, USubtitlesFunctions;
+  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls, CheckLst, ComCtrls, ExtCtrls, IniFiles, FileCtrl;
 
-type                                 
+type
   TfrmBatchConvert = class(TForm)
     pnlHeading: TPanel;
     imgDrawing: TImage;
@@ -84,7 +88,9 @@ var
 
 implementation
 
-uses formMain;
+uses
+  General, Functions, FileTypes, USubtitlesFunctions,
+  formMain;
 
 {$R *.dfm}
 
@@ -145,7 +151,7 @@ begin
       // -------- //
       //  Page 3  //
       // -------- //
-      lblDone.Caption    := ReadString('Batch convert', '24', 'Done!. See log for details:');
+      lblDone.Caption    := ReadString('Batch convert', '24', 'Done! See log for details:');
       btnSaveLog.Caption := ReadString('Batch convert', '25', 'Save...');
 
       // ----------- //
@@ -162,14 +168,14 @@ begin
       LogStr[3]  := '// ' + ReadString('Batch convert log', '03', 'Output format: %s');
       LogStr[4]  := '// ' + ReadString('Batch convert log', '04', 'Total files to convert: %d');
       LogStr[5]  := ReadString('Batch convert log', '05', 'Trying to load "%s"...');
-      LogStr[6]  := ReadString('Batch convert log', '06', 'File succesfully loaded!');
+      LogStr[6]  := ReadString('Batch convert log', '06', 'File successfully loaded!');
       LogStr[7]  := ReadString('Batch convert log', '07', 'File "%s" already existed, replacing...');
-      LogStr[8]  := ReadString('Batch convert log', '08', 'File succesfully saved to "%s"');
+      LogStr[8]  := ReadString('Batch convert log', '08', 'File successfully saved to "%s"');
       LogStr[9]  := ReadString('Batch convert log', '09', 'File "%s" already existed and you didn''t enable the program to replace it');
       LogStr[10] := ReadString('Batch convert log', '10', 'Error while loading file, can''t save!');
       LogStr[11] := '// ' + ReadString('Batch convert log', '11', 'Total conversions done: %u');
       LogStr[12] := '// ' + ReadString('Batch convert log', '12', 'Total time: %s');
-      LogStr[13] := '// ' + ReadString('Batch convert log', '13', 'All the files were converted succesfully');
+      LogStr[13] := '// ' + ReadString('Batch convert log', '13', 'All the files were converted successfully');
       LogStr[14] := '// ' + ReadString('Batch convert log', '14', 'There were errors while converting some files, see below for details');
 
       // ------------------ //
@@ -400,7 +406,7 @@ begin
   if NoteBook.PageIndex = 1 then
   begin
     mmoLog.Clear;
-    mmoLog.Lines.Add(Format(LogStr[1], [ID_PROGRAM, ID_VERSION]));
+    mmoLog.Lines.Add(Format(LogStr[1], [ID_PROGRAM, ID_FULLVERSION]));
     mmoLog.Lines.Add(Format(LogStr[2], [DateToStr(Now) + ' ' + TimeToStr(Now)]));
     mmoLog.Lines.Add(Format(LogStr[3], [cmbOutputFormat.Items[cmbOutputFormat.ItemIndex]]));
     mmoLog.Lines.Add(Format(LogStr[4], [lstFiles.Items.Count]));

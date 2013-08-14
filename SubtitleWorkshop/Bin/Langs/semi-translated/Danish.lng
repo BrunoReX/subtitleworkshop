@@ -14,6 +14,7 @@ FPS=FPS
 PlainText=Blank tekst
 STP=Undertext Oversætnings Project
 SRF=Undertekst Rapport Fil
+AllTheFiles=All files
 
 [Standard buttons]
 01=&Ok
@@ -41,6 +42,11 @@ SRF=Undertekst Rapport Fil
 14=Længde:
 15=%s (%s tegn):
 16=- Ikke oversat tekst -
+17=Lines:
+18=Notes:
+19=Pause
+20=%d subtitles selected / %d
+21=#%d / %d
 
 [Main menu header]
 01=Filer
@@ -50,6 +56,7 @@ SRF=Undertekst Rapport Fil
 05=Film
 06=Indstillinger
 07=Hjælp(Eng manual)
+08=View
 
 [Main menu/File]
 01=Ny undertekst...
@@ -66,6 +73,7 @@ SRF=Undertekst Rapport Fil
 12=Gem som...
 13=Luk
 14=Afslut
+15=Save marking
 
 [Main menu/Edit]
 01=Fortryd
@@ -77,6 +85,8 @@ SRF=Undertekst Rapport Fil
 07=Kopier
 08=Indsæt
 09=Vælg alle
+10=Invert selection
+11=Insert symbol...
 
 [Main menu/Edit/Timings]
 01=Tidsjusteringer
@@ -90,6 +100,11 @@ SRF=Undertekst Rapport Fil
 09=Automatisk visnings begrænsning
 10=Lås tidsjustering  fra fil
 11=Flyt %s Millisekunder
+12=Extend length to previous
+13=Set pauses...
+14=Shift to next
+15=Shift to previous
+16=Round time values...
 
 [Main menu/Edit/Texts]
 01=Tekster
@@ -100,6 +115,8 @@ SRF=Undertekst Rapport Fil
 06=Adskil hurtige replikker
 07=Sæt maksimum linielængde...
 08=Læs tekster fra fil
+09=Fast smart line adjust
+10=Fast unbreak subtitles
 
 [Main menu/Edit/Subtitles]
 01=Undertekster
@@ -117,6 +134,10 @@ SRF=Undertekst Rapport Fil
 13=Fjern unødige links
 14=Marker valgte undertekster
 15=Fjern markering fra valgte undertekster
+16=Auto combine subtitles...
+17=Delete dots at the beginning
+18=Jump to next marked
+19=Jump to previous marked
 
 [Main menu/Edit/Translation]
 01=Tekst oversætning
@@ -148,6 +169,8 @@ SRF=Undertekst Rapport Fil
 16=Extern visning
 17=SAMI sprog extractor
 18=Pascal manus
+19=Jump to previous error
+20=Show CpS boxes
 
 [Main menu/Movie]
 01=Åben...
@@ -156,6 +179,11 @@ SRF=Undertekst Rapport Fil
 04=Video visnings modus
 05=Vis undertekster
 06=Gem media startfil
+07=Audio stream
+08=None
+09=Video renderer
+10=Default
+11=VMR9
 
 [Main menu/Movie/Playback]
 01=Afspilning
@@ -192,6 +220,9 @@ SRF=Undertekst Rapport Fil
 03=Vis venstre panel
 04=Vis tidskontrol
 05=Anvend in-place editering
+06=Refresh language files
+07=Files refreshed
+08=keys
 
 [Main menu/Help]
 01=OM %s...
@@ -203,6 +234,9 @@ SRF=Undertekst Rapport Fil
 03=Understregning
 04=Vælg farve
 05=Fjern farvevalg
+06=Remove all tags
+07=Delete
+08=Style
 
 [Video preview hints]
 01=Afspil/Pause (%s)
@@ -221,6 +255,8 @@ SRF=Undertekst Rapport Fil
 14=Marker som første synk punkt (%s)
 15=Marker som sidste synk punkt (%s)
 16=Tilføj undertekst/video synk punkt (%s)
+17=Volume: %d%%
+18=Mute/Unmute
 
 [Save as]
 01=Gem som
@@ -247,7 +283,6 @@ SRF=Undertekst Rapport Fil
 [Settings Form]
 01=Indstillinger
 02=Ændre program konfigurationer
-; Sections
 03=Generelt
 04=Avanceret
 05=Tegn
@@ -261,9 +296,6 @@ SRF=Undertekst Rapport Fil
 13=Program
 14=Liste
 15=Menu
-;-----------------;
-; General section ;
-;-----------------;
 16=Altid øverst
 17=Tillad flere udførelser samtidigt
 18=Spørg før sletning af undertekst
@@ -276,9 +308,6 @@ SRF=Undertekst Rapport Fil
 25=Ingen interaktion mellem mærker
 26=Arbejd med stilmærker
 27=Seneste åbnede fil begrænsninger:
-;----------;
-; Advanced ;
-;----------;
 28=Smart linie justering
 29=To linier hvis længere end:
 30=Tegn
@@ -289,36 +318,21 @@ SRF=Undertekst Rapport Fil
 35=Maximal linie længde:
 36=Ændre tid:
 37=Millisekunder
-;----------;
-; Charsets ;
-;----------;
 38=Vis i hovedvindue
 39=Originale tegnsæt:
 40=Oversættnings tegntolkning:
-;-----------------;
-; Formats section ;
-;-----------------;
 41=Forud indstillet format:
 42=Vis format ved "Gem som":
 43=Vis redigeret format
 44=Vælg &alle
 45=Vælg &ingen
-;--------------------;
-; File types section ;
-;--------------------;
 46=Registrer filendelser ved start
 47=Sammenlign med de hyppigste undertekster
-;--------------;
-; Save section ;
-;--------------;
 48=Spørg om gem ved programafslut/luk undertekst
 49=Gem arbejdet automatisk hver
 50=minuter.
 51=Gem som backup
 52=Output indstillinger...
-;---------------;
-; Video preview ;
-;---------------;
 53=Dobbelklik på undertekst:
 54=Hop Sekunder:
 55=Shift-dobbelklik på undertekst:
@@ -328,9 +342,6 @@ SRF=Undertekst Rapport Fil
 59=Baglæns og fremad tid:
 60=Sekunder.
 61=Forudindstil slow motion:
-;-------------------------;
-; Video preview Subtitles ;
-;-------------------------;
 62=Vis kanter
 63=Vis skygger
 64=Prøv transparent baggrund
@@ -341,16 +352,10 @@ SRF=Undertekst Rapport Fil
 69=Kant bredde:
 70=Skygge bredde:
 71=MODELL
-;--------------------------;
-; External Preview General ;
-;--------------------------;
 72=Vælg videoafspillerens program:
 73=Find associerede program
 74=Spørg efter anden video hver gang
 75=Test altid med video:
-;---------------------------;
-; External Preview Advanced ;
-;---------------------------;
 76=Gem midlertidig undertekst i format:
 77=Original format
 78=Redigeret format:
@@ -358,25 +363,74 @@ SRF=Undertekst Rapport Fil
 80=VIDEO_FILE repræsentere videofilen med hvilken du tester underteksten . SUBT_FILE er
 parameteren med hvilken den midlertidige undertekst sendes til videoafspilleren. Du kan
 tilføje andre parameter som for eks.Fuldskærm, osv.
-;----------------;
-; Look / Program ;
-;----------------;
 81=Font som bruges i programmet:
 82=Font størrelse:
 83=Placering af "Tekst" og "Oversættelses" felt:
 84=Venster|Højrer|Midt
-;-------------;
-; Look / List ;
-;-------------;
 85=Vis yderkanter
 86=Anvend stil for undertekst
 87=Marker ikke versat tekst med farve:
 88=Vis horisontal skyder
-;-------------;
-; Look / Menu ;
-;-------------;
 89=Anvend Office XP stil menu
 90=Anvend valgfri hovedmenuer
+91=Tags mode:
+92=Multiple tags mode
+93=Single tags mode (the old mode)
+94=Auto delete tags
+95=Default subtitle duration:
+96=Default subtitle pause:
+97=Increase step (time):
+98=Increase step (frames):
+99=frames
+100=Keep min duration of:
+101=but don''t allow overlaps
+102=Automatically round time values to:
+103=Round time values on subtitle load
+104=Notes charset:
+105=Add "Open with Subtitle Workshop" to shell context menu
+106=Ask to save new subttiles
+107=Save empty subtitles
+108=Vertical video center align
+109=Enter full screen on double click
+110=Setting Show and Hide times
+111=Shift Show value:
+112=Shift Hide value:
+113=Align left when subtitles contain a new line starting with "-"
+114=Relative font size
+115=Keep subtitle on video
+116=Try antialiasing (Force using regions must be off)
+117=Smart main window and subtitle list resize
+118=Resize subtitle list columns when resizing form
+119=Mark untranslated subtitles with background:
+120=Right click selection
+121=Row height:
+122=Text margin:
+123=Selection
+124=Text:
+125=Color:
+126=Transparency:
+127=Columns
+128=Align:
+129=Display style:
+130=Full
+131=Compact
+132=Marking with color:
+133=Marking with background:
+134=Columns to mark:
+135=Mark column "%s"
+136=Marking priority:
+137=Low (before error marking)
+138=High (after error marking)
+139=Marked subtitle color in video preview:
+140=Marking file
+141=Do not save marking file
+142=Ask each time to save marking file
+143=Automatically save marking file on subtitle save
+144=Automatically load marking file
+145=Marking
+146=Play video on load
+147=Visual subtitle representation color:
+148=Hilight tags in "Text" and "Translation" fields:
 
 [Output settings]
 01=Output indstillinger
@@ -437,11 +491,13 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 03=Millisekunder
 04=Indstil til minimum visningstid
 05=* At øge tiden påvirker ikke overlapning
+06=Increase at start if necessary
 
 [Set delay]
 01=Sæt forsinkelse...
 02=For alle undertekster
 03=For valgte undertekster
+04=From first selected until last subtitle
 
 [Adjust subtitles]
 01=Juster undertekster
@@ -492,6 +548,12 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 08=Kun hvis ny begrænsning er mindre end originalen
 09=Alle undertekster
 10=Kun valgte undertekster
+11=Method
+12=Characters
+13=per second
+14=Increase at start if necessary
+15=Maximum increase at start (0 = no limit):
+16=milliseconds
 
 [Convert case]
 01=Ændringer
@@ -542,7 +604,6 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 [Batch convert]
 01=Gruppe forandring
 02=Ændre ens filer til samme format
-; Buttons
 03=< &Tilbage
 04=&Næste >
 05=Ændre
@@ -550,7 +611,6 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 07=&Luk
 08=&Alle
 09=Ingen
-; Page 1
 10=Forøgninger:
 11=Søgesti:
 12=Inkluder undermapper
@@ -558,19 +618,15 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 14=Output katalog:
 15=Output format:
 16=Forudindstillet FPS:
-; List columns
 17=Fil navn
 18=Format
 19=FPS
 20=Størrelse
-; Page 2
 21=&Tilføj
 22=&Fjern
 23=Tøm
-; Page 3
 24=Færdig!. Se loggen for detaljer:
 25=Gem...
-; Searching
 26=Kontrollerer fil %s
 
 [Batch convert log]
@@ -642,21 +698,12 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 06=Undertekst
 07=Type
 08=Beskrivelse
-;-------;
-; Types ;
-;-------;
 09=Fejl
 10=Advarsler
 11=Info
 13=Repareret
-;----------------------;
-; Information messages ;
-;----------------------;
 14=Antal fejl: %d
 15=Reparerede fejl: %d
-;---------------;
-; Error reports ;
-;---------------;
 16=Indeholder linier uden bogstaver
 17=Tom undertekst
 18=Overlapning med foregående undertekst
@@ -677,9 +724,6 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 33=Ingen mellemrum før redigeret tegn
 34=Unødige mellemrum
 35=Markeret undertekst
-;-------------;
-; Fix reports ;
-;-------------;
 36=Slettede linier uden bogstaver
 37=Tom undertekst slettet
 38=Repareret overlapning
@@ -697,8 +741,52 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 50=Tilføjet mellemrum efter tegn
 51=Tilføjet mellemrum før redigeret tegn
 52=Fjernet unødigt mellemrum
-;-----
 53=Dobbelklik for at gå til hovedvindue
+67=E
+68=W
+69=F
+70=CI
+71=Select
+72=+ Select
+73=- Select
+74=Select subtitles
+75=Add to selected subtitles
+76=Remove from selected subtitles
+77=All
+78=None
+79=Inverse
+80=Select all
+81=Select none
+82=Invert selection
+83=Error types sets
+84=Save error types set
+85=Delete error types set
+86=Error types
+87=Custom info
+88=Show/hide errors
+89=Show/hide warnings
+90=Show/hide fixed
+91=Show/hide custom info
+92=Show/hide Error types panel
+93=Show/hide Custom info panel
+65=Custom info
+66=Displayed: %d
+54=Unnecessary tags
+56=Dash on first line
+58=Too many CpS
+60=Too short pause
+62=Dialogue on one line
+55=Removed unnecessary tags
+57=Removed dash on first line
+59=Fixed too much CpS
+61=Fixed too short pause
+63=Fixed dialogue on one line
+94=Export to file
+95=Text file
+96=char
+97=sec
+98=fr
+99=cps
 
 [Information and errors Settings]
 01=Indstilinger
@@ -728,7 +816,6 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 25=For kort visningstid:
 26=For lang linie:
 27=Tegn.
-;------
 28=Linie uden bogstaver
 29=Blank undertekst
 30=Overlappede undertekster
@@ -749,7 +836,6 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 45=Mellemrum efter redigeret tegn
 46=Mellemrum før redigeret tegn
 47=Unødigt mellemrum
-;------
 48=Check for:
 49=Reparer:
 50=Redigering og mellemrum i start og slut
@@ -759,6 +845,51 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 54=Mellemrum efter "¿" og "¡"
 55=Mellemrum før "?" og "!"
 56=Mellemrum mellem nummer
+57=Too short pauses
+58="- " on first line
+59=Only if there is no "- " on second line
+60=Dialogue on one line
+61=Unnecessary tags
+62=Too many characters per second
+63=Mark too much CpS with CpS boxes
+64=Default errorr marking
+65=Set Default Styles
+66=Mark column "Num"
+67=Mark column "Pause"
+68=Mark column "Show"
+69=Mark column "Hide"
+70=Mark column "Duration"
+71=Mark column "Text"
+72=Mark as Bold
+73=Mark as Italic
+74=Mark as Underline
+75=Mark as Strikethrough
+76=Mark the text color
+77=Mark the background color
+78=Mark
+79=Automatically recheck errors
+80=Do not recheck on Pascal scripts
+81=Recheck all once after a Pascal script executes
+82=Recheck on each change made by a Pascal script (might be slow)
+83=Indicate too long lines in Text and Translation labels
+84=Indicate too short duration in Duration box
+85=Indicate too long duration in Duration box
+86=Indicate too short pause in Pause box
+87=Indicate overlapping subtitles in Pause box
+88=Indicate bad values in Show and Hide boxes
+89=Indicate subtitles over two lines in lines counter labels
+90=Text color
+91=Background color
+92=Too short pause under:
+93=Characters per second (CpS)
+94=Too many CpS over:
+95=characters per second
+96=Normal CpS box colors:
+97=Too many CpS box colors:
+98=Display percantage in CpS box
+99=Display current CpS in CpS box
+100=Display minimum time in CpS box
+101=Display maximum characters in CpS box
 
 [Various information]
 01=Diverse information
@@ -785,6 +916,18 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 22=Fed
 23=Kursiv
 24=Beregn
+25=Shortest line:
+26=Longest pause:
+27=Shortest pause:
+28=In subtitle %d, %d,%.3d seconds
+29=In subtitle %d, %d milliseconds
+30=Most CpS:
+31=Least CpS:
+32=In subtitle %d, %d cps
+33=Average CpS:
+34=Longest duration:
+35=Shortest duration:
+36=Refresh info
 
 [SAMI Language Extractor]
 01=SAMI Sprog Extraktor
@@ -811,12 +954,12 @@ tilføje andre parameter som for eks.Fuldskærm, osv.
 08=Programeret af
 09=Tillægs programmering
 10=%s af
-; Følgende linie er "DirectShow programmering"
 11=%s programmering
 12=Oversættere
 13=Beta testere
 14=Standard ikon af
 15=For opdateringer besøg:
+16=License
 
 [Error messages]
 01=Kunne ikke initialisere underteksten API. Download venligst DLL "%s" fra %s og kopier til
@@ -841,6 +984,12 @@ du gjorde da fejlen opstod.||Tryk Ok for at fortsætte, og Afbryd for at afslutte
 18=Vælg en undertekst i listen.
 19=Hvis du vælger et film fragment for en del af underteksten, så skal du vælge filmfragment for alle dele af underteksten (på nær den sidste del).
 20=Du behøver to eller flere punkter.
+21=Incorrect regular expression in Custom info %s
+22=Custom Info %d was disabled.|Fix the regular expression to enable it.
+23=Subtitle duration too short!
+24=Error: can not execute script.
+25=Error: can not compile script.
+26=Save subtitles first
 
 [Question messages]
 01=Filen "%s" er ændret.||Vil du gemme ændringerne?.
@@ -855,6 +1004,7 @@ afspillere?.
 08=Der er fundet en ny version!.||Vil du se en listen over ændringer?.
 09=Filen du forsøger gemme er skrivebeskyttet (read-only).||Vil du forsøge at gemme den
 alligevel?.
+10=Do you want to save the marking in a file?
 
 [Information messages]
 01=Kunne ikke finde flere emner af "%s".
@@ -871,6 +1021,7 @@ filen med en teksteditor og reparer klasse navn  .
 10=En del af sekvenserne i filmen kunde ikke tolkes ordentligt. Lyd eller billede codec
 mangler muligvis.
 11=Det er ikke nødvendigt at sætte filmfragment for undertekstens sidste del.
+12=A sudden error occured:|"%s"
 
 [Information and errors messages]
 01=Undertekst nr %d er en blank undertekst og vil blive fjernet.||Vil du fortsætte?.
@@ -880,4 +1031,118 @@ mangler muligvis.
 fortsætte?.
 05=Undertekst nr %d:||"%s" er en enkelt linie undertekst med "-".||Vil du fjerne "-" i
 begyndelsen af linien?.
+
+[Main menu/View]
+01=Toolbar
+02=Text style bars
+03=Statusbar
+04=Columns
+05=Show notes in left panel
+06=Show time control buttons
+07=Show lines count
+08=Visual subtitle representation
+
+[Video Popup Menu]
+01=Enter full screen
+02=Exit full screen
+03=Zoom to %d%%
+04=Reset subtitle vertical position
+
+[Time control buttons hints]
+01=Shift to previous/Extend to previous
+02=Shift to next/Extend to next
+03=Set default pause/Set default pause, if pause is too short
+04=Set ato duration/Set min duration
+
+[Auto combine subtitles]
+01=Auto combine subtitles
+02=milliseconds
+03=Combine if duration is less than (0 = no limit):
+04=Combine if CpS is greater than (0 = no limit):
+05=characters per second
+06=Don't combine if pause is greater than (0 = no limit):
+07=Punctuation marks detection
+08=Combined subtitles maximum duration (0 = no limit):
+09=Decrease duration if necessary, with no more than:
+10=Combined subtitles maximum lines length (0 = no limit):
+11=characters
+12=For all the subtitles
+13=For the selected subtitles
+
+[Set pauses]
+01=Set pauses
+02=Pauses value:
+03=Shorten duration of:
+04=First subtitle only
+05=Second subtitle only
+06=Both subtitles equally
+07=The subtitle with less CpS
+08=For all the subtitles
+09=For the selected subtitles
+
+[Round time values]
+01=Round time values
+02=Round to:
+03=milliseconds
+04=For all the subtitles
+05=For the selected subtitles
+
+[Smart line adjust]
+01=Smart line adjust
+02=Two lines if longer than:
+03=characters
+04=Break method:
+05=Equal lines
+06=Break on punctuation marks
+07=Don''t unbreak subtitles that are not too long
+08=Adjust only long subs and subs with more than 2 lines
+09=For all the subtitles
+10=For the selected subtitles
+11=Always try to find a better breaking point
+
+[Unbreak subtitles]
+01=Unbreak subtitles
+02=Characters limit
+03=No limit
+04=Don''t unbreak if line length exceeds:
+05=characters
+06=Don''t unbreak subtitles with "—" on second line
+07=For all the subtitles
+08=For the selected subtitles
+
+[Custom info]
+01=Add custom info
+02=Composite custom info
+03=Subtitles duration information
+04=Subtitles line lenght information
+05=Subtitles lines count information
+06=Subtitles pause information
+07=Subtitles CpS information
+08=Subtitles text information
+09=Custom info sets
+10=Save custom info set
+11=Delete custom info set
+12=There is no custom info. Click the "+" button to add new custom info.
+13=Caption
+14=Duration
+15=Lines length
+16=Lines count
+17=Pause
+18=CpS
+19=Text
+20=Composite info
+21=ms
+22=chars
+23=lines
+24=cps
+25=AND
+26=OR
+27=Contains (Case sensitive)
+28=Contains (Case insensitive)
+29=Does not contain (Case sensitive)
+30=Does not contain (Case insensitive)
+31=Matches regular expression
+32=Matches regular expression (tags ignored)
+33=Delete
+34=Edit
 

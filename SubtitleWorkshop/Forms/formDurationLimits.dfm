@@ -1,12 +1,12 @@
 object frmDurationLimits: TfrmDurationLimits
-  Left = 214
-  Top = 130
+  Left = 381
+  Top = 565
   BiDiMode = bdLeftToRight
-  BorderIcons = []
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'frmDurationLimits'
-  ClientHeight = 193
-  ClientWidth = 288
+  ClientHeight = 217
+  ClientWidth = 361
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -21,8 +21,8 @@ object frmDurationLimits: TfrmDurationLimits
   PixelsPerInch = 96
   TextHeight = 13
   object btnApply: TButton
-    Left = 112
-    Top = 160
+    Left = 184
+    Top = 184
     Width = 81
     Height = 25
     Caption = '&Apply'
@@ -37,8 +37,8 @@ object frmDurationLimits: TfrmDurationLimits
     OnClick = btnApplyClick
   end
   object btnCancel: TButton
-    Left = 200
-    Top = 160
+    Left = 272
+    Top = 184
     Width = 81
     Height = 25
     Cancel = True
@@ -49,13 +49,13 @@ object frmDurationLimits: TfrmDurationLimits
   object Panel1: TPanel
     Left = 8
     Top = 8
-    Width = 273
-    Height = 145
+    Width = 345
+    Height = 169
     TabOrder = 2
     object lblNoOverlapping: TLabel
       Left = 16
       Top = 112
-      Width = 249
+      Width = 321
       Height = 25
       AutoSize = False
       Caption = '* Increasing the time will not cause overlapping'
@@ -77,7 +77,7 @@ object frmDurationLimits: TfrmDurationLimits
     object chkSetMaxDur: TCheckBox
       Left = 8
       Top = 8
-      Width = 257
+      Width = 329
       Height = 17
       Caption = 'Set maximum duration'
       TabOrder = 0
@@ -98,10 +98,18 @@ object frmDurationLimits: TfrmDurationLimits
     object chkSetMinDur: TCheckBox
       Left = 8
       Top = 64
-      Width = 257
+      Width = 329
       Height = 17
       Caption = 'Set minimum duration'
       TabOrder = 2
+    end
+    object chkIncreaseAtStart: TCheckBox
+      Left = 16
+      Top = 140
+      Width = 321
+      Height = 17
+      Caption = 'Increase at start if necessary'
+      TabOrder = 4
     end
   end
 end
