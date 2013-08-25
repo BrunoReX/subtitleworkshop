@@ -9,8 +9,8 @@
 !define PRODUCT_SHORTNAME "SubtitleWorkshop"
 !define PRODUCT_EXENAME "subtitleworkshop.exe"
 !define VER_MAJOR 6
-!define VER_MINOR 0
-!define BUILD_NUM 130814
+!define VER_MINOR "0a"
+!define BUILD_NUM 130825
 !define VERSION "${VER_MAJOR}.${VER_MINOR}"
 !define VERSION_FULL "${VERSION} (build ${BUILD_NUM})"
 !define WEBSITE "http://subworkshop.sf.net/"
@@ -268,11 +268,12 @@ SubSection $(TITLE_Manual) Manual
     SetOutPath $INSTDIR\Help
     File "${FILESPATH}\Help\ManualBG.html"
   SectionEnd
-
+/*
   Section $(TITLE_ManualRussian) ManualRussian
     SetOutPath $INSTDIR\Help
     File "${FILESPATH}\Help\ManualRUS.html"
   SectionEnd
+*/
 
 SubSectionEnd
 
@@ -308,9 +309,9 @@ SubSection $(TITLE_ShortCuts) ShortCuts
     ${If} ${SectionIsSelected} ${ManualBulgarian}
       CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (Bulgarian).lnk" "$INSTDIR\Manual\ManualBG.html" "" "$INSTDIR\Manual\ManualBG.html" 0
     ${EndIf}
-    ${If} ${SectionIsSelected} ${ManualRussian}
+    /*${If} ${SectionIsSelected} ${ManualRussian}
       CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (Russian).lnk" "$INSTDIR\Manual\ManualRUS.html" "" "$INSTDIR\Manual\ManualRUS.html" 0
-    ${EndIf}
+    ${EndIf}*/
 
     CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT_EXENAME}" "" "$INSTDIR\${PRODUCT_EXENAME}" 0
     CreateShortCut "$SMPROGRAMS\${PRODUCT}\Uninstall ${PRODUCT}.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0

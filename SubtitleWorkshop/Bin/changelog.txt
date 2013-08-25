@@ -2,6 +2,13 @@ SUBTITLE WORKSHOP VERSION HISTORY
 
 
 ==========================================================================================================
+Changes in version 6.0a (build 130825) since version 6.0 (build 130814)
+==========================================================================================================
+
+* Bug fixed: The input language changes automatically in various situations, especially when using a right-to-left language like Arabic or Hebrew.
+* Edit > Timings > Extend Length to previous shortcut changed to SHIFT+ALT+E in order to free the ALT+E combination used in the Polish keyboard.
+
+==========================================================================================================
 Changes in version 6.0 (build 130814) since version 2.51
 ==========================================================================================================
 
@@ -66,7 +73,7 @@ Changes in version 6.0 (build 130814) since version 2.51
 		--> The Translation and the Show Time and Hide Time values can now be edited with "in-place edition".
 		--> The Pause and Duration values can now be edited using "in-place edition".
 		--> Time values can now be modified with the mouse scroll wheel when using "in-place edition".		
-		--> When using "in-place edition", the pop-up edition boxes now have the same alignment as the corresponding cell in the Subtitles List.
+		--> When using "in-place edition", the popup edition boxes now have the same alignment as the corresponding cell in the Subtitles List.
 	--> System menu and Close button added to all modal windows.
 	--> The color value of the Color Tag Dialog is now automatically saved.
 
@@ -112,8 +119,8 @@ Changes in version 6.0 (build 130814) since version 2.51
 		--> "Reset subtitles vertical position" - sets the default vertical position for the subtitles in the Video Preview Panel.
 		--> "Information..." - equivalent to "Movie: Information...".
 	--> Show Time and Hide Time values can now be set by clicking with the mouse on the Time Counter below the video. Clicking with the left mouse button will set the Show Time, clicking with the right mouse button will set the Hide Time. In addition, while the mouse button (left or right) is held down, the mouse scroll wheel can be used to further modify the corresponding (Show or Hide) time value.
-	--> If the SHIFT key is held when setting the Show Time/Hide Time via clicking on the "Set Show Time"/"Set Hide Time" button or on the Time Counter, the Show Time/Hide Time will be set and then the subtitle will be shifted in time.
-	--> If more than one subtitles are selected when setting the Show Time/Hide Time via clicking on the "Set Show Time"/"Set Hide Time" button or on the Time Counter, the Show Time of the first selected subtitle/the Hide Time of the last selected subtitle will be set and then all selected subtitles will be shifted in time accordingly.
+	--> If the SHIFT key is held when setting the Show Time/Hide Time via clicking on tha "Set Show Time"/"Set Hide Time" button or on the Time Counter, the Show Time/Hide Time will be set and then the subtitle will be shifted in time.
+	--> If more than one subtitles are selected when setting the Show Time/Hide Time via clicking on tha "Set Show Time"/"Set Hide Time" button or on the Time Counter, the Show Time of the first selected subtitle/the Hide Time of the last selected subtitle will be set and then all selected subtitles will be shifted in time accordingly.
 	--> The Video Preview Panel height ratio (in relation to the Subtitles List) is now kept and automatically saved.
 	--> When the mouse cursor is over the Volume Control, a tooltip with the current volume per cent is now displayed.
 	--> The Time Counter below the video now displays the video time at the current mouse cursor position, when the mouse cursor is moved over the Seekbar.
@@ -160,7 +167,7 @@ Changes in version 6.0 (build 130814) since version 2.51
 		--> A new ("CPS") method added in "Automatic Durations".
 	"TEXTS" MENU:
 		--> "Smart Line Adjust" added - works like the old "Smart Line Adjust" (now called "Fast smart line adjust"), but has some additional settings - it can break the text on dialogue dashes and punctuation marks ("Break on punctuation marks" method); it can be set not to unbreak subtitles with the "Don't unbreak subtitles that are not too long" option (e.g. this: "Hello.|How are you?" will NOT be changed to "Hello. How are you?"); it can be set not to modify normal subtitles with the "Adjust only long subs and subs with more than 2 lines" option (e.g. this: "What do you think|for my new lovely collection?" will NOT be changed to "What do you think for my|new lovely collection?"), which preserves the original look of those subtitles and doesn't break their readability. If the "Always try to find a better breaking point" option (for the "Break on punctuation marks" method) is checked, Subtitle Workshop will always try to find a better break point; if it's not checked - Subtitle Workshop will try to find a better break point only if the previous break point is not a punctuation mark already.
-		--> "Unbreak subtitles" added - works like the old "Unbreak subtitles" (now called "Fast unbreak subtitles"), but has some additional settings - you can set a maximum line length ("Don't unbreak if line length exceeds"), and set it not to unbreak subtitles with dialogue ("Don't unbreak subtitles with "-" on second line").
+		--> "Unbreak subtitles" added - works like the old "Unbreak subtitles" (now called "Fast unbreak subtitles"), but has some additional settings - you can set a maximum line lenght ("Don't unbreak if line length exceeds"), and set it not to unbreak subtitles with dialogue ("Don't unbreak subtitles with "-" on second line").
 		--> Old "Smart line adjust" renamed to "Fast smart line adjust".
 		--> Old "Unbreak subtitles" renamed to "Fast unbreak subtitles".
 	"SUBTITLES" MENU:
@@ -206,7 +213,7 @@ Changes in version 6.0 (build 130814) since version 2.51
 			--> There are no Custom info fields at first. Add a new field with the "+" button or with its dropdown menu. The following Custom info rule types are available:
 				a) "Composite custom info" (default when you press the "+" button): look for subtitles that fit several rules simultaneously:
 					--> When a "Composite custom info" is added, a new window - the Composite Custom Info Window - appears where all the Composite custom info's sub-rules can be set. Enter the name of the Composite custom info in the "Caption" field. With a Composite custom info, Subtitle Workshop can look for subtitles that fit several rules simultaneously. Those rules can be the same as the other Custom info rule types ("Duration", "Line length", "Line count", "Pause", "CPS", and "Text" - see their description below). Add new subrules with the "+" button.
-						Example: To find all subtitles that have two lines and a duration less than 1.5 seconds, add a "Composite custom info" with the "+" button. Enter a name for this rule in the "Caption" field. Click on the "+" button in the Composite Custom Info Window below and add a "Subtitles duration information" subfield, and after its "<" sign enter the number 1500. Click on the "+" button again and add a "Subtitles lines count information" subfield and after its ">" sign enter the number 1, after its "<" sign enter the number 3, and from the dropdown select "AND". This way Subtitle Workshop will be looking for subtitles with a duration < 1500 ms, having more than one and less than three (exactly two) lines. Click the "OK" button to finish editing the Composite custom info.
+						Example: To find all subtitles that have two lines and a duration less than 1.5 seconds, add a "Composite custom info" with the "+" button. Enter a name for this rule in the "Caption" field. Click on the "+" button in the Composite Custom Info Window below and add a "Subtitles duration information" subfield, and after its "<" sign enter the number 1500. Click on the "+" button again and add a "Subtitles lines count information" subfield and after its ">" sign enter the number 1, after its "<" sign enter the number 3, and from the dropdown select "AND". This way Subtitle Workshop will be looking for subtitles with a duration < 1500 ms, having more than one and less than three (exactly two) lines. Click the "Ok" button to finish editing the Composite custom info.
 					--> The "Composite custom info" type fields contain an "Edit" button - when clicked, the Composite Custom Info Window appears.
 				b) "Subtitles duration information":
 					--> This field type has two textboxes (for two rule values: ">" - greater than, and "<" - less than) - enter the desired number (in milliseconds) in them. You can also select a logical connection between the rules from the dropdown box ("AND" - look for subtitles fitting both conditions; "OR" - look for subtitles fitting at least one of the conditions). You can enter only one value and leave the other field and the dropdown box empty if you wish.
@@ -414,7 +421,7 @@ Changes in version 6.0 (build 130814) since version 2.51
 		--> New Pascal Script functions added:
 			--> procedure GoToLineNumber(const Line: Integer); - selects and scrolls into view the line with a number Line.
 			--> function GetSWVersion(): String; - returns Subtitle Workshop's current version.
-			--> function GetAPIVersion(): String; - return Subtitle API's current version.
+			--> function GetAPIVersion(): String; - return SubtitleAPI's current version.
 			--> function GetOrgFilename(): String; - returns the original file's name (including its extension).
 			--> function GetOrgFilepath(): String; - returns the original file's path (both drive and directory, including the final backslash).
 			--> function GetTransFilename(): String; - returns the translation file's name (including its extension).
@@ -432,7 +439,8 @@ Changes in version 6.0 (build 130814) since version 2.51
 			--> Dot after punctuation marks ("?.", "!.", ":.") OCR errors detection added
 			--> Unnecessary spaces fixes removed	
 	--> TAGS:
-		--> <B>, <I>, <U>, and <C:#XXXXXX> tags (capitalized) are now supported.
+		--> Support added for the following tags: <font color=XXXXXX>, <font color=#XXXXXX>, <font color="XXXXXX">, and <font color="#XXXXXX">.
+		--> <B>, <I>, and <U> tags (capitalized) are now supported.
 	--> MAIN WINDOW"
 		--> There's less flickering when you resize the Main Window now.
 		--> Shortcut files can be now dragged and dropped in Subtitle Workshop.
@@ -515,14 +523,14 @@ Changes in version 6.0 (build 130814) since version 2.51
 	--> "Edit: Texts: Fast divide lines" doesn't set the subtitle file as modified.
 	--> When changing times using "in-place edition", the subtitle file is not set as modified.
 	--> Pressing the ENTER key when changing the Text using "in-place edition" causes an error or doesn't set the new text/translation.
-	--> When using "in-place edition", the edit boxes that pop up don't always fill the corresponding cell properly.	
+	--> When using "in-place edition", the edit boxes that popup don't always fill the corresponding cell properly.	
 	--> The text in the Subtitles List becomes empty when the "Default" charset is being used.
 	--> The Subtitle in the Video Preview Panel doesn't show up immediately when "Movie: Show subtitles" is turned on after it was turned off.
 	--> Clicking on the "Calculate" button in the "Extras" tab of the Various Information Window when the length of the longest subtitle is 0 (all subtitles are empty), causes Subtitle Workshop to crash.
 	--> If only one instance of Subtitle Workshop is allowed, when trying to open a subtitle file and Subtitle Workshop is already running, the file is sometimes not opened at all.
 	--> Output settings are not loaded when using command line parameters.
 	--> When setting "Backward and forward time" in "Settings: Settings: Video Preview", if the full number is not written (blanks are left - '_'), an error occurs.
-	--> When opening a .srf file that references a subtitle file that does not exist, an incorrect error message is displayed (The file "<file name>" is a bad subtitle or an unsupported format.) and then an error occurs.
+	--> When opening a .srf file that references a subtitle file that does not exist, an incorrect error message is dislpayed (The file "<file name>" is a bad subtitle or an unsupported format.) and then an error occurs.
 	--> In Translator Mode, loading a "Plain text" is not possible (always leads to error).
 	-->	In Translator Mode, after loading a .srf file, an error occurs.
 	--> Other small bugs.

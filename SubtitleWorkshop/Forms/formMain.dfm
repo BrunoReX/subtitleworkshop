@@ -7375,7 +7375,7 @@ object frmMain: TfrmMain
         end
         object mnuExtendLength2: TMenuItem
           Caption = 'Extend length to previous'
-          ShortCut = 49221
+          ShortCut = 41029
           OnClick = mnuExtendLength2Click
         end
         object mnuShiftToNext: TMenuItem

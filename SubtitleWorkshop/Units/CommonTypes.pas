@@ -9,7 +9,7 @@ unit CommonTypes;
 interface
 
 uses
-  Controls, StdCtrls, ComCtrls, ExtCtrls, Messages;
+  Controls, StdCtrls, ComCtrls, ExtCtrls, Messages, Classes, Windows, RichEdit;
 
 type
 
@@ -42,6 +42,14 @@ type
   TComboBox = class(StdCtrls.TComboBox)
   protected
     procedure WMPaste(var Msg: TWMPaste); message WM_PASTE;
+  end;
+  //added by adenry: end
+
+  //added by adenry: begin
+  //Interceptor calss for TRichEdit
+  TRichEdit = Class(ComCtrls.TRichEdit)
+  protected
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
   end;
   //added by adenry: end
 
@@ -227,6 +235,19 @@ implementation
 
 uses
   formMain;
+
+// -----------------------------------------------------------------------------
+
+//Completely remove the auto keyboard switching feature, which RichEdit controls can turn on by itself
+procedure TRichEdit.KeyDown(var Key: Word; Shift: TShiftState);
+var
+  i: Integer;
+begin
+  i := SendMessage(Handle, EM_GETLANGOPTIONS, 0, 0);    //get current lang options
+  i := i and not IMF_AUTOKEYBOARD;                      //remove auto keyboard from current lang options
+  SendMessage(Handle, EM_SETLANGOPTIONS, 0, LPARAM(i)); //set new lang options
+  inherited;
+end;
 
 // -----------------------------------------------------------------------------
 
