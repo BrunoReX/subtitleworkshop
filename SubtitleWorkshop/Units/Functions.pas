@@ -2315,12 +2315,15 @@ end;
 
 //added by adenry: begin
 //Get RichEdit Text as ANSI String WITH THE PROPER ENCODING instead of the encoding of the system's default non-Unicode language
+//This is the only function changed in 6.0b
 function GetRichEditText(RichEdit: TRichEdit): AnsiString;
 var
   GetTextLengthEx: TGetTextLengthEx;
   GetTextEx: TGetTextEx;
   Len: Integer;
   AnsiCodePage: UINT;
+
+  i: Integer; //added by adenry
 begin
   //Get and set text length:
   AnsiCodePage := CharsetToCodePage(RichEdit.Font.Charset);
@@ -2329,7 +2332,13 @@ begin
   Len := SendMessage(RichEdit.Handle, EM_GETTEXTLENGTHEX, WPARAM(@GetTextLengthEx), 0);
   if Len=E_INVALIDARG then
     raise Exception.Create('EM_GETTEXTLENGTHEX failed');
+
+  Len := Len*2; //6.0b //added by adenry - we might be dealing with 2-byte characters (CJK languages), so we need the byte size to be twice the number of the characters
+
   SetLength(Result, Len);
+
+  for i := 1 to Len do Result[i] := #0; //6.0b //added by adenry - fill the Result with #0. If we have 1-byte characters or a mix of 2-byte and 1-byte characters (CJK languages), the first #0 will terminate the string.
+
   if Len=0 then
     exit;
   //Get text:
@@ -2339,6 +2348,11 @@ begin
   GetTextEx.lpDefaultChar := nil;
   GetTextEx.lpUsedDefChar := nil;
   SendMessage(RichEdit.Handle, EM_GETTEXTEX, WPARAM(@GetTextEx), LPARAM(PChar(Result))); //PWideChar changed to PChar
+
+  //added by adenry: trim unnecessary trailing #0 characters
+  i := Pos(#0, Result);             //6.0b
+  if i > 0 then                     //6.0b
+    Result := Copy(Result, 1, i-1); //6.0b
 end;
 //added by adenry: end
 
