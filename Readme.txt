@@ -1,12 +1,9 @@
-The source code included is old and may need some tweaks to be compiled with latest versions of components.
+Subtitle Workshop is released as opensource under the GNU/GPL version 3 license.
+Recent version of main program and sources are available at http://sw.binhoster.com
 
-It was originally made with Delphi 7.
+Versions up to 2.51 are coded by
+UruSoft (DekSoft, AML) in 2001-2008 years.
 
-Additional components you need:
-- RemObjects Pascal Script - http://www.remobjects.com
-- VirtualTreeView - http://www.delphi-gems.com/VirtualTreeview/
-
-
-Also installer files are old and have not been changed, so they will not work with latest NSIS version.
-
-Subtitle Workshop is released under the GNU/GPL 3 license. The About Window needs updating to reflect this fact.
+Original 2.51 sources from http://sourceforge.net/projects/subworkshop/
+are improved to version 2.52 by Bedazzle in 2011-2012.
+This work is dedicated to the memory of my loving mom Jelena.
