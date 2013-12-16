@@ -94,7 +94,7 @@ OutputDir=..\Bin\SubtitleAPI
 UnitOutputDir=DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=..\Lib;$(DELPHI)\Lib\Debug
+SearchPath=$(DELPHI)\Lib\Debug;Source;Source\ReadFormats;Source\SaveFormats;..\Lib;..\..\3rd party components\XML Parser
 Packages=vcl;rtl;dsnapcon;dsnap;dbrtl;vcldb;vclx;adortl;bdertl;vcldbx;ibxpress;teeui;teedb;tee;dss;visualclx;visualdbclx;vclactnband;USViPlay3
 Conditionals=
 DebugSourceDirs=
@@ -138,10 +138,7 @@ Comments=
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=3
-Item0=..\Lib;$(DELPHI)\Lib\Debug
-Item1=$(DELPHI)\Lib\Debug
-Item2=$(DELPHI)\Lib\Debug;components\XMLParser
+Count=0
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=DCU

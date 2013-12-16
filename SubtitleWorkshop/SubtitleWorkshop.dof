@@ -94,10 +94,10 @@ OutputDir=Bin
 UnitOutputDir=DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=SWComponents\Sources
+SearchPath=Lib;Units;SWComponents\Sources;..\3rd party components\Innerfuse Pascal Script;..\3rd party components\Virtual Treeview\Source
 Packages=SWComponents
 Conditionals=DEBU
-DebugSourceDirs=
+DebugSourceDirs=..\3rd party components\Innerfuse Pascal Script\
 UsePackages=0
 [Parameters]
 RunParams=
@@ -141,9 +141,7 @@ Item0=DEBU
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=2
-Item0=SWComponents\Sources
-Item1=SWComponents\Sources;$(DELPHI)\Projects\Bpl
+Count=0
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=DCU
