@@ -90,7 +90,7 @@ MaxStackSize=1048576
 ImageBase=4194304
 ExeDescription=
 [Directories]
-OutputDir=G:\URUSoft\Programs\Subtitle Workshop\2.52\Bin\SubtitleAPI
+OutputDir=..\Source\Bin\SubtitleAPI
 UnitOutputDir=
 PackageDLLOutputDir=
 PackageDCPOutputDir=
@@ -101,7 +101,7 @@ DebugSourceDirs=
 UsePackages=0
 [Parameters]
 RunParams=
-HostApplication=G:\URUSoft\Programs\Subtitle Workshop\2.52\Bin\SubtitleWorkshop.exe
+HostApplication=..\Source\Bin\SubtitleWorkshop.exe
 Launcher=
 UseLauncher=0
 DebugCWD=
@@ -141,10 +141,4 @@ Item0=ViPlay
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlOutputDirectorry]
-Count=6
-Item0=G:\URUSoft\Programs\Subtitle Workshop\2.52\Bin\SubtitleAPI
-Item1=G:\URUSoft\Programs\Subtitle Workshop\2.51\Bin\SubtitleAPI
-Item2=G:\URUSoft\Programs\Subtitle Workshop\2.50\SubtitleAPI
-Item3=G:\URUSoft\Programs\Subtitle Workshop\2.04\SubtitleAPI
-Item4=G:\URUSoft\Programs\Subtitle Workshop\2.02\SubtitleAPI
-Item5=D:\AML\Programas\Componentes\Dlls\Subtitle API\Demos\Delphi
+Count=0
