@@ -5,6 +5,6 @@ FOR /F "SKIP=1 DELIMS=" %%A IN ('WMIC CPU GET ADDRESSWIDTH') DO IF NOT DEFINED O
 SET DELPHI_PATH=%ProgramFiles%\Borland\Delphi7
 IF %OS_ARCH%==64 SET DELPHI_PATH=%ProgramFiles(x86)%\Borland\Delphi7
 
-"%DELPHI_PATH%\Bin\dcc32.exe" "%~dp0\SubtitleWorkshop.dpr"
+"%DELPHI_PATH%\Bin\dcc32.exe" "SubtitleWorkshop.dpr"
 
 PAUSE
