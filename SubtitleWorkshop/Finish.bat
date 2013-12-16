@@ -1,6 +1,25 @@
 @echo off
-"D:\Archivos de programa\Borland\Delphi7\Bin\dcc32.exe" "G:\URUSoft\Programs\SubtitleAPI_Old\SubtitleAPI.dpr"
-"G:\UPX\upx.exe" "G:\URUSoft\Programs\Subtitle Workshop\2.51\Bin\SubtitleAPI\SubtitleAPI.dll" --compress-exports=1 --compress-resources=1 --strip-relocs --best --compress-icons=1
 
-"D:\Archivos de programa\Borland\Delphi7\Bin\dcc32.exe" "G:\URUSoft\Programs\Subtitle Workshop\2.51\SubtitleWorkshop.dpr"
-"G:\UPX\upx.exe" "G:\URUSoft\Programs\Subtitle Workshop\2.51\Bin\SubtitleWorkshop.exe" --compress-exports=1 --compress-resources=1 --strip-relocs --best --compress-icons=1
+SET UPX_PATH=C:\Others\UPX\upx.exe
+
+FOR /F "SKIP=1 DELIMS=" %%A IN ('WMIC CPU GET ADDRESSWIDTH') DO IF NOT DEFINED OS_ARCH SET OS_ARCH=%%A
+
+SET DELPHI_PATH=%ProgramFiles%\Borland\Delphi7
+IF %OS_ARCH%==64 SET DELPHI_PATH=%ProgramFiles(x86)%\Borland\Delphi7
+
+CD "%~dp0\.."
+CD SubtitleAPI
+"%DELPHI_PATH%\Bin\dcc32.exe" "SubtitleAPI.dpr"
+
+CD "%~dp0"
+"%DELPHI_PATH%\Bin\dcc32.exe" "SubtitleWorkshop.dpr"
+
+IF EXIST "%UPX_PATH%" GOTO UPX_COMPRESS
+GOTO END
+
+:UPX_COMPRESS
+"%UPX_PATH%" "%~dp0\Bin\SubtitleAPI\SubtitleAPI.dll" --compress-exports=1 --compress-resources=1 --strip-relocs --best --compress-icons=1
+"%UPX_PATH%" "%~dp0\Bin\SubtitleWorkshop.exe" --compress-exports=1 --compress-resources=1 --strip-relocs --best --compress-icons=1
+
+:END
+PAUSE
