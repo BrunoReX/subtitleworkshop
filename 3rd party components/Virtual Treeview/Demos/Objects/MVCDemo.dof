@@ -3,7 +3,7 @@ Version=7.0
 [Compiler]
 A=8
 B=0
-C=0
+C=1
 D=1
 E=0
 F=0
@@ -17,7 +17,7 @@ M=0
 N=1
 O=1
 P=1
-Q=1
+Q=0
 R=0
 S=0
 T=0
@@ -25,7 +25,7 @@ U=0
 V=1
 W=0
 X=1
-Y=2
+Y=1
 Z=1
 ShowHints=1
 ShowWarnings=1
@@ -80,7 +80,7 @@ UnsafeType=0
 UnsafeCode=0
 UnsafeCast=0
 [Linker]
-MapFile=0
+MapFile=3
 OutputObjs=0
 ConsoleApp=1
 DebugInfo=0
@@ -90,14 +90,14 @@ MaxStackSize=1048576
 ImageBase=4194304
 ExeDescription=
 [Directories]
-OutputDir=Bin
-UnitOutputDir=DCU
+OutputDir=
+UnitOutputDir=
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=$(DELPHI)\Lib\Debug;DCU;..\3rd party components\ifps3;..\Components\Sources;..\3rd party components\TntUnicode\Source;..\3rd party components\Virtual Treeview\Source;..\3rd party components\RZNEdit
-Packages=vcl;vclx;qrpt;rtl;vclshlctrls;dbrtl;ThemeManager6;vcldb;SynEdit_D6;bdertl;ibxpress;dsnap;dsnapcrba;dsnapcon;VclSmp;vclie;xmlrtl;inet;inetdbbde;inetdbxpress;nmfast;webdsnap;websnap;dbexpress;indy;dclOffice2k;MenuMi;LabelLink;adortl;vcldbx;cds;bdecds;teeui;teedb;tee;dss;teeqr;visualclx;visualdbclx;inetdb;dbxcds;VirtualTreesD6;SubtituloMi
-Conditionals=DOMEMCHECKX
-DebugSourceDirs=..\3rd party components\ifps3\
+SearchPath=..\..\Source
+Packages=vcl;rtl;vclx
+Conditionals=
+DebugSourceDirs=
 UsePackages=0
 [Parameters]
 RunParams=
@@ -105,52 +105,35 @@ HostApplication=
 Launcher=
 UseLauncher=0
 DebugCWD=
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
 [Version Info]
-IncludeVerInfo=1
-AutoIncBuild=1
-MajorVer=2
-MinorVer=52
-Release=1
-Build=66
+IncludeVerInfo=0
+AutoIncBuild=0
+MajorVer=1
+MinorVer=0
+Release=0
+Build=0
 Debug=0
-PreRelease=1
+PreRelease=0
 Special=0
 Private=0
 DLL=0
-Locale=1033
+Locale=1031
 CodePage=1252
 [Version Info Keys]
-CompanyName=Urusoft + Bedazzle
+CompanyName=
 FileDescription=
-FileVersion=2.52.1.66
+FileVersion=1.0.0.0
 InternalName=
 LegalCopyright=
 LegalTrademarks=
-OriginalFilename=SubtitleWorkshop.exe
-ProductName=Subtitle Workshop
-ProductVersion=2.52 RC
+OriginalFilename=
+ProductName=
+ProductVersion=1.0.0.0
 Comments=
 [Excluded Packages]
-[HistoryLists\hlDebugSourcePath]
-Count=0
 [HistoryLists\hlConditionals]
-Count=2
-Item0=DOMEMCHECKX
-Item1=DOMEMCHECK
+Count=1
+Item0=EUREKALOG;EUREKALOG_VER6
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
-[HistoryLists\hlSearchPath]
-Count=0
-[HistoryLists\hlUnitOutputDirectory]
-Count=2
-Item0=DCU
-Item1=\DCU
-[HistoryLists\hlOutputDirectorry]
-Count=2
-Item0=Bin
-Item1=\Bin
