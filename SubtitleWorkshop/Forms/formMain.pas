@@ -8,7 +8,7 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Menus, VirtualTrees, ComCtrls, Mask, TreeViewHandle,
   USubtitlesFunctions, Functions, MiMenu, General, USubtitleAPI, IniFiles,
-  ToolWin, MiSubtitulo, ImgList, VideoPreview, DirectShow9, ShellAPI, MiHint,
+  ToolWin, MiSubtitulo, ImgList, VideoPreview, DirectShow9, ShellAPI,
   FileTypes, NFormSizing, FastStrings, InfoErrorsFunctions, ClipBrd, URLMon,
   SWSeekBar, SWButton, USSpeller, Undo, SWTimeCounter, StrMan, ShortCuts,
   TimeMaskEdit, VTInPlaceEdition, FileCtrl, IFPS3CompExec, ifpsComp, ifps3,
@@ -156,7 +156,6 @@ type
     mnuSetColor: TMenuItem;
     dlgColor: TColorDialog;
     mnuRemoveColorTags: TMenuItem;
-    MiHint: TMiHint;
     tmrSaveWork: TTimer;
     N26: TMenuItem;
     mnuReadTimesFromFile: TMenuItem;

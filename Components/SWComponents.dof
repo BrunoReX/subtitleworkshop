@@ -91,10 +91,10 @@ ImageBase=4194304
 ExeDescription=
 [Directories]
 OutputDir=
-UnitOutputDir=
+UnitOutputDir=..\SubtitleWorkshop\DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\URUSoft\Programs\SubtitleAPI\URUSoft-Generic;G:\URUSoft\Programs\SubtitleAPI\3rd-party
+SearchPath=Sources;..\SubtitleAPI;..\SubtitleWorkshop\Units
 Packages=vcl;rtl;vclx;indy;inet;xmlrtl;vclie;inetdbbde;inetdbxpress;dbrtl;dsnap;dsnapcon;vcldb;soaprtl;VclSmp;dbexpress;dbxcds;inetdb;bdertl;vcldbx;webdsnap;websnap;adortl;ibxpress;teeui;teedb;tee;dss;visualclx;visualdbclx;vclactnband;vclshlctrls;IntrawebDB_50_70;Intraweb_50_70;Rave50CLX;Rave50VCL;dclOffice2k
 Conditionals=
 DebugSourceDirs=
@@ -138,8 +138,4 @@ Comments=
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=4
-Item0=G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\URUSoft\Programs\SubtitleAPI\URUSoft-Generic;G:\URUSoft\Programs\SubtitleAPI\3rd-party
-Item1=G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\URUSoft\Programs\SubtitleAPI\URUSoft-Generic
-Item2=G:\URUSoft\Programs\Subtitle Workshop\Components\Sources
-Item3=\Sources
+Count=0

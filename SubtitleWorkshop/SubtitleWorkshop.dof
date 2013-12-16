@@ -94,7 +94,7 @@ OutputDir=Bin
 UnitOutputDir=DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=G:\Delphi\Componentes\VirtualTreeView;G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\URUSoft\Programs\SubtitleAPI\URUSoft-Generic;G:\Delphi\Componentes\PascalScript;G:\Delphi\Componentes\PascalScript\dunit;C:\Program Files\Borland\Delphi7\Virtual Treeview\Source;C:\Backa\Urusoft\_SW_2.51_sources\SW251src\DCU;C:\Backa\Urusoft\_SW_2.51_sources\SWComponents\Sources;C:\Backa\Urusoft\components\ifps3
+SearchPath=DCU;..\Components\Sources;..\SubtitleAPI;..\3rd party components\ifps3;..\3rd party components\Virtual Treeview\Source
 Packages=vcl;vclx;qrpt;rtl;vclshlctrls;dbrtl;ThemeManager6;vcldb;SynEdit_D6;bdertl;ibxpress;dsnap;dsnapcrba;dsnapcon;VclSmp;vclie;xmlrtl;inet;inetdbbde;inetdbxpress;nmfast;webdsnap;websnap;dbexpress;indy;dclOffice2k;MenuMi;LabelLink;adortl;vcldbx;cds;bdecds;teeui;teedb;tee;dss;teeqr;visualclx;visualdbclx;inetdb;dbxcds;VirtualTreesD6;SubtituloMi
 Conditionals=
 DebugSourceDirs=
@@ -135,41 +135,14 @@ ProductName=
 ProductVersion=1.0.0.0
 Comments=
 [Excluded Packages]
-c:\program files\borland\delphi7\Projects\Bpl\sciedit.bpl=TIASciEdit v 1.01
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=24
-Item0=G:\Delphi\Componentes\VirtualTreeView;G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\URUSoft\Programs\SubtitleAPI\URUSoft-Generic;G:\Delphi\Componentes\PascalScript;G:\Delphi\Componentes\PascalScript\dunit;C:\Program Files\Borland\Delphi7\Virtual Treeview\Source;C:\Backa\Urusoft\_SW_2.51_sources\SW251src\DCU;C:\Backa\Urusoft\_SW_2.51_sources\SWComponents\Sources;C:\Backa\Urusoft\components\ifps3
-Item1=G:\Delphi\Componentes\VirtualTreeView;G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\URUSoft\Programs\SubtitleAPI\URUSoft-Generic;G:\Delphi\Componentes\PascalScript;G:\Delphi\Componentes\PascalScript\dunit;C:\Program Files\Borland\Delphi7\Virtual Treeview\Source;C:\Backa\Urusoft\_SW_2.51_sources\SW251src\DCU;C:\Backa\Urusoft\_SW_2.51_sources\SWComponents\Sources
-Item2=G:\Delphi\Componentes\VirtualTreeView;G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\URUSoft\Programs\SubtitleAPI\URUSoft-Generic;G:\Delphi\Componentes\PascalScript;G:\Delphi\Componentes\PascalScript\dunit;C:\Program Files\Borland\Delphi7\Virtual Treeview\Source;C:\Backa\Urusoft\_SW_2.51_sources\SW251src\DCU
-Item3=G:\Delphi\Componentes\VirtualTreeView;G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\URUSoft\Programs\SubtitleAPI\URUSoft-Generic;G:\Delphi\Componentes\PascalScript;G:\Delphi\Componentes\PascalScript\dunit;C:\Program Files\Borland\Delphi7\Virtual Treeview\Source
-Item4=G:\Delphi\Componentes\VirtualTreeView;G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\URUSoft\Programs\SubtitleAPI\URUSoft-Generic;G:\Delphi\Componentes\PascalScript;G:\Delphi\Componentes\PascalScript\dunit
-Item5=G:\Delphi\Componentes\VirtualTreeView;G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\New_SubtitleAPI\URUSoft-Generic;G:\Delphi\Componentes\PascalScript;G:\Delphi\Componentes\PascalScript\dunit
-Item6=G:\Delphi\Componentes\VirtualTreeView;G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\New_SubtitleAPI\URUSoft-Generic;G:\Delphi\Componentes\PascalScript
-Item7=G:\Delphi\Componentes\VirtualTreeView;G:\URUSoft\Programs\Subtitle Workshop\Components\Sources;G:\New_SubtitleAPI\URUSoft-Generic
-Item8=G:\Delphi\Componentes\VirtualTreeView;G:\URUSoft\Programs\Subtitle Workshop\Components\Sources
-Item9=F:\Componentes\VirtualTreeView\VirtualTreeview;F:\DeKSoft\Subtitle Workshop\TSWComponents\Package;F:\Extras\MiMenu;F:\DeKSoft\Subtitle Workshop\TSWComponents
-Item10=F:\Componentes\VirtualTreeView\VirtualTree;F:\DeKSoft\Subtitle Workshop\MiSubtitulo;F:\Extras\MiMenu;F:\DeKSoft\Subtitle Workshop\MiHint;F:\DeKSoft\Subtitle Workshop\TNFormSizing;F:\DeKSoft\Subtitle Workshop\TSWComponents;F:\DeKSoft\Subtitle Workshop\TSWComponents\Spell Check
-Item11=F:\Componentes\VirtualTreeView\VirtualTree;F:\DeKSoft\Subtitle Workshop\MiSubtitulo;F:\Extras\MiMenu;F:\DeKSoft\Subtitle Workshop\MiHint;F:\DeKSoft\Subtitle Workshop\TNFormSizing;F:\DeKSoft\Subtitle Workshop\TSWComponents
-Item12=F:\Componentes\VirtualTreeView\VirtualTree;F:\DeKSoft\Subtitle Workshop\MiSubtitulo;F:\Extras\MiMenu;F:\DeKSoft\Subtitle Workshop\MiHint
-Item13=F:\Componentes\VirtualTreeView\VirtualTree;F:\DeKSoft\Subtitle Workshop\MiSubtitulo;F:\Extras\MiMenu;F:\Componentes\MiHint
-Item14=F:\Componentes\VirtualTreeView\theme manager;F:\Componentes\VirtualTreeView\VirtualTree;F:\DeKSoft\Subtitle Workshop\MiSubtitulo;F:\Extras\MiMenu;F:\Componentes\MiHint
-Item15=F:\Componentes\VirtualTreeView\VirtualTree;F:\Componentes\VirtualTreeView\theme manager;F:\Extras\MiMenu;F:\Componentes\MiHint;F:\DeKSoft\Subtitle Workshop\MiSubtitulo;F:\DeKSoft\Subtitle Workshop\NewFileCtrl
-Item16=F:\Componentes\VirtualTreeView\VirtualTree;F:\Componentes\VirtualTreeView\theme manager;F:\Extras\MiMenu;F:\Componentes\MiHint;F:\DeKSoft\Subtitle Workshop\MiSubtitulo
-Item17=F:\Componentes\VirtualTreeView\VirtualTree;F:\Componentes\VirtualTreeView\theme manager;F:\Extras\MiMenu;F:\Componentes\MiHint
-Item18=F:\Componentes\VirtualTreeView\VirtualTree;F:\Componentes\VirtualTreeView\theme manager;F:\Extras\MiMenu
-Item19=F:\Componentes\VirtualTreeView\VirtualTree;F:\Componentes\VirtualTreeView\theme manager
-Item20=F:\Componentes\VirtualTreeView\VirtualTree
-Item21=F:\Extras\MiMenu;F:\Componentes\VirtualTreeView\VirtualTree;F:\Componentes\VirtualTreeView\theme manager
-Item22=F:\Extras\MiMenu;F:\Componentes\VirtualTreeView\VirtualTree
-Item23=F:\Extras\MiMenu
+Count=0
 [HistoryLists\hlUnitOutputDirectory]
-Count=2
+Count=1
 Item0=DCU
-Item1=\DCU
 [HistoryLists\hlOutputDirectorry]
-Count=2
+Count=1
 Item0=Bin
-Item1=\Bin

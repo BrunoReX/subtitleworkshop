@@ -5365,13 +5365,6 @@ object frmMain: TfrmMain
     Left = 168
     Top = 176
   end
-  object MiHint: TMiHint
-    BackColor = clInfoBk
-    BorderColor = clBlack
-    TextColor = clInfoText
-    Left = 200
-    Top = 176
-  end
   object tmrSaveWork: TTimer
     Enabled = False
     Interval = 0

@@ -48,7 +48,7 @@ uses
   USubtitlesFunctions in 'Units\USubtitlesFunctions.pas',
   VideoPreview in 'Units\VideoPreview.pas',
   VTInPlaceEdition in 'Units\VTInPlaceEdition.pas',
-  VirtualTrees in '..\..\..\..\Delphi\Componentes\VirtualTreeView\VirtualTrees.pas',
+  VirtualTrees in '..\3rd party components\Virtual Treeview\Source\VirtualTrees.pas',
   DirectShow9 in 'DirectX Units\DirectShow9.pas',
   DirectDraw in 'DirectX Units\DirectDraw.pas',
   DirectSound in 'DirectX Units\DirectSound.pas',
