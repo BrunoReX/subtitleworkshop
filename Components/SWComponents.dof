@@ -91,7 +91,7 @@ ImageBase=4194304
 ExeDescription=
 [Directories]
 OutputDir=
-UnitOutputDir=..\SubtitleWorkshop\DCU
+UnitOutputDir=DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
 SearchPath=Sources;..\SubtitleAPI;..\SubtitleWorkshop\Units

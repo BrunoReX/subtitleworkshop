@@ -91,10 +91,10 @@ ImageBase=4194304
 ExeDescription=
 [Directories]
 OutputDir=..\SubtitleWorkshop\Bin\SubtitleAPI
-UnitOutputDir=..\SubtitleWorkshop\DCU
+UnitOutputDir=DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=..\SubtitleAPI;..\SubtitleWorkshop\DCU
+SearchPath=..\SubtitleAPI
 Packages=vcl;rtl;vclx;indy;inet;xmlrtl;vclie;inetdbbde;inetdbxpress;dbrtl;dsnap;dsnapcon;vcldb;soaprtl;dbexpress;dbxcds;inetdb;bdertl;vcldbx;webdsnap;websnap;adortl;ibxpress;teeui;teedb;tee;dss;visualclx;visualdbclx;vclactnband;IntrawebDB_50_70;Intraweb_50_70;dclOffice2k
 Conditionals=
 DebugSourceDirs=
