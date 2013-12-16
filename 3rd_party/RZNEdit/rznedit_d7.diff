@@ -1,0 +1,32 @@
+--- a/rznedit.pas	Thu May 13 14:49:38 1999
++++ b/rznedit.pas	Mon Dec 16 05:03:09 2013
+@@ -109,6 +109,7 @@ Type
+                                     Write SetAlignment;
+     Property AutoSelect;
+     Property AutoSize;
++    Property Anchors;
+     Property BorderStyle;
+     Property Color;
+     Property ColorNormal  : TColor Read  FColorNormal
+@@ -241,7 +242,7 @@ Implementation
+ 
+ {---------------------------------------------------------------------}
+ 
+-Uses WinProcs, DsgnIntf;
++Uses WinProcs;
+ 
+ 
+ 
+@@ -757,9 +758,9 @@ End;
+ Procedure Register;
+ {---------------------------------------------------------------------}
+ Begin
+-  RegisterComponents('MyComponents', [TRealEdit]);
+-  RegisterComponents('MyComponents', [TIntegerEdit]);
+-  RegisterComponents('MyComponents', [TCardinalEdit]);
++  RegisterComponents('RZNEdit', [TRealEdit]);
++  RegisterComponents('RZNEdit', [TIntegerEdit]);
++  RegisterComponents('RZNEdit', [TCardinalEdit]);
+ End;
+ 
+ 

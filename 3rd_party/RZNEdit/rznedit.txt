@@ -1,0 +1,19 @@
+----------------------------------------------------------
+
+RZNEdit   A component with edit controls for real numbers,
+          integers and positive integers.
+          Input with watchdog.
+          Clipboard support.
+          Range check of input data.
+
+Version   1.7
+
+Status    Freeware
+
+Date      05/13/99
+
+Author    Robert Kratz
+          R.Kratz@fz-rossendorf.de
+
+----------------------------------------------------------
+
