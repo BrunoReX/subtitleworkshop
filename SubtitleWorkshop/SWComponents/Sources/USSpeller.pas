@@ -13,7 +13,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Variants,
   //Dialogs, //added by adenry
-  ComObj, ActiveX, Registry;
+  ComObj, ActiveX, Registry, AsyncCalls;
 
 // -----------------------------------------------------------------------------
 
@@ -27,10 +27,12 @@ type
     FNumChanges   : Integer;
     FOleOn        : Boolean;
     FSpellCaption : String;
+    FSpellClass   : String;
     FWordVersion  : String;
     FLanguage     : Integer; //added by adenry
     hMapObject    : Cardinal;
     pMem          : Pointer;
+    fAsyncCall    : IAsyncCall;
     // OLE Variants
     FWordApp  : OLEVariant;
     FRange    : OLEVariant;
@@ -65,6 +67,7 @@ type
     procedure RemoveCustomDic(const Name: String); overload;
     procedure ResetIgnoreAll;
     procedure SpellingOptions;
+    procedure BringSpellDlgToFront(Delay: Integer);
     property ChangedText: String read FChangedText;
     property CheckGrammarWithSpelling: Boolean read GetCheckGWS write SetCheckGWS;
     property Connected: Boolean read FConnected;
@@ -99,6 +102,10 @@ const
   //memspace looks like this: |..Caption...|...WindowsClassID..|
 
   //Constants for MS Word
+  MSDialogWndClass2010 = 'bosa_sdm_msword';
+  MSDialogWndClass2007 = 'bosa_sdm_Microsoft Office Word 12.0';
+  MSDialogWndClass2003 = 'bosa_sdm_Microsoft Office Word 11.0';
+  MSDialogWndClassXP   = 'bosa_sdm_Microsoft Word 10.0';
   MSDialogWndClass2000 = 'bosa_sdm_Microsoft Word 9.0';
   MSDialogWndClass97   = 'bosa_sdm_Microsoft Word 8.0';
   MSWordWndClass       = 'OpusApp';
@@ -277,6 +284,9 @@ begin
   FNumChanges := 0;
 
   if (FLanguage > 0) then FRange.LanguageID := FLanguage; //added by adenry
+  
+  fAsyncCall := AsyncCall(BringSpellDlgToFront, 2000);
+  fAsyncCall.ForceDifferentThread;
 
   OleCheck(FRange.CheckGrammar);
 
@@ -301,6 +311,9 @@ begin
 
   if (FLanguage > 0) then FRange.LanguageID := FLanguage; //added by adenry //$00000809 is EnglishUK, $00000409 is EnglishUS
   
+  fAsyncCall := AsyncCall(BringSpellDlgToFront, 2000);
+  fAsyncCall.ForceDifferentThread;
+
   if CheckGrammarWithSpelling then
     OleCheck(FADoc.CheckGrammar) else // Check spelling and grammar
     OleCheck(FADoc.CheckSpelling); // We check spelling, not grammar
@@ -427,8 +440,7 @@ begin
     FWordApp                := CreateOleObject('Word.Application');
     FConnected              := True;
     FWordApp.Visible        := False; // hides the application
-    FWordApp.ScreenUpdating := False; // speed up winword's processing
-    //FWordApp.WindowState    := $00000002; // minimise
+  //FWordApp.WindowState    := $00000002; // minimise
 
     FADoc  := FWordApp.Documents.Add(EmptyParam, False); // this will hold the text to be checked
     FRange := FADoc.Range;
@@ -438,9 +450,25 @@ begin
     s := FADoc.Name + ' - ' + FWordApp.Name;
     FHandle := FindWindow(MSWordWndClass, PChar(s)); // Word main window's handle
 
-    s := MSDialogWndClass2000;
-    if FWordVersion[1] = '9' then
-      s := MSDialogWndClass2000 else s := MSDialogWndClass97;
+    s := Copy(FWordVersion, 1, 2); // Get first two chars from version number
+    if s[2] = '.' then s := '0'+s[1]; // Add padding to single numbers
+
+    if CompareStr('14', s) > 0 then FWordApp.ScreenUpdating := False; // speed up winword's processing
+
+    if s = '08' then
+      FSpellClass := MSDialogWndClass97
+    else if s = '09' then
+      FSpellClass := MSDialogWndClass2000
+    else if s = '10' then
+      FSpellClass := MSDialogWndClassXP
+    else if s = '11' then
+      FSpellClass := MSDialogWndClass2003
+    else if s = '12' then
+      FSpellClass := MSDialogWndClass2007
+    else if s = '14' then
+      FSpellClass := MSDialogWndClass2010
+    else
+      FSpellClass := MSDialogWndClass2010;
 
     //set up shared memory space
     hMapObject := CreateFileMapping($FFFFFFFF, nil, PAGE_READWRITE, 0, USShareSize, 'US_spell_share');
@@ -449,7 +477,7 @@ begin
     begin
       FillChar(pMem^, USShareSize, 0);
       p := pMem;
-      StrCopy(p + USClassStart, PChar(s));
+      StrCopy(p + USClassStart, PChar(FSpellClass));
       StrCopy(p + USCaptionStart, PChar(FSpellCaption));
     end;
     //memory share set up
@@ -539,6 +567,22 @@ end;
 procedure Register;
 begin
   RegisterComponents('Subtitle Workshop', [TUSSpell]);
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TUSSpell.BringSpellDlgToFront(Delay: Integer);
+var
+  Input    : TInput;
+  FSHandle : HWND;
+begin
+  Sleep(Delay);
+  
+  ZeroMemory(@Input, SizeOf(Input));
+  SendInput(1, Input, SizeOf(Input));
+  
+  FSHandle := FindWindow(PChar(FSpellClass), NIL);
+  SetForegroundWindow(FSHandle);
 end;
 
 // -----------------------------------------------------------------------------  .
