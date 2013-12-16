@@ -1,0 +1,7 @@
+*.dcu
+*.ddp
+*.dll
+*.~*
+SubtitleWorkshop.exe
+SubtitleWorkshop.ini
+DCU/
