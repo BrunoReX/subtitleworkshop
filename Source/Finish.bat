@@ -1,6 +1,6 @@
 @echo off
 
-SET UPX_PATH=C:\Others\UPX\upx.exe
+SET UPX_PATH=..\3rd party components\UPX\upx.exe
 
 FOR /F "SKIP=1 DELIMS=" %%A IN ('WMIC CPU GET ADDRESSWIDTH') DO IF NOT DEFINED OS_ARCH SET OS_ARCH=%%A
 
@@ -18,8 +18,8 @@ IF EXIST "%UPX_PATH%" GOTO UPX_COMPRESS
 GOTO END
 
 :UPX_COMPRESS
-"%UPX_PATH%" "%~dp0\Bin\SubtitleAPI\SubtitleAPI.dll" --compress-exports=1 --compress-resources=1 --strip-relocs --best --compress-icons=1
-"%UPX_PATH%" "%~dp0\Bin\SubtitleWorkshop.exe" --compress-exports=1 --compress-resources=1 --strip-relocs --best --compress-icons=1
+"%UPX_PATH%" "%~dp0Bin\SubtitleAPI\SubtitleAPI.dll" --compress-exports=1 --compress-resources=1 --strip-relocs --best --compress-icons=1
+"%UPX_PATH%" "%~dp0Bin\SubtitleWorkshop.exe" --compress-exports=1 --compress-resources=1 --strip-relocs --best --compress-icons=1
 
 :END
 PAUSE
