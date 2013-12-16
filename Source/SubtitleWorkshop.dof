@@ -94,10 +94,10 @@ OutputDir=Bin
 UnitOutputDir=DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=$(DELPHI)\Lib\Debug;..\3rd_party\ifps3;..\Components\Sources;..\3rd_party\TntUnicode\Source
+SearchPath=$(DELPHI)\Lib\Debug;..\3rd party components\ifps3;..\Components\Sources;..\3rd party components\TntUnicode\Source
 Packages=vcl;vclx;qrpt;rtl;vclshlctrls;dbrtl;ThemeManager6;vcldb;SynEdit_D6;bdertl;ibxpress;dsnap;dsnapcrba;dsnapcon;VclSmp;vclie;xmlrtl;inet;inetdbbde;inetdbxpress;nmfast;webdsnap;websnap;dbexpress;indy;dclOffice2k;MenuMi;LabelLink;adortl;vcldbx;cds;bdecds;teeui;teedb;tee;dss;teeqr;visualclx;visualdbclx;inetdb;dbxcds;VirtualTreesD6;SubtituloMi
 Conditionals=DOMEMCHECKX
-DebugSourceDirs=..\3rd_party\ifps3\
+DebugSourceDirs=..\3rd party components\ifps3\
 UsePackages=0
 [Parameters]
 RunParams=
