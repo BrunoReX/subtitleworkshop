@@ -79,7 +79,9 @@ var
   Ini  : TIniFile;
 begin
   //{$IFDEF DEBU}MemChk;{$ENDIF}  {added by Bdzl}
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + '\SubtitleWorkshop.ini');
+  if not DirectoryExists(GetSWAppDataPath()) then
+    CreateDir(GetSWAppDataPath());
+  Ini := TIniFile.Create(GetSWAppDataPath() + ID_ININAME);
   if Ini.ReadBool('Settings', 'Allow more than one instance', True) = False then //False changed to True by adenry
   begin
     hWnd := FindWindow(SWindowClassName, nil);
@@ -122,7 +124,7 @@ begin
   Ini.Free;
 
   Application.Initialize;
-  Application.Title := 'Subtitle Workshop';
+  Application.Title := ID_PROGRAM;
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;
 

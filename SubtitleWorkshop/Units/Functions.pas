@@ -180,7 +180,7 @@ var
   i    : Integer;
   Item : String;
 begin
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'FPS.ini');
+  Ini := TIniFile.Create(GetSWAppDataPath() + ID_INIFPSNAME);
   try
     for i := 1 to Ini.ReadInteger('FPS', 'Total', 0) do
     begin
@@ -219,7 +219,7 @@ var
   Ini : TIniFile;
   i   : Integer;
 begin
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'FPS.ini');
+  Ini := TIniFile.Create(GetSWAppDataPath() + ID_INIFPSNAME);
   try
     Ini.WriteInteger('FPS', 'Total', ComboBox.Items.Count);
     Ini.WriteInteger('FPS', 'Active', ComboBox.ItemIndex + 1);
@@ -555,7 +555,7 @@ var
   Ini : TIniFile;
   i   : Integer;
 begin
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + ID_ININAME);
+  Ini := TIniFile.Create(GetSWAppDataPath() + ID_ININAME);
   try
     for i := 0 to frmMain.RFMaxCount-1 do
       if (Ini.ReadString('Recent',IntToStr(i),'') <> '') and
@@ -575,7 +575,7 @@ var
   i   : Integer;
 begin
   //removed by adenry: begin
-  {Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + ID_ININAME);
+  {Ini := TIniFile.Create(GetSWAppDataPath() + ID_ININAME);
   try}
   //removed by adenry: end
     if RecentFiles.Count > 0 then
