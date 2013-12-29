@@ -20,7 +20,9 @@ Name "${PRODUCT}"
 SetCompressor lzma
 BrandingText "Subtitle Workshop ${VERSION_FULL}"
 SetOverwrite on
+RequestExecutionLevel user
 !include "MUI2.nsh"
+!include "UAC.nsh"
 !include "Sections.nsh"
 !include "LogicLib.nsh"
 !define MUI_ABORTWARNING
@@ -219,9 +221,6 @@ FunctionEnd
 ; Folder-selection page
 InstallDir "$PROGRAMFILES\${PRODUCT}"
 
-; For removing Start Menu shortcut in Windows 7
-RequestExecutionLevel user
-
 ; -------------------------------- ;
 ;         Files to install         ;
 ; -------------------------------- ;
@@ -229,28 +228,29 @@ RequestExecutionLevel user
 Section $(TITLE_MainFiles) MainFiles
   SectionIn RO
 
-  SetOutPath $INSTDIR
+  SetOutPath "$INSTDIR"
     File "${FILESPATH}\${PRODUCT_EXENAME}"
-		SetOverwrite off ; preserve shortcuts
-    File "${FILESPATH}\shortcuts.key"
-		SetOverwrite on
-		File "${FILESPATH}\changelog.txt"
-		File "${FILESPATH}\gpl-3.0.txt"
-  SetOutPath $INSTDIR\SubtitleAPI
+    File "${FILESPATH}\changelog.txt"
+    File "${FILESPATH}\gpl-3.0.txt"
+  SetOutPath "$INSTDIR\SubtitleAPI"
     File "${FILESPATH}\SubtitleAPI\SubtitleAPI.dll"
-	SetOutPath $INSTDIR\Help
-		File "${FILESPATH}\Help\01-SW-Main-Window-EN.png"
-  SetOutPath $INSTDIR\OCRScripts
+  SetOutPath "$INSTDIR\Help"
+    File "${FILESPATH}\Help\01-SW-Main-Window-EN.png"
+  SetOutPath "$APPDATA\${PRODUCT}"
+    SetOverwrite off ; preserve shortcuts
+    File "${FILESPATH}\shortcuts.key"
+    SetOverwrite on
+  SetOutPath "$APPDATA\${PRODUCT}\OCRScripts"
     File "${FILESPATH}\OCRScripts\*.ocr"
-  SetOutPath $INSTDIR\PascalScripts
+  SetOutPath "$APPDATA\${PRODUCT}\PascalScripts"
     File "${FILESPATH}\PascalScripts\*.pas"
-  CreateDirectory $INSTDIR\CustomFormats
-	
+  CreateDirectory "$APPDATA\${PRODUCT}\CustomFormats"
 
   WriteRegStr HKLM "SOFTWARE\${PRODUCT}" "Install_Dir" "$INSTDIR"
   WriteRegStr HKLM "SOFTWARE\${PRODUCT}" "Installer Language" "$LANGUAGE"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_SHORTNAME}" "DisplayName" "${PRODUCT} ${VERSION}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_SHORTNAME}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  SetOutPath "$INSTDIR"
   WriteUninstaller "uninstall.exe"
 
 SectionEnd
@@ -260,17 +260,17 @@ SectionEnd
 SubSection $(TITLE_Manual) Manual
 	
   Section $(TITLE_ManualEnglish) ManualEnglish
-    SetOutPath $INSTDIR\Help
+    SetOutPath "$INSTDIR\Help"
     File "${FILESPATH}\Help\Manual.html"
   SectionEnd
 
   Section $(TITLE_ManualBulgarian) ManualBulgarian
-    SetOutPath $INSTDIR\Help
+    SetOutPath "$INSTDIR\Help"
     File "${FILESPATH}\Help\ManualBG.html"
   SectionEnd
 
   Section $(TITLE_ManualRussian) ManualRussian
-    SetOutPath $INSTDIR\Help
+    SetOutPath "$INSTDIR\Help"
     File "${FILESPATH}\Help\ManualRUS.html"
   SectionEnd
 
@@ -279,17 +279,17 @@ SubSectionEnd
 ;--------------------------------------------------------------------
 
 Section $(TITLE_CustomFormats) CustomFormats
-  SetOutPath "$INSTDIR\Custom Formats Examples"
+  SetOutPath "$APPDATA\${PRODUCT}\Custom Formats Examples"
     File "${FILESPATH}\Custom Formats Examples\*.*"
 SectionEnd
 
 ;--------------------------------------------------------------------
 
 Section $(TITLE_LangFiles) LangFiles
-  SetOutPath $INSTDIR\Langs
+  SetOutPath "$APPDATA\${PRODUCT}\Langs"
     File "${FILESPATH}\Langs\*.lng"
     File "${FILESPATH}\Langs\Charsets.txt"
-	SetOutPath $INSTDIR\Langs\semi-translated
+	SetOutPath "$APPDATA\${PRODUCT}\Langs\semi-translated"
 		File "${FILESPATH}\Langs\semi-translated\*.lng"		
 SectionEnd
 
@@ -298,18 +298,25 @@ SectionEnd
 SubSection $(TITLE_ShortCuts) ShortCuts
 
   Section $(TITLE_StartMenuShortCuts) StartMenuShortCuts
+    SetOutPath "$INSTDIR" ; Set shortcut's working dir
     CreateDirectory "$SMPROGRAMS\${PRODUCT}"
 
-    CreateDirectory "$SMPROGRAMS\${PRODUCT}\Help"
-
     ${If} ${SectionIsSelected} ${ManualEnglish}
-        CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (English).lnk" "$INSTDIR\Manual\Manual.html" "" "$INSTDIR\Manual\Manual.html" 0
-    ${EndIf}
-    ${If} ${SectionIsSelected} ${ManualBulgarian}
-      CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (Bulgarian).lnk" "$INSTDIR\Manual\ManualBG.html" "" "$INSTDIR\Manual\ManualBG.html" 0
-    ${EndIf}
-    ${If} ${SectionIsSelected} ${ManualRussian}
-      CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (Russian).lnk" "$INSTDIR\Manual\ManualRUS.html" "" "$INSTDIR\Manual\ManualRUS.html" 0
+    ${OrIf} ${SectionIsSelected} ${ManualBulgarian}
+    ${OrIf} ${SectionIsSelected} ${ManualRussian}
+      CreateDirectory "$SMPROGRAMS\${PRODUCT}\Help"
+
+	  ${If} ${SectionIsSelected} ${ManualEnglish}
+        CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (English).lnk" "$INSTDIR\Help\Manual.html"
+      ${EndIf}
+
+      ${If} ${SectionIsSelected} ${ManualBulgarian}
+        CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (Bulgarian).lnk" "$INSTDIR\Help\ManualBG.html"
+      ${EndIf}
+    
+      ${If} ${SectionIsSelected} ${ManualRussian}
+        CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (Russian).lnk" "$INSTDIR\Help\ManualRUS.html"
+      ${EndIf}
     ${EndIf}
 
     CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT_EXENAME}" "" "$INSTDIR\${PRODUCT_EXENAME}" 0
@@ -317,10 +324,12 @@ SubSection $(TITLE_ShortCuts) ShortCuts
   SectionEnd
 
   Section $(TITLE_DesktopShortCuts) DesktopShortCuts
+    SetOutPath "$INSTDIR" ; Set shortcut's working dir
     CreateShortCut "$DESKTOP\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT_EXENAME}" "" "$INSTDIR\${PRODUCT_EXENAME}" 0
   SectionEnd
 
   Section $(TITLE_QuickLaunchShortCuts) QuickLaunchShortCuts
+    SetOutPath "$INSTDIR" ; Set shortcut's working dir
     CreateShortCut "$QUICKLAUNCH\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT_EXENAME}" "" "$INSTDIR\${PRODUCT_EXENAME}" 0
   SectionEnd
 
@@ -328,9 +337,38 @@ SubSectionEnd
 
 ;--------------------------------------------------------------------
 
+; ------------------------------- ;
+;          UAC elevation          ;
+; ------------------------------- ;
+
+!macro Init type
+uac_tryagain:
+!insertmacro UAC_RunElevated
+${Switch} $0
+${Case} 0
+	${IfThen} $1 = 1 ${|} Quit ${|} ;we are the outer process, the inner process has done its work, we are done
+	${IfThen} $3 <> 0 ${|} ${Break} ${|} ;we are admin, let the show go on
+	${If} $1 = 3 ;RunAs completed successfully, but with a non-admin user
+		MessageBox mb_YesNo|mb_IconExclamation|mb_TopMost|mb_SetForeground "The ${PRODUCT} ${type} requires admin privileges, try again." /SD IDNO IDYES uac_tryagain IDNO 0
+	${EndIf}
+	;fall-through and die
+${Case} 1223
+	MessageBox mb_IconStop|mb_TopMost|mb_SetForeground "The ${PRODUCT} ${type} requires admin privileges, aborting!"
+	Quit
+${Case} 1062
+	MessageBox mb_IconStop|mb_TopMost|mb_SetForeground "Logon service not running, aborting!"
+	Quit
+${Default}
+	MessageBox mb_IconStop|mb_TopMost|mb_SetForeground "Unable to elevate, error $0."
+	Quit
+${EndSwitch}
+!macroend
+
 ; When installer is launched...
 
 Function .onInit
+	!insertmacro Init "installer"
+
 	; Check if installer is not already launched
 	System::Call 'kernel32::CreateMutexA(i 0, i 0, t "${PRODUCT_SHORTNAME}Installer") i .r1 ?e'
 	Pop $R0 
@@ -367,48 +405,50 @@ FunctionEnd
 ; -------------------------------- ;
 
 Section "Uninstall"
+	; remove registry keys
+	DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_SHORTNAME}"
+	DeleteRegKey HKLM "Software\${PRODUCT}"
 
-  ; remove registry keys
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_SHORTNAME}"
-  DeleteRegKey HKLM "Software\${PRODUCT}"	
-	
 	; Delete registry keys for "Open with Subtitle Workshop" for all extensions
 	!insertmacro MacroAllExtensions UnRemoveContextMenu
-	
+
 	; Restore file associations for all extensions	
 	!insertmacro MacroAllExtensions UnRestoreAssociation
 	DeleteRegKey HKCR "${PRODUCT_SHORTNAME}"	
 
 	; Delete all files and folders
-  Delete "$INSTDIR\*.*"
-  Delete "$INSTDIR\OCRScripts\*.*"
-  RMDir  "$INSTDIR\OCRScripts"
-  Delete "$INSTDIR\PascalScripts\*.*"
-  RMDir  "$INSTDIR\PascalScripts"
-  Delete "$INSTDIR\SubtitleAPI\*.*"
-  RMDir  "$INSTDIR\SubtitleAPI"
-	Delete "$INSTDIR\Langs\semi-translated\*.*"
-	RMDir  "$INSTDIR\Langs\semi-translated\"
-  Delete "$INSTDIR\Langs\*.*"
-	RMDir  "$INSTDIR\Langs\"
-  Delete "$INSTDIR\Custom Formats Examples\*.*"
-  RMDir  "$INSTDIR\Custom Formats Examples\"
-  Delete "$INSTDIR\CustomFormats\*.*"
-  RMDir  "$INSTDIR\CustomFormats\"  
-  Delete "$INSTDIR\Help\*.*"
-  RMDir  "$INSTDIR\Help\"
-  Delete "$SMPROGRAMS\${PRODUCT}\*.*"
-  Delete "$SMPROGRAMS\${PRODUCT}\Help\*.*"
-  RMDir  "$SMPROGRAMS\${PRODUCT}\Help"
-  RMDir  "$SMPROGRAMS\${PRODUCT}"
-  Delete "$DESKTOP\${PRODUCT}.lnk"
-  Delete "$QUICKLAUNCH\${PRODUCT}.lnk"
-  RMDir  "$INSTDIR"
-
+	Delete "$INSTDIR\*.*"
+	Delete "$INSTDIR\SubtitleAPI\*.*"
+	RMDir  "$INSTDIR\SubtitleAPI\"
+	Delete "$INSTDIR\Help\*.*"
+	RMDir  "$INSTDIR\Help\"
+	Delete "$APPDATA\${PRODUCT}\*.*"
+	Delete "$APPDATA\${PRODUCT}\OCRScripts\*.*"
+	RMDir  "$APPDATA\${PRODUCT}\OCRScripts\"
+	Delete "$APPDATA\${PRODUCT}\PascalScripts\*.*"
+	RMDir  "$APPDATA\${PRODUCT}\PascalScripts\"
+	Delete "$APPDATA\${PRODUCT}\Langs\semi-translated\*.*"
+	RMDir  "$APPDATA\${PRODUCT}\Langs\semi-translated\"
+	Delete "$APPDATA\${PRODUCT}\Langs\*.*"
+	RMDir  "$APPDATA\${PRODUCT}\Langs\"
+	Delete "$APPDATA\${PRODUCT}\Custom Formats Examples\*.*"
+	RMDir  "$APPDATA\${PRODUCT}\Custom Formats Examples\"
+	Delete "$APPDATA\${PRODUCT}\CustomFormats\*.*"
+	RMDir  "$APPDATA\${PRODUCT}\CustomFormats\"  
+	Delete "$SMPROGRAMS\${PRODUCT}\*.*"
+	Delete "$SMPROGRAMS\${PRODUCT}\Help\*.*"
+	RMDir  "$SMPROGRAMS\${PRODUCT}\Help"
+	RMDir  "$SMPROGRAMS\${PRODUCT}\"
+	Delete "$DESKTOP\${PRODUCT}.lnk"
+	Delete "$QUICKLAUNCH\${PRODUCT}.lnk"
+	RMDir  "$APPDATA\${PRODUCT}\"
+	RMDir  "$INSTDIR\"
 SectionEnd
 
 ; When uninstaller is launched...
 Function un.onInit
+	!insertmacro Init "uninstaller"
+
 	; Check if installer is not already launched
 	System::Call 'kernel32::CreateMutexA(i 0, i 0, t "${PRODUCT_SHORTNAME}Uninstaller") i .r1 ?e'
 	Pop $R0 

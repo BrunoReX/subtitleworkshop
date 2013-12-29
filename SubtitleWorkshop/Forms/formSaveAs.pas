@@ -85,7 +85,7 @@ var
   i     : Integer;
   A     : TListItem;
 begin
-  i := FindFirst(ExtractFilePath(Application.ExeName) + ID_CFPDIR + '\*.cfp', faAnyFile,Busca);
+  i := FindFirst(GetSWAppDataPath() + ID_CFPDIR + '\*.cfp', faAnyFile,Busca);
   while i = 0 do
   begin
     A            := lstFormats.Items.Add;
@@ -310,7 +310,7 @@ begin
   begin
     Lines := TStringList.Create;
     try
-      GetCustomFormatInfo(ExtractFilePath(Application.ExeName) + ID_CFPDIR + '\' + lstFormats.Items[lstFormats.ItemIndex].Caption + '.cfp', FormatName, Ext, NewLineChar, TimeStructure, Time, Frames, FPS, Lines);
+      GetCustomFormatInfo(GetSWAppDataPath() + ID_CFPDIR + '\' + lstFormats.Items[lstFormats.ItemIndex].Caption + '.cfp', FormatName, Ext, NewLineChar, TimeStructure, Time, Frames, FPS, Lines);
       Ext := Copy(Ext, 2, Length(Ext));
       if SaveTranslation then
         SubFile := Copy(frmMain.TransFile, 1, LastDelimiter('.', frmMain.TransFile)) else

@@ -25,10 +25,16 @@ const
   ID_WEBPAGE      = 'http://subworkshop.sf.net';
   ID_DONATIONPAGE = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=974UTRLZU5L6C';
   ID_ININAME      = 'SubtitleWorkshop.ini';
+  ID_INIFPSNAME   = 'FPS.ini';
+  ID_INIOUTNAME   = 'Output.ini';
+  ID_SUPPORNAME   = 'SupportedFormats.txt';
   ID_UPDATEINI    = 'http://subworkshop.sf.net/swupdate.ini';
   ID_DLLNAME      = 'SubtitleAPI.dll';
   ID_DLLDIR       = 'SubtitleAPI';
   ID_CFPDIR       = 'CustomFormats';
+  ID_LANGDIR      = 'Langs';
+  ID_PASCALDIR    = 'PascalScripts';
+  ID_OCRDIR       = 'OCRScripts';
   ID_STPEXT       = '.stp';
   ID_SRFEXT       = '.srf';
   ID_OCREXT       = '.ocr';
@@ -174,6 +180,8 @@ procedure ShowMsg(msg: String); //added by adenry
 procedure Note(Text: String); //added by adenry for test purposes
 procedure SplitDelimitedString(Delimiter: Char; Str: string; ListOfStrings: TStrings); //added by adenry
 function GetVideoFilesFilterString: String; //added by adenry
+function GetRoamingUserAppDataPath: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+function GetSWAppDataPath: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
 
 // -----------------------------------------------------------------------------
 
@@ -216,7 +224,7 @@ implementation
 
 uses
   Functions, Undo, InfoErrorsFunctions, TreeViewHandle, USubtitlesFunctions, VideoPreview, ShortCuts,
-  formMain, formSaveAs;
+  formMain, formSaveAs, ShlObj;
 
 // -----------------------------------------------------------------------------
 
@@ -1218,7 +1226,7 @@ procedure CommandLineProcess(Cli: String);
       for i := 0 to SubtitleAPI.FormatsCount do
         Formats.Add(SubtitleAPI.GetFormatName(i));
     finally
-      Formats.SaveToFile(ExtractFilePath(Application.ExeName) + 'SupportedFormats.txt');
+      Formats.SaveToFile(GetSWAppDataPath() + ID_SUPPORNAME);
       Formats.Free;
     end;
     Application.Terminate;
@@ -1251,7 +1259,7 @@ procedure CommandLineProcess(Cli: String);
 
       // run script
       err := FALSE;
-      frmMain.psCompExec.Script.LoadFromFile(ExtractFilePath(Application.ExeName) + 'PascalScripts\' + Script);
+      frmMain.psCompExec.Script.LoadFromFile(GetSWAppDataPath() + ID_PASCALDIR + '\' + Script);
 
       if frmMain.psCompExec.Compile then
       begin
@@ -2465,5 +2473,45 @@ end;
 //added by adenry: end
 
 // -----------------------------------------------------------------------------
+
+function GetRoamingUserAppDataPath: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+var
+  path: {$IFDEF UTF8}PWideChar{$ELSE}PAnsiChar{$ENDIF};
+begin
+  {$IFDEF UTF8}GetMem(path, MAX_PATH * 2 + SizeOf(Cardinal));
+  {$ELSE}GetMem(path, MAX_PATH + SizeOf(Cardinal));{$ENDIF}
+  Cardinal(Pointer(path)^) := MAX_PATH;
+  {$IFDEF UTF8}Inc(PWideChar(path), SizeOf(Cardinal));
+  {$ELSE}Inc(PAnsiChar(path), SizeOf(Cardinal));{$ENDIF}
+  
+  try
+    FillChar(path^, MAX_PATH, 0);
+    if SHGetSpecialFolderPath(0, path, CSIDL_APPDATA, false) then
+      result := path
+	else
+	  result := '';
+  finally
+    StrDispose(path);
+  end;
+end;
+
+// -----------------------------------------------------------------------------
+
+function GetSWAppDataPath: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+var
+  path: {$IFDEF UTF8}WideString{$ELSE}String{$ENDIF};
+begin
+  {$IFDEF PORTABLE}
+    path := ExtractFilePath(Application.ExeName);
+    Result := path;
+  {$ELSE}
+    path := GetRoamingUserAppDataPath();
+
+    if path <> '' then
+      Result := path + '\' + ID_PROGRAM + '\'
+    else
+      Result := ExtractFilePath(Application.ExeName);
+  {$ENDIF}
+end;
 
 end.

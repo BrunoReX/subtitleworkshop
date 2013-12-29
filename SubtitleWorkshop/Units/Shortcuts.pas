@@ -564,7 +564,7 @@ var
   List         : TStringList;
   i            : Integer;
 begin
-  ShortCutFile := ExtractFilePath(Application.ExeName) + ID_SHORTCUTS;
+  ShortCutFile := GetSWAppDataPath() + ID_SHORTCUTS;
   if FileExists(ShortCutFile) then
   begin
     List := TStringList.Create;

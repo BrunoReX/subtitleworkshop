@@ -181,11 +181,11 @@ var
 begin
   tmpList := TStringList.Create;
   try
-    i := FindFirst(ExtractFilePath(Application.ExeName)+'Langs\*.lng', faAnyFile,Busca);
+    i := FindFirst(GetSWAppDataPath() + ID_LANGDIR + '\*.lng', faAnyFile,Busca);
     while i = 0 do
     begin
       Trans := Copy(Busca.Name, 1, Length(busca.Name)-4) + ': ';
-      Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'Langs\' + Busca.Name);
+      Ini := TIniFile.Create(GetSWAppDataPath() + ID_LANGDIR + '\' + Busca.Name);
         Trans := Trans + Ini.ReadString('General', 'Translator', ID_PROGRAM);
       Ini.Free;
       tmpList.Add(Trans);
