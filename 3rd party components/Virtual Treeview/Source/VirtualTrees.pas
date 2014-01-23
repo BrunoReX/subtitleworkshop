@@ -90,11 +90,12 @@ uses
   ;
 
 const
-  VTVersion = '5.2.2';
+  VTVersion = '5.3.0';
 
 {$if CompilerVersion < 20}
 type
   UnicodeString = WideString;
+  RawByteString = AnsiString;
   PByte = PAnsiChar;
 {$ifend}
 
@@ -1802,8 +1803,11 @@ type
   // ----- Event prototypes:
 
   // node enumeration
+  {$if CompilerVersion >= 20}
+  TVTGetNodeProc = reference to procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Data: Pointer; var Abort: Boolean);
+  {$else}
   TVTGetNodeProc = procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; Data: Pointer; var Abort: Boolean) of object;
-
+  {$ifend}
   // node events
   TVTChangingEvent = procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; var Allowed: Boolean) of object;
   TVTCheckChangingEvent = procedure(Sender: TBaseVirtualTree; Node: PVirtualNode; var NewState: TCheckState;
@@ -3497,8 +3501,8 @@ type
     function ComputeNodeHeight(Canvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; S: UnicodeString = ''): Integer; virtual;
     function ContentToClipboard(Format: Word; Source: TVSTTextSourceType): HGLOBAL;
     procedure ContentToCustom(Source: TVSTTextSourceType);
-    function ContentToHTML(Source: TVSTTextSourceType; Caption: UnicodeString = ''): AnsiString;
-    function ContentToRTF(Source: TVSTTextSourceType): AnsiString;
+    function ContentToHTML(Source: TVSTTextSourceType; Caption: UnicodeString = ''): RawByteString;
+    function ContentToRTF(Source: TVSTTextSourceType): RawByteString;
     function ContentToText(Source: TVSTTextSourceType; Separator: Char): AnsiString; overload;
     function ContentToText(Source: TVSTTextSourceType; const Separator: AnsiString): AnsiString; overload;
     function ContentToUnicode(Source: TVSTTextSourceType; Separator: WideChar): UnicodeString; overload;
@@ -4284,14 +4288,14 @@ type
     FStart,
     FPosition,
     FEnd: PAnsiChar;
-    function GetAsString: AnsiString;
+    function GetAsString: RawByteString;
   public
     destructor Destroy; override;
 
-    procedure Add(const S: AnsiString);
+    procedure Add(const S: RawByteString);
     procedure AddNewLine;
 
-    property AsString: AnsiString read GetAsString;
+    property AsString: RawByteString read GetAsString;
   end;
 
   TWideBufferedString = class
@@ -6341,6 +6345,7 @@ begin
       TranslateMessage(Msg);
       DispatchMessage(Msg);
     end;
+    CheckSynchronize();// If this call makes problems consider doing it only when needed by counting Synchronize() calls in a threadsafe counter
   end;
 end;
 
@@ -6402,6 +6407,7 @@ begin
           if csUseCache in EnterStates then
             Include(LeaveStates, csValidationNeeded);
           ChangeTreeStates(EnterStates, LeaveStates);
+          Synchronize(FCurrentTree.UpdateEditBounds);
           FCurrentTree := nil;
         end;
       end;
@@ -6457,7 +6463,7 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-function TBufferedAnsiString.GetAsString: AnsiString;
+function TBufferedAnsiString.GetAsString: RawBytestring;
 
 begin
   SetString(Result, FStart, FPosition - FStart);
@@ -6465,12 +6471,12 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-procedure TBufferedAnsiString.Add(const S: AnsiString);
+procedure TBufferedAnsiString.Add(const S: RawByteString);
 
 var
   NewLen,
   LastOffset,
-  Len: Integer;
+  Len: NativeInt;
 
 begin
   Len := Length(S);
@@ -6495,7 +6501,7 @@ procedure TBufferedAnsiString.AddNewLine;
 
 var
   NewLen,
-  LastOffset: Integer;
+  LastOffset: NativeInt;
 
 begin
   // Make room for the CR/LF characters.
@@ -6674,6 +6680,11 @@ begin
     ToBeSet := Value - FPaintOptions;
     ToBeCleared := FPaintOptions - Value;
     FPaintOptions := Value;
+    if (toFixedIndent in ToBeSet) then begin
+      // Fixes issue #388
+      Include(FPaintOptions, toShowRoot);
+      Include(ToBeSet, toShowRoot);
+    end;//if
     with FOwner do
     begin
       HandleWasAllocated := HandleAllocated;
@@ -10115,7 +10126,7 @@ var
   AutoIndex,
   Index,
   RestWidth: Integer;
-
+  WasUpdating: Boolean;
 begin
   if Count > 0 then
   begin
@@ -10148,7 +10159,15 @@ begin
         begin
           FWidth := NewValue;
           UpdatePositions;
-          FHeader.Treeview.DoColumnResize(AutoIndex);
+          WasUpdating := csUpdating in FHeader.Treeview.ComponentState;
+          if not WasUpdating then
+            FHeader.Treeview.Updating();// Fixes #398
+          try
+            FHeader.Treeview.DoColumnResize(AutoIndex);
+          finally
+            if not WasUpdating then
+              FHeader.Treeview.Updated();
+          end;
         end;
       end;
     end;
@@ -12389,9 +12408,10 @@ procedure TVTHeader.FixedAreaConstraintsChanged(Sender: TObject);
 // This method gets called when FFixedAreaConstraints is changed.
 
 begin
-  Include(FStates, hsNeedScaling);
   if Treeview.HandleAllocated then
-    RescaleHeader;
+    RescaleHeader
+  else
+    Include(FStates, hsNeedScaling);
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -12482,7 +12502,7 @@ begin
               FColumns[NextColumn].Width := FColumns[NextColumn].Width - NewWidth
                                             + FColumns[FColumns.FTrackIndex].Width
             else
-              FColumns[FColumns.FTrackIndex].Width := NewWidth;
+              FColumns[FColumns.FTrackIndex].Width := NewWidth; // 1 EListError seen here (List index out of bounds (-1)) since 10/2013
           end;
           HandleHeaderMouseMove := True;
           Result := 0;
@@ -15401,7 +15421,7 @@ begin
         InitNode(Node);
 
       // Ensure the node's height is determined.
-      MeasureItemHeight(Canvas, Node);
+      MeasureItemHeight(Self.Canvas, Node);
     end;
     Result := Node.NodeHeight
   end
@@ -16935,7 +16955,7 @@ begin
       if not (tsValidating in FStates) and FullyVisible[Node] and not IsEffectivelyFiltered[Node] then
       begin
         InvalidateCache;
-        if FUpdateCount = 0 then
+        if (FUpdateCount = 0) and ([tsPainting, tsSizing] * FStates = []) then
         begin
           ValidateCache;
           InvalidateToBottom(Node);
@@ -23309,7 +23329,8 @@ procedure TBaseVirtualTree.FontChanged(AFont: TObject);
 
 begin
   FFontChanged := True;
-  FOldFontChange(AFont);
+  if Assigned(FOldFontChange) then
+    FOldFontChange(AFont);
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -24162,9 +24183,17 @@ begin
     MultiSelect := toMultiSelect in FOptions.FSelectionOptions;
     ShiftEmpty := ShiftState = [];
     NodeSelected := IsAnyHit and (vsSelected in HitInfo.HitNode.States);
-    FullRowDrag := (toFullRowDrag in FOptions.FMiscOptions) and IsCellHit and
-      not (hiNowhere in HitInfo.HitPositions) and
-      (NodeSelected or (hiOnItemLabel in HitInfo.HitPositions) or (hiOnNormalIcon in HitInfo.HitPositions));
+    if MultiSelect then
+    begin
+      // If MultiSelect is selected we will start a full row drag only in case a label was hit,
+      // otherwise a multi selection will start.
+      FullRowDrag := (toFullRowDrag in FOptions.FMiscOptions) and IsCellHit and
+          not (hiNowhere in HitInfo.HitPositions) and
+          (NodeSelected or (hiOnItemLabel in HitInfo.HitPositions) or (hiOnNormalIcon in HitInfo.HitPositions))
+    end
+    else // No MultiSelect, hence we can start a drag anywhere in the row.
+      FullRowDrag := toFullRowDrag in FOptions.FMiscOptions;
+
     IsHeightTracking := (Message.Msg = WM_LBUTTONDOWN) and
                         (hiOnItem in HitInfo.HitPositions) and
                         ([hiUpperSplitter, hiLowerSplitter] * HitInfo.HitPositions <> []);
@@ -24279,7 +24308,9 @@ begin
     if Focused and
       ((hiOnItemLabel in HitInfo.HitPositions) or ((toGridExtensions in FOptions.FMiscOptions) and
       (hiOnItem in HitInfo.HitPositions))) and NodeSelected and not NewColumn and ShiftEmpty then
+    begin
       DoStateChange([tsEditPending]);
+    end;
 
     if not (toDisableDrawSelection in FOptions.FSelectionOptions) and not (IsLabelHit or FullRowDrag) and MultiSelect then
     begin
@@ -24412,7 +24443,7 @@ begin
          (toEditOnClick in FOptions.FMiscOptions) and CanEdit(FFocusedNode, HitInfo.HitColumn) then
       begin
         FEditColumn := FFocusedColumn;
-        DoEdit;
+        SetTimer(Handle, EditTimer, FEditDelay, nil);
       end
       else
         DoStateChange([], [tsEditPending]);
@@ -24467,14 +24498,12 @@ begin
   begin
     Count := Node.ChildCount;
     DoInitChildren(Node, Count);
-    if Count = Node.ChildCount then
-      exit;// value has not chnaged, so nothing to do
-    SetChildCount(Node, Count);
+    if Count <> Node.ChildCount then
+      SetChildCount(Node, Count);
     if Count = 0 then
       Exclude(Node.States, vsHasChildren);
   end;
 end;
-
 //----------------------------------------------------------------------------------------------------------------------
 
 procedure TBaseVirtualTree.InitNode(Node: PVirtualNode);
@@ -25129,7 +25158,12 @@ begin
     FHeader.FColumns.FixPositions;
     if toAutoBidiColumnOrdering in FOptions.FAutoOptions then
       FHeader.FColumns.ReorderColumns(UseRightToLeftAlignment);
-    FHeader.RecalculateHeader;
+    // Because of the special recursion and update stopper when creating the window (or resizing it)
+    // we have to manually trigger the auto size calculation here.
+    if hsNeedScaling in FHeader.FStates then
+      FHeader.RescaleHeader
+    else
+      FHeader.RecalculateHeader;
     if hoAutoResize in FHeader.FOptions then
       FHeader.FColumns.AdjustAutoSize(InvalidColumn, True);
   finally
@@ -25863,14 +25897,12 @@ const
 
   procedure DrawBackground(State: Integer);
   begin
-    // if the toGridExtensions is NOT in MiscOptions or a full row
-    // selection is enabled, draw the selection into the RowRect; if
-    // toGridExtensions is included, draw just to the InnerRect cell
-    // rectangle
-    if not (toGridExtensions in FOptions.FMiscOptions) or (toFullRowSelect in FOptions.FSelectionOptions) then
-      DrawThemeBackground(Theme, PaintInfo.Canvas.Handle, TVP_TREEITEM, State, RowRect, nil)
+    // if the full row selection is disabled or toGridExtensions is in the MiscOptions, draw the selection
+    // into the InnerRect, otherwise into the RowRect
+    if not (toFullRowSelect in FOptions.FSelectionOptions) or (toGridExtensions in FOptions.FMiscOptions) then
+      DrawThemeBackground(Theme, PaintInfo.Canvas.Handle, TVP_TREEITEM, State, InnerRect, nil)
     else
-      DrawThemeBackground(Theme, PaintInfo.Canvas.Handle, TVP_TREEITEM, State, InnerRect, nil);
+      DrawThemeBackground(Theme, PaintInfo.Canvas.Handle, TVP_TREEITEM, State, RowRect, nil);
   end;
 
   procedure DrawThemedFocusRect(State: Integer);
@@ -25878,10 +25910,10 @@ const
     Theme: HTHEME;
   begin
     Theme := OpenThemeData(Application.{$if CompilerVersion >= 20}ActiveFormHandle{$else}Handle{$ifend}, 'Explorer::ItemsView');
-    if not (toGridExtensions in FOptions.FMiscOptions) or (toFullRowSelect in FOptions.FSelectionOptions) then
-      DrawThemeBackground(Theme, PaintInfo.Canvas.Handle, LVP_LISTDETAIL, State, RowRect, nil)
+    if not (toFullRowSelect in FOptions.FSelectionOptions) or (toGridExtensions in FOptions.FMiscOptions) then
+      DrawThemeBackground(Theme, PaintInfo.Canvas.Handle, LVP_LISTDETAIL, State, InnerRect, nil)
     else
-      DrawThemeBackground(Theme, PaintInfo.Canvas.Handle, LVP_LISTDETAIL, State, InnerRect, nil);
+      DrawThemeBackground(Theme, PaintInfo.Canvas.Handle, LVP_LISTDETAIL, State, RowRect, nil);
     CloseThemeData(Theme);
   end;
 
@@ -26926,6 +26958,10 @@ var
 begin
   if (tsEditing in FStates) and Assigned(FFocusedNode) then
   begin
+    if (GetCurrentThreadId <> MainThreadID) then begin
+      // UpdateEditBounds() will be called at the end of the thread
+      Exit;
+    end;
     if vsMultiline in FFocusedNode.States then
       R := GetDisplayRect(FFocusedNode, FEditColumn, True, False)
     else
@@ -26953,6 +26989,7 @@ begin
     end;
     if toShowHorzGridLines in TreeOptions.PaintOptions then
       Dec(R.Bottom);
+    R.Bottom := R.Top + Max(R.Bottom - R.Top, FEditLink.GetBounds.Bottom - FEditLink.GetBounds.Top); // Ensure to never decrease the size of the currently active edit control. Helps to prevent issue #159
     FEditLink.SetBounds(R);
   end;
 end;
@@ -28448,14 +28485,17 @@ begin
     Exit;
   Temp := Node;
   Indent := 0;
-  while Temp <> FRoot do
+  if not (toFixedIndent in FOptions.FPaintOptions) then
   begin
-    if not (vsVisible in Temp.States) or not (vsExpanded in Temp.Parent.States) then
-      Exit;
-    Temp := Temp.Parent;
-    if MainColumnHit and (Temp <> FRoot) then
-      Inc(Indent, FIndent);
-  end;
+    while Temp <> FRoot do
+    begin
+      if not (vsVisible in Temp.States) or not (vsExpanded in Temp.Parent.States) then
+        Exit;
+      Temp := Temp.Parent;
+      if MainColumnHit and (Temp <> FRoot) then
+        Inc(Indent, FIndent);
+    end;
+  end;//if not toFixedIndent
 
   // Here we know the node is visible.
   Offset := 0;
@@ -31516,12 +31556,17 @@ var
   NewNodeHeight: Integer;
 
 begin
-  if not (vsHeightMeasured in Node.States) then
+  if not (vsHeightMeasured in Node.States) {$if CompilerVersion < 20}and (MainThreadId = GetCurrentThreadId){$ifend} then
   begin
     Include(Node.States, vsHeightMeasured);
     if (toVariableNodeHeight in FOptions.FMiscOptions) then begin
       NewNodeHeight := Node.NodeHeight;
-      DoMeasureItem(Canvas, Node, NewNodeHeight);
+      {$if CompilerVersion > 20} // Anonymous methods help to make this thread safe easily.
+      if (MainThreadId <> GetCurrentThreadId) then
+        TThread.Synchronize(nil, procedure begin DoMeasureItem(Canvas, Node, NewNodeHeight) end)
+      else
+      {$ifend}
+        DoMeasureItem(Canvas, Node, NewNodeHeight);
       if NewNodeHeight <> Node.NodeHeight then
         SetNodeHeight(Node, NewNodeHeight);
     end;
@@ -31859,6 +31904,7 @@ begin
 
         TargetRect := Rect(Target.X, Target.Y - (Window.Top - BaseOffset), MaximumRight, 0);
         TargetRect.Bottom := TargetRect.Top;
+        TargetCanvas.Font := Self.Font;
 
         // This marker gets the index of the first column which is visible in the given window.
         // This is needed for column based background colors.
@@ -34244,6 +34290,8 @@ begin
     // Instead directly calling AutoAdjustSize it is necessary on Win9x/Me to decouple this notification message
     // and eventual resizing. Hence we use a message to accomplish that.
     AutoAdjustSize()
+  else
+    Inherited;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -34348,7 +34396,7 @@ begin
       end;
     Ord('A'):
       begin
-        if Tree.IsEditing and (ssCtrl in KeyboardStateToShiftState) then begin
+        if Tree.IsEditing and ([ssCtrl] = KeyboardStateToShiftState) then begin
           Self.SelectAll();
           Message.CharCode := 0;
         end;
@@ -34383,13 +34431,14 @@ begin
       {$ifdef TntSupport}
         GetTextExtentPoint32W(DC, PWideChar(Text), Length(Text), Size);
       {$else}
-        GetTextExtentPoint32(DC, PChar(Text), Length(Text), Size);
+        GetTextExtentPoint32(DC, PChar(Text+'yG'), Length(Text)+2, Size);
       {$endif TntSupport}
       Inc(Size.cx, 2 * FLink.FTree.FTextMargin);
-
+      Inc(Size.cy, 2 * FLink.FTree.FTextMargin);
+      Height := Max(Size.cy, Height - 2 * GetSystemMetrics(SM_CYBORDER)); // Ensure a minimum height so that the edit field's content and cursor are displayed correctly.
       // Repaint associated node if the edit becomes smaller.
       if Size.cx < Width then
-        FLink.FTree.InvalidateNode(FLink.FNode);
+        FLink.FTree.Invalidate();
 
       if FLink.FAlignment = taRightJustify then
         FLink.SetBounds(Rect(Left + Width - Size.cx, Top, Left + Width, Top + Height))
@@ -34620,7 +34669,7 @@ begin
     InflateRect(R, -FTree.FTextMargin + lOffset, lOffset);
     if not (vsMultiline in FNode.States) then
       OffsetRect(R, 0, FTextBounds.Top - FEdit.Top);
-
+    R.Top := Max(-1, R.Top); // A value smaller than -1 will prevent the edit cursor from being shown by Windows, see issue #159
     SendMessage(FEdit.Handle, EM_SETRECTNP, 0, LPARAM(@R));
   end;
 end;
@@ -35310,25 +35359,28 @@ begin
   // This long winded procedure is necessary because font changes (as well as brush and pen changes) are
   // unfortunately not announced via the Canvas.OnChange event.
   RedirectFontChangeEvent(PaintInfo.Canvas);
+  try
 
-  // Determine main text direction as well as other text properties.
-  TextOutFlags := ETO_CLIPPED or RTLFlag[PaintInfo.BidiMode <> bdLeftToRight];
-  S := Text[PaintInfo.Node, PaintInfo.Column];
+    // Determine main text direction as well as other text properties.
+    TextOutFlags := ETO_CLIPPED or RTLFlag[PaintInfo.BidiMode <> bdLeftToRight];
+    S := Text[PaintInfo.Node, PaintInfo.Column];
 
-  // Paint the normal text first...
-  if Length(S) > 0 then
-    PaintNormalText(PaintInfo, TextOutFlags, S);
-
-  // ... and afterwards the static text if not centered and the node is not multiline enabled.
-  if (Alignment <> taCenter) and not (vsMultiline in PaintInfo.Node.States) and (toShowStaticText in TreeOptions.FStringOptions) then
-  begin
-    S := '';
-    with PaintInfo do
-      DoGetText(Node, Column, ttStatic, S);
+    // Paint the normal text first...
     if Length(S) > 0 then
-      PaintStaticText(PaintInfo, TextOutFlags, S);
+      PaintNormalText(PaintInfo, TextOutFlags, S);
+
+    // ... and afterwards the static text if not centered and the node is not multiline enabled.
+    if (Alignment <> taCenter) and not (vsMultiline in PaintInfo.Node.States) and (toShowStaticText in TreeOptions.FStringOptions) then
+    begin
+      S := '';
+      with PaintInfo do
+        DoGetText(Node, Column, ttStatic, S);
+      if Length(S) > 0 then
+        PaintStaticText(PaintInfo, TextOutFlags, S);
+    end;
+  finally
+    RestoreFontChangeEvent(PaintInfo.Canvas);
   end;
-  RestoreFontChangeEvent(PaintInfo.Canvas);
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -35758,7 +35810,7 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-function TCustomVirtualStringTree.ContentToHTML(Source: TVSTTextSourceType; Caption: UnicodeString = ''): AnsiString;
+function TCustomVirtualStringTree.ContentToHTML(Source: TVSTTextSourceType; Caption: UnicodeString = ''): RawByteString;
 
 // Renders the current tree content (depending on Source) as HTML text encoded in UTF-8.
 // If Caption is not empty then it is used to create and fill the header for the table built here.
@@ -36274,7 +36326,7 @@ end;
 
 //----------------------------------------------------------------------------------------------------------------------
 
-function TCustomVirtualStringTree.ContentToRTF(Source: TVSTTextSourceType): AnsiString;
+function TCustomVirtualStringTree.ContentToRTF(Source: TVSTTextSourceType): RawByteString;
 
 // Renders the current tree content (depending on Source) as RTF (rich text).
 // Based on ideas and code from Frank van den Bergh and Andreas Hörstemeier.
@@ -36405,7 +36457,7 @@ var
   I, J: Integer;
   Save, Run: PVirtualNode;
   GetNextNode: TGetNextNodeProc;
-  S, Tabs : AnsiString;
+  S, Tabs : RawByteString;
   Text: UnicodeString;
   Twips: Integer;
 
@@ -36577,6 +36629,7 @@ begin
         Inc(I);
       end;
       Buffer.Add('\row');
+      Buffer.AddNewLine;
       if (Assigned(FOnAfterNodeExport)) then
         FOnAfterNodeExport(Self, etRTF, Run);
       Run := GetNextNode(Run);
