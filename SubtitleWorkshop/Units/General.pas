@@ -25,10 +25,16 @@ const
   ID_WEBPAGE      = 'http://subworkshop.sf.net';
   ID_DONATIONPAGE = 'https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=974UTRLZU5L6C';
   ID_ININAME      = 'SubtitleWorkshop.ini';
+  ID_INIFPSNAME   = 'FPS.ini';
+  ID_INIOUTNAME   = 'Output.ini';
+  ID_SUPPORNAME   = 'SupportedFormats.txt';
   ID_UPDATEINI    = 'http://subworkshop.sf.net/swupdate.ini';
   ID_DLLNAME      = 'SubtitleAPI.dll';
   ID_DLLDIR       = 'SubtitleAPI';
   ID_CFPDIR       = 'CustomFormats';
+  ID_LANGDIR      = 'Langs';
+  ID_PASCALDIR    = 'PascalScripts';
+  ID_OCRDIR       = 'OCRScripts';
   ID_STPEXT       = '.stp';
   ID_SRFEXT       = '.srf';
   ID_OCREXT       = '.ocr';
@@ -1218,7 +1224,7 @@ procedure CommandLineProcess(Cli: String);
       for i := 0 to SubtitleAPI.FormatsCount do
         Formats.Add(SubtitleAPI.GetFormatName(i));
     finally
-      Formats.SaveToFile(ExtractFilePath(Application.ExeName) + 'SupportedFormats.txt');
+      Formats.SaveToFile(ExtractFilePath(Application.ExeName) + ID_SUPPORNAME);
       Formats.Free;
     end;
     Application.Terminate;
@@ -1251,7 +1257,7 @@ procedure CommandLineProcess(Cli: String);
 
       // run script
       err := FALSE;
-      frmMain.psCompExec.Script.LoadFromFile(ExtractFilePath(Application.ExeName) + 'PascalScripts\' + Script);
+      frmMain.psCompExec.Script.LoadFromFile(ExtractFilePath(Application.ExeName) + ID_PASCALDIR + '\' + Script);
 
       if frmMain.psCompExec.Compile then
       begin

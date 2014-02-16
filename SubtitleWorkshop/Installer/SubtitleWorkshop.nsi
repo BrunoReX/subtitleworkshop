@@ -20,7 +20,9 @@ Name "${PRODUCT}"
 SetCompressor lzma
 BrandingText "Subtitle Workshop ${VERSION_FULL}"
 SetOverwrite on
+RequestExecutionLevel user
 !include "MUI2.nsh"
+!include "UAC.nsh"
 !include "Sections.nsh"
 !include "LogicLib.nsh"
 !define MUI_ABORTWARNING
@@ -60,6 +62,7 @@ OutFile "${PRODUCT_SHORTNAME}_${VERSION}_${BUILD_NUM}_installer.exe"
 !insertmacro MUI_PAGE_LICENSE $(gpllicense)
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
+Page Custom CanWriteToInstallDir
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 
@@ -140,6 +143,50 @@ LangString TITLE_ManualRussian ${LANG_ENGLISH} "Russian"
 LangString TITLE_ManualRussian ${LANG_BULGARIAN} "Руски"
 LangString TITLE_ManualRussian ${LANG_RUSSIAN} "Русский"
 
+; Check if user can write to the install folder
+!macro CanWriteToDir un
+	Function ${un}CanWriteToDir
+		StrCpy $R8 "true"
+		CreateDirectory $INSTDIR
+		ClearErrors
+		FileOpen $R0 $INSTDIR\tmp.dat w
+		FileClose $R0
+		Delete $INSTDIR\tmp.dat
+		${If} ${Errors}
+			StrCpy $R8 "false"
+		${EndIf}
+	FunctionEnd
+!macroend
+
+!insertmacro CanWriteToDir ""
+!insertmacro CanWriteToDir "un."
+
+; Go (back) to the specified page
+Function RelGotoPage
+  IntCmp $R9 0 0 Move Move
+    StrCmp $R9 "X" 0 Move
+      StrCpy $R9 "120"
+ 
+  Move:
+  SendMessage $HWNDPARENT "0x408" "$R9" ""
+FunctionEnd
+
+
+; This custom page is located between the install location page and the actual install page
+; It will prevent the user from advancing without write permissions to the specified folder
+Function CanWriteToInstallDir
+	Call CanWriteToDir
+	StrCmp $R8 "false" cant_write
+	Goto can_write
+	
+	cant_write:
+		StrCpy $R9 "-1" ; Go back to the install location page
+		Call RelGotoPage
+		MessageBox MB_OK|MB_ICONEXCLAMATION "The user needs admin permissions to write to the specified folder!"
+	
+	can_write:
+FunctionEnd
+
 ; Function to remove the "Open with" shell context menu item
 Function un.RemoveContextMenu
   ReadRegStr $1 HKCR "$R0" "" ; get the name for this extension
@@ -219,9 +266,6 @@ FunctionEnd
 ; Folder-selection page
 InstallDir "$PROGRAMFILES\${PRODUCT}"
 
-; For removing Start Menu shortcut in Windows 7
-RequestExecutionLevel user
-
 ; -------------------------------- ;
 ;         Files to install         ;
 ; -------------------------------- ;
@@ -251,6 +295,7 @@ Section $(TITLE_MainFiles) MainFiles
   WriteRegStr HKLM "SOFTWARE\${PRODUCT}" "Installer Language" "$LANGUAGE"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_SHORTNAME}" "DisplayName" "${PRODUCT} ${VERSION}"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_SHORTNAME}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  SetOutPath "$INSTDIR"
   WriteUninstaller "uninstall.exe"
 
 SectionEnd
@@ -298,18 +343,25 @@ SectionEnd
 SubSection $(TITLE_ShortCuts) ShortCuts
 
   Section $(TITLE_StartMenuShortCuts) StartMenuShortCuts
+    SetOutPath "$INSTDIR"
     CreateDirectory "$SMPROGRAMS\${PRODUCT}"
 
-    CreateDirectory "$SMPROGRAMS\${PRODUCT}\Help"
-
     ${If} ${SectionIsSelected} ${ManualEnglish}
-        CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (English).lnk" "$INSTDIR\Manual\Manual.html" "" "$INSTDIR\Manual\Manual.html" 0
-    ${EndIf}
-    ${If} ${SectionIsSelected} ${ManualBulgarian}
-      CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (Bulgarian).lnk" "$INSTDIR\Manual\ManualBG.html" "" "$INSTDIR\Manual\ManualBG.html" 0
-    ${EndIf}
-    ${If} ${SectionIsSelected} ${ManualRussian}
-      CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (Russian).lnk" "$INSTDIR\Manual\ManualRUS.html" "" "$INSTDIR\Manual\ManualRUS.html" 0
+    ${OrIf} ${SectionIsSelected} ${ManualBulgarian}
+    ${OrIf} ${SectionIsSelected} ${ManualRussian}
+      CreateDirectory "$SMPROGRAMS\${PRODUCT}\Help"
+
+	  ${If} ${SectionIsSelected} ${ManualEnglish}
+        CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (English).lnk" "$INSTDIR\Help\Manual.html"
+      ${EndIf}
+
+      ${If} ${SectionIsSelected} ${ManualBulgarian}
+        CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (Bulgarian).lnk" "$INSTDIR\Help\ManualBG.html"
+      ${EndIf}
+    
+      ${If} ${SectionIsSelected} ${ManualRussian}
+        CreateShortCut "$SMPROGRAMS\${PRODUCT}\Help\Manual (Russian).lnk" "$INSTDIR\Help\ManualRUS.html"
+      ${EndIf}
     ${EndIf}
 
     CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT_EXENAME}" "" "$INSTDIR\${PRODUCT_EXENAME}" 0
@@ -317,10 +369,12 @@ SubSection $(TITLE_ShortCuts) ShortCuts
   SectionEnd
 
   Section $(TITLE_DesktopShortCuts) DesktopShortCuts
+    SetOutPath "$INSTDIR"
     CreateShortCut "$DESKTOP\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT_EXENAME}" "" "$INSTDIR\${PRODUCT_EXENAME}" 0
   SectionEnd
 
   Section $(TITLE_QuickLaunchShortCuts) QuickLaunchShortCuts
+    SetOutPath "$INSTDIR"
     CreateShortCut "$QUICKLAUNCH\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT_EXENAME}" "" "$INSTDIR\${PRODUCT_EXENAME}" 0
   SectionEnd
 
@@ -328,9 +382,67 @@ SubSectionEnd
 
 ;--------------------------------------------------------------------
 
+; ------------------------------- ;
+;          UAC elevation          ;
+; ------------------------------- ;
+
+!macro InitInstaller
+uac_tryagain:
+!insertmacro UAC_RunElevated
+${Switch} $0
+${Case} 0
+	${IfThen} $1 = 1 ${|} Quit ${|} ;we are the outer process, the inner process has done its work, we are done
+	${IfThen} $3 <> 0 ${|} ${Break} ${|} ;we are admin, let the show go on
+	${If} $1 = 3 ;RunAs completed successfully, but with a non-admin user
+		StrCpy $INSTDIR "$APPDATA\${PRODUCT}"
+	${EndIf}
+	;fall-through and die
+${Case} 1223
+	StrCpy $INSTDIR "$APPDATA\${PRODUCT}"
+${Case} 1062
+	StrCpy $INSTDIR "$APPDATA\${PRODUCT}"
+${Default}
+	StrCpy $INSTDIR "$APPDATA\${PRODUCT}"
+${EndSwitch}
+!macroend
+
+!macro InitUninstaller
+; Only show UAC prompt if the install folder needs admin permissions
+call un.CanWriteToDir
+StrCmp $R8 "false" uac_tryagain
+Goto uac_not_needed
+
+uac_tryagain:
+!insertmacro UAC_RunElevated
+${Switch} $0
+${Case} 0
+	${IfThen} $1 = 1 ${|} Quit ${|} ;we are the outer process, the inner process has done its work, we are done
+	${IfThen} $3 <> 0 ${|} ${Break} ${|} ;we are admin, let the show go on
+	${If} $1 = 3 ;RunAs completed successfully, but with a non-admin user
+		MessageBox mb_YesNo|mb_IconExclamation|mb_TopMost|mb_SetForeground "The ${PRODUCT} uninstaller requires admin privileges, try again." /SD IDNO IDYES uac_tryagain IDNO 0
+	${EndIf}
+	;fall-through and die
+${Case} 1223
+	MessageBox mb_IconStop|mb_TopMost|mb_SetForeground "The ${PRODUCT} uninstaller requires admin privileges, aborting!"
+	Quit
+${Case} 1062
+	MessageBox mb_IconStop|mb_TopMost|mb_SetForeground "Logon service not running, aborting!"
+	Quit
+${Default}
+	MessageBox mb_IconStop|mb_TopMost|mb_SetForeground "Unable to elevate, error $0."
+	Quit
+${EndSwitch}
+
+uac_not_needed:
+!macroend
+
+;--------------------------------------------------------------------
+
 ; When installer is launched...
 
 Function .onInit
+	!insertmacro InitInstaller
+
 	; Check if installer is not already launched
 	System::Call 'kernel32::CreateMutexA(i 0, i 0, t "${PRODUCT_SHORTNAME}Installer") i .r1 ?e'
 	Pop $R0 
@@ -409,6 +521,8 @@ SectionEnd
 
 ; When uninstaller is launched...
 Function un.onInit
+	!insertmacro InitUninstaller
+
 	; Check if installer is not already launched
 	System::Call 'kernel32::CreateMutexA(i 0, i 0, t "${PRODUCT_SHORTNAME}Uninstaller") i .r1 ?e'
 	Pop $R0 

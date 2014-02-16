@@ -180,7 +180,7 @@ var
   i    : Integer;
   Item : String;
 begin
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'FPS.ini');
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + ID_INIFPSNAME);
   try
     for i := 1 to Ini.ReadInteger('FPS', 'Total', 0) do
     begin
@@ -219,7 +219,7 @@ var
   Ini : TIniFile;
   i   : Integer;
 begin
-  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'FPS.ini');
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + ID_INIFPSNAME);
   try
     Ini.WriteInteger('FPS', 'Total', ComboBox.Items.Count);
     Ini.WriteInteger('FPS', 'Active', ComboBox.ItemIndex + 1);
