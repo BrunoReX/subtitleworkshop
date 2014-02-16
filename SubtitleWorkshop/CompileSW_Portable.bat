@@ -1,5 +1,0 @@
-@ECHO OFF
-
-SET PORTABLE_BUILD=TRUE
-
-CALL CompileSW.bat
