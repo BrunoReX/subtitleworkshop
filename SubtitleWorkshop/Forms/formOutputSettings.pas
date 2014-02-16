@@ -558,7 +558,7 @@ begin
   pnlHeading.Caption         := tvFormats.Items.Item[0].Text;
   SetLanguage;
 
-  Ini := TIniFile.Create(GetSWAppDataPath() + ID_INIOUTNAME);
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'Output.ini');
   try
 
     //added by adenry: begin
@@ -889,7 +889,7 @@ var
   Timer     : String; //added by adenry
   Angle     : String; //added by adenry
 begin
-  Ini := TIniFile.Create(GetSWAppDataPath() + ID_INIOUTNAME);
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'Output.ini');
   try
 
     //added by adenry: begin
