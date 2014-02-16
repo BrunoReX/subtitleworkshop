@@ -1138,7 +1138,7 @@ try
     if ( ((cmbOCRFiles.ItemIndex <> frmMain.cmbOCRScripts.ItemIndex) or (OCRFileEdited)) and (ErrorsToCheck.eOCRErrors or ErrorsToFix.eOCRErrors) ) or  //if the script file was edited or another script file was selected, and OCR Check/Fix is turned on //added by adenry
        ( ((ErrorsToCheck.eOCRErrors = False) and (ErrorsToFix.eOCRErrors = False)) and ((chkCheckOCRErrors.Checked) or (chkFixOCRErrors.Checked)) ) then //if OCR Check/Fix was just turned on //added by adenry
     begin
-      OCRDefFile := GetSWAppDataPath() + ID_OCRDIR + '\' + cmbOCRFiles.Items[cmbOCRFiles.ItemIndex] + ID_OCREXT;
+      OCRDefFile := ExtractFilePath(Application.ExeName) + 'OCRScripts\' + cmbOCRFiles.Items[cmbOCRFiles.ItemIndex] + ID_OCREXT;
       Ini.WriteString('Information and Errors', 'OCR Definitions file', OCRDefFile);
       frmMain.mnuOCRScripts.Items[cmbOCRFiles.ItemIndex].Checked := True;
       frmMain.cmbOCRScripts.ItemIndex := cmbOCRFiles.ItemIndex;
@@ -1473,7 +1473,7 @@ var
   WinDir  : String;
   OCRFile : String;
 begin
-  OCRFile := GetSWAppDataPath() + ID_OCRDIR + '\' + cmbOCRFiles.Items[cmbOCRFiles.ItemIndex] + ID_OCREXT;
+  OCRFile := ExtractFilePath(Application.ExeName) + 'OCRScripts\' + cmbOCRFiles.Items[cmbOCRFiles.ItemIndex] + ID_OCREXT;
   if FileExists(OCRFile) then
   begin
     WinDir := GetWindowsDirectory;

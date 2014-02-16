@@ -110,9 +110,9 @@ begin
   cmbFPS.Items            := frmMain.cmbInputFPS.Items;
   cmbFPS.ItemIndex        := frmMain.cmbInputFPS.ItemIndex;
   edtFormatName.SelLength := 0;
-  if not DirectoryExists(GetSWAppDataPath() + ID_CFPDIR + '\') then
-    CreateDir(GetSWAppDataPath() + ID_CFPDIR + '\');
-  dlgLoad.InitialDir := GetSWAppDataPath() + ID_CFPDIR + '\';
+  if not DirectoryExists(ExtractFilePath(Application.ExeName) + 'CustomFormats\') then
+    CreateDir(ExtractFilePath(Application.ExeName) + 'CustomFormats\');
+  dlgLoad.InitialDir := ExtractFilePath(Application.ExeName) + 'CustomFormats\';
   Ini := TIniFile.Create(IniRoot);
   try
     if Ini.ReadBool('Custom formats', 'Remember last custom format', True) then
@@ -183,7 +183,7 @@ var
   f: TextFile;
 begin
   dlgSave.Filter := CustomFormatProject + ' (*.cfp)|*.cfp';
-  dlgSave.InitialDir := GetSWAppDataPath() + ID_CFPDIR + '\';
+  dlgSave.InitialDir := ExtractFilePath(Application.ExeName) + 'CustomFormats\';
   if (dlgSave.Execute) and (dlgSave.FileName <> '') then
   begin
     try

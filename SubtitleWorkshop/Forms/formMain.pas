@@ -1528,7 +1528,7 @@ begin
   ActualLangFile := LangFile;
   if ExtractFileExt(ActualLangFile) <> '.lng' then
     ActualLangFile := ActualLangFile + '.lng';
-  ActualLangFile := GetSWAppDataPath() + ID_LANGDIR + '\' + ActualLangFile;
+  ActualLangFile := ExtractFilePath(Application.ExeName) + 'Langs\' + ActualLangFile;
 
   LF := TIniFile.Create(ActualLangFile);
 
@@ -2167,7 +2167,7 @@ begin
     LF.Free;
   end;
 
-  LF := TIniFile.Create(GetSWAppDataPath() + ID_ININAME);
+  LF := TIniFile.Create(ExtractFilePath(Application.ExeName) + ID_ININAME);
   try
     Font.Name := LF.ReadString('Program look', 'Font', 'Tahoma');
     Font.Size := LF.ReadInteger('Program look', 'Font size', 8);
@@ -2246,7 +2246,7 @@ end;
 
 procedure TfrmMain.mnuOCRScriptClick(Sender: TObject);
 begin
-  OCRDefFile := GetSWAppDataPath() + ID_OCRDIR + '\' + (Sender as TMenuItem).Caption + ID_OCREXT;
+  OCRDefFile := ExtractFilePath(Application.ExeName) + 'OCRScripts\' + (Sender as TMenuItem).Caption + ID_OCREXT;
   cmbOCRScripts.ItemIndex := cmbOCRScripts.Items.IndexOf(ExtractFileName(Copy(OCRDefFile, 1, Length(OCRDefFile)-4)));
 end;
 
@@ -2261,7 +2261,7 @@ var
 begin
   Langs := TStringList.Create;
   try
-    i := FindFirst(GetSWAppDataPath() + ID_LANGDIR + '\*.lng', faAnyFile, Busca);
+    i := FindFirst(ExtractFilePath(Application.ExeName) + 'Langs\*.lng', faAnyFile, Busca);
     while i = 0 do
     begin
       Langs.Add(Copy(Busca.Name, 1, Length(Busca.Name)-4));
@@ -2305,7 +2305,7 @@ var
 begin
   Scripts := TStringList.Create;
   try
-    i := FindFirst(GetSWAppDataPath() + ID_OCRDIR + '\*' + ID_OCREXT, faAnyFile, Busca);
+    i := FindFirst(ExtractFilePath(Application.ExeName) + 'OCRScripts\*' + ID_OCREXT, faAnyFile, Busca);
     while i = 0 do
     begin
       Scripts.Add(Copy(Busca.Name, 1, Length(Busca.Name)-4));
@@ -2345,7 +2345,7 @@ var
 begin
   Scripts := TStringList.Create;
   try
-    i := FindFirst(GetSWAppDataPath() + ID_PASCALDIR + '\*.pas', faAnyFile, Busca);
+    i := FindFirst(ExtractFilePath(Application.ExeName) + 'PascalScripts\*.pas', faAnyFile, Busca);
     while i = 0 do
     begin
       Scripts.Add(Copy(Busca.Name, 1, Length(Busca.Name)-4));
@@ -2801,7 +2801,7 @@ begin
   //   Initialize SubtitleAPI   //
   // ---------------------------//
 
-  Ini := TIniFile.Create(GetSWAppDataPath() + ID_ININAME);
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + '\' + ID_ININAME);
   try
     GetLangs;
     GetPascalScripts;
@@ -2842,7 +2842,7 @@ begin
     SearchWord            := '';
     OldInputFPS           := 0;
     OldFPS                := 0;
-    IniRoot               := GetSWAppDataPath() + ID_ININAME;
+    IniRoot               := ExtractFilePath(Application.ExeName) + '\' + ID_ININAME;
     FormatType            := ftTime;
     RecentFiles           := TStringList.Create;
     FirstDialogInVideo    := -1;
@@ -3224,7 +3224,7 @@ begin
     AutoRecheckOnScripts        := Ini.ReadInteger('Information and Errors', 'Recheck on scripts', 1); //added by adenry
     FixOneUnitOverlap           := Ini.ReadBool('Information and Errors', 'Fix one unit overlap at load', False);
     FixOnLoad                   := Ini.ReadBool('Information and Errors', 'Fix errors on load subtitle', False);
-    OCRDefFile                  := Ini.ReadString('Information and Errors', 'OCR Definitions file', GetSWAppDataPath() + ID_OCRDIR + '\Default' + ID_OCREXT);
+    OCRDefFile                  := Ini.ReadString('Information and Errors', 'OCR Definitions file', ExtractFilePath(Application.ExeName) + 'OCRScripts\Default' + ID_OCREXT);
     IndicTooLongLines           := Ini.ReadBool('Information and Errors', 'Indicate too long lines', True); //added by adenry
     TooLongLinesColor           := Ini.ReadInteger('Information and Errors', 'Indicate too long lines color', pnlIndicTooLongLinesColor.Font.Color); //added by adenry
     TooLongLinesBackground      := Ini.ReadInteger('Information and Errors', 'Indicate too long lines background', pnlIndicTooLongLinesBackground.Font.Color); //added by adenry
@@ -3658,7 +3658,7 @@ begin
   //                            Set Output settings                           //
   // ------------------------------------------------------------------------ //
   
-  Ini := TIniFile.Create(GetSWAppDataPath() + ID_INIOUTNAME);
+  Ini := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'Output.ini');
   try
     //added by adenry: begin
     // --------------------------- //
@@ -9726,7 +9726,7 @@ begin
   Screen.Cursor := crHourGlass; //added by adenry
   try
     frmMain.tmrPascalScriptRestoreCursor.Enabled := True; //added by adenry
-    psCompExec.Script.LoadFromFile(GetSWAppDataPath() + ID_PASCALDIR + '\' + (Sender as TMenuItem).Caption + '.pas'); //StripHotKey added by adenry for toolbar button fix
+    psCompExec.Script.LoadFromFile(ExtractFilePath(Application.ExeName) + 'PascalScripts\' + (Sender as TMenuItem).Caption + '.pas'); //StripHotKey added by adenry for toolbar button fix
 
     if psCompExec.Compile then
     begin
@@ -9814,7 +9814,7 @@ end;
 
 procedure TfrmMain.cmbOCRScriptsSelect(Sender: TObject);
 begin
-  OCRDefFile := GetSWAppDataPath() + ID_OCRDIR + '\' + cmbOCRScripts.Items[cmbOCRScripts.ItemIndex] + ID_OCREXT;
+  OCRDefFile := ExtractFilePath(Application.ExeName) + 'OCRScripts\' + cmbOCRScripts.Items[cmbOCRScripts.ItemIndex] + ID_OCREXT;
   //added by adenry later:
   if ((ErrorsToCheck.eOCRErrors) or (ErrorsToFix.eOCRErrors)) and (FileExists(OCRDefFile)) then
   begin
@@ -14023,7 +14023,7 @@ begin
       if mnuLanguage.Items[i].Caption = 'English' then
       begin
         Screen.Cursor := crHourglass;
-        eng := TMemIniFile.Create(GetSWAppDataPath() + ID_LANGDIR + '\English.lng');
+        eng := TMemIniFile.Create('Langs\English.lng');
         try
           //Initialize Report info:
           SetLength(ChangesCount, mnuLanguage.Count);
@@ -14046,7 +14046,7 @@ begin
             if mnuLanguage.Items[ini].Caption <> 'English' then
             begin
               ChangesCount[ini] := 0; //Report info
-              lang := TMemIniFile.Create(GetSWAppDataPath() + ID_LANGDIR + '\' + mnuLanguage.Items[ini].Caption + '.lng');
+              lang := TMemIniFile.Create('Langs\' + mnuLanguage.Items[ini].Caption + '.lng');
               try
                 //Refresh lang file with missing strings
                 for sec := 0 to SectionsEng.Count-1 do //check all sections
