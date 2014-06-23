@@ -3,7 +3,7 @@ These versions of Subtitle Workshop and Subtitle API are developed with Delphi 7
 Additional components Subtitle Workshop requires:
 - SWComponents (included in source, see "SWComponents" directory)
 - Innerfuse Pascal Script 3 (IFPS3) - current version used is 1.33 (included in source, see "3rd party components" directory)
-- VirtualTreeView - current version used is 5.2.2 - http://www.delphi-gems.com/VirtualTreeview/
+- VirtualTreeView - current version used is 5.4.1 - http://www.jam-software.de/virtual-treeview/
 - AsyncCalls - current version used is 2.99 - http://andy.jgknet.de/blog/bugfix-units/asynccalls-29-asynchronous-function-calls/
 
 Additional components Subtitle API requires:
