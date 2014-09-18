@@ -1,6 +1,7 @@
 *.dcu
 *.ddp
 *.dll
+!3rd party components/**/*.dll
 *.~*
 SubtitleWorkshop.exe
 SubtitleWorkshop.ini
