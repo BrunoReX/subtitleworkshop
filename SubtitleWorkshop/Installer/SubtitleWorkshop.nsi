@@ -387,7 +387,6 @@ SubSectionEnd
 ; ------------------------------- ;
 
 !macro InitInstaller
-uac_tryagain:
 !insertmacro UAC_RunElevated
 ${Switch} $0
 ${Case} 0
